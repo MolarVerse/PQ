@@ -30,55 +30,55 @@
 TEST(ConstraintSettingsTest, ShakeMaxIterRoundTrip)
 {
     ConstraintSettings settings;
-    settings.setShakeMaxIterByUser(500U);
-    EXPECT_EQ(settings.getShakeMaxIter(), 500U);
+    settings.set_shakeMaxIterByUser(500U);
+    EXPECT_EQ(settings.get_shakeMaxIter(), 500U);
 
-    settings.setShakeMaxIterByUser(1U);
-    EXPECT_EQ(settings.getShakeMaxIter(), 1U);
+    settings.set_shakeMaxIterByUser(1U);
+    EXPECT_EQ(settings.get_shakeMaxIter(), 1U);
 }
 
 TEST(ConstraintSettingsTest, RattleMaxIterRoundTrip)
 {
     ConstraintSettings settings;
-    settings.setRattleMaxIterByUser(750U);
-    EXPECT_EQ(settings.getRattleMaxIter(), 750U);
+    settings.set_rattleMaxIterByUser(750U);
+    EXPECT_EQ(settings.get_rattleMaxIter(), 750U);
 }
 
 TEST(ConstraintSettingsTest, MShakeMaxIterRoundTrip)
 {
     ConstraintSettings settings;
-    settings.setMShakeMaxIterByUser(5U);
-    EXPECT_EQ(settings.getMShakeMaxIter(), 5U);
+    settings.set_mshakeMaxIterByUser(5U);
+    EXPECT_EQ(settings.get_mshakeMaxIter(), 5U);
 
-    settings.setMShakeMaxIterByUser(2U);
-    EXPECT_EQ(settings.getMShakeMaxIter(), 2U);
+    settings.set_mshakeMaxIterByUser(2U);
+    EXPECT_EQ(settings.get_mshakeMaxIter(), 2U);
 }
 
 TEST(ConstraintSettingsTest, ShakeToleranceRoundTrip)
 {
     ConstraintSettings settings;
-    settings.setShakeToleranceByUser(1.0e-4);
-    EXPECT_DOUBLE_EQ(settings.getShakeTolerance(), 1.0e-4);
+    settings.set_shakeToleranceByUser(1.0e-4);
+    EXPECT_DOUBLE_EQ(settings.get_shakeTolerance(), 1.0e-4);
 
-    settings.setShakeToleranceByUser(1.0e-12);
-    EXPECT_DOUBLE_EQ(settings.getShakeTolerance(), 1.0e-12);
+    settings.set_shakeToleranceByUser(1.0e-12);
+    EXPECT_DOUBLE_EQ(settings.get_shakeTolerance(), 1.0e-12);
 }
 
 TEST(ConstraintSettingsTest, RattleToleranceRoundTrip)
 {
     ConstraintSettings settings;
-    settings.setRattleToleranceByUser(1.0e-6 * g_per_mol / s);
-    EXPECT_EQ(settings.getRattleTolerance(), 1.0e-6 * g_per_mol / s);
+    settings.set_rattleToleranceByUser(1.0e-6 * g_per_mol / s);
+    EXPECT_EQ(settings.get_rattleTolerance(), 1.0e-6 * g_per_mol / s);
 }
 
 TEST(ConstraintSettingsTest, MShakeToleranceRoundTrip)
 {
     ConstraintSettings settings;
-    settings.setMShakeToleranceByUser(3.0e-5);
-    EXPECT_DOUBLE_EQ(settings.getMShakeTolerance(), 3.0e-5);
+    settings.set_mshakeToleranceByUser(3.0e-5);
+    EXPECT_DOUBLE_EQ(settings.get_mshakeTolerance(), 3.0e-5);
 
-    settings.setMShakeToleranceByUser(1.1e-10);
-    EXPECT_DOUBLE_EQ(settings.getMShakeTolerance(), 1.1e-10);
+    settings.set_mshakeToleranceByUser(1.1e-10);
+    EXPECT_DOUBLE_EQ(settings.get_mshakeTolerance(), 1.1e-10);
 }
 
 /**

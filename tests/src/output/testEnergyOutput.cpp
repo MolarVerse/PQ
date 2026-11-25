@@ -64,7 +64,7 @@ TEST_F(TestEnergyOutput, writeHeader)
  */
 TEST_F(TestEnergyOutput, columnHeader)
 {
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en", false);
@@ -94,7 +94,7 @@ TEST_F(TestEnergyOutput, columnHeader)
  */
 TEST_F(TestEnergyOutput, columnHeaderOnceAfterMetadata)
 {
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en", false);
@@ -126,7 +126,7 @@ TEST_F(TestEnergyOutput, columnHeaderOnceAfterMetadata)
  */
 TEST_F(TestEnergyOutput, columnHeaderMatchesDataAndInfo)
 {
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::ON);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::ON);
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
     _settings->manostatSettings.setFixedAxisByUser(FixedAxis::Z);
     _settings->thermostatSettings.setThermostatTypeByUser(
@@ -220,7 +220,7 @@ TEST_F(TestEnergyOutput, forceFieldNotActive)
     _physicalData->set_intraNonCoulombEnergy(10.0 * kcal_per_mol);
     _physicalData->set_loopTime(0.1 * s);
 
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en", false);
@@ -264,7 +264,7 @@ TEST_F(TestEnergyOutput, forceFieldActive)
     _physicalData->set_improperEnergy(22.0 * kcal_per_mol);
     _physicalData->set_loopTime(0.1 * s);
 
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::ON);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::ON);
     _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en", false);
@@ -308,7 +308,7 @@ TEST_F(TestEnergyOutput, manostatActive)
     _physicalData->set_density(20.0 * kg_per_litre);
     _physicalData->set_loopTime(0.1 * s);
 
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
     _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
     _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
@@ -354,7 +354,7 @@ TEST_F(TestEnergyOutput, manostatActiveWithFixedAxis)
     _physicalData->set_density(20.0 * kg_per_litre);
     _physicalData->set_loopTime(0.1 * s);
 
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
     _settings->manostatSettings.setFixedAxisByUser(FixedAxis::Z);
     _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
@@ -401,7 +401,7 @@ TEST_F(TestEnergyOutput, qmActive)
     _physicalData->set_density(20.0 * kg_per_litre);
     _physicalData->set_loopTime(0.1 * s);
 
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     _settings->generalSettings.setJobtypeByUser(JobType::QM_MD);
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
 
@@ -443,7 +443,7 @@ TEST_F(TestEnergyOutput, noseHooverActive)
     _physicalData->set_noseHooverFrictionEnergy(12.0);
     _physicalData->set_loopTime(0.1 * s);
 
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
     _settings->thermostatSettings.setThermostatTypeByUser(
@@ -491,7 +491,7 @@ TEST_F(TestEnergyOutput, qmmmActiveSubtractsQMReferenceEnergy)
     _physicalData->set_numberOfSmoothingMol(1.0);
     _physicalData->set_loopTime(0.1 * s);
 
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     _settings->generalSettings.setJobtypeByUser(JobType::QMMM_MD);
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
     _settings->thermostatSettings.setThermostatTypeByUser(ThermostatType::NONE);

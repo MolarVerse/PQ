@@ -517,7 +517,7 @@ TEST_F(TestSetup, testCheckZeroVelocities)
  */
 TEST_F(TestSetup, testFullSetup)
 {
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::ON);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::ON);
 
     ::molsys::Molecule molecule1{MolType{1}};
     const auto         atom1 = std::make_shared<::molsys::Atom>();
