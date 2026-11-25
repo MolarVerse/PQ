@@ -42,7 +42,7 @@ class TestSetup : public ::testing::Test
     void SetUp() override;
 };
 
-void TestSetup::SetUp()
+inline void TestSetup::SetUp()
 {
     _settings = std::make_unique<Settings>();
     // NOTE: here the MMOPTEngine is used as dummy engine
