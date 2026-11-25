@@ -28,12 +28,13 @@
 
 #include "atomSection.hpp"
 #include "boxSection.hpp"
-#include "engine.hpp"
 #include "exceptions.hpp"
-#include "fileSettings.hpp"
-#include "generalSettings.hpp"
+#include "logOutput.hpp"
 #include "metaDataSection.hpp"
 #include "noseHooverSection.hpp"
+#include "settings.hpp"
+#include "simulationBox.hpp"
+#include "stdoutOutput.hpp"
 #include "stepCountSection.hpp"
 #include "stringUtilities.hpp"
 #include "units.hpp"
@@ -51,31 +52,16 @@ namespace input::restartFile
      *
      *
      * @param filename
-     * @param engine
-     * @param noseHooverSettings Reference to the NoseHooverSettings object
-     * @param timingsSettings Reference to the TimingsSettings object
      * @param generalSettings Reference to the GeneralSettings object
      */
-    RestartFileReader::RestartFileReader(
-        const std::string  &filename,
-        engine::Engine     &engine,
-        NoseHooverSettings &noseHooverSettings,
-        TimingsSettings    &timingsSettings,
-        GeneralSettings    &generalSettings
-    )
+    RestartFileReader::RestartFileReader(const std::string &filename)
         : _fileName(filename),
           _fp(filename),
-          _engine(engine),
-          _atomSection(std::make_unique<AtomSection>()),
-          _timingsSettings(timingsSettings)
+          _atomSection(std::make_unique<AtomSection>())
     {
         _sections.push_back(std::make_unique<BoxSection>());
-        _sections.push_back(
-            std::make_unique<NoseHooverSection>(noseHooverSettings)
-        );
-        _sections.push_back(
-            std::make_unique<StepCountSection>(timingsSettings)
-        );
+        _sections.push_back(std::make_unique<NoseHooverSection>());
+        _sections.push_back(std::make_unique<StepCountSection>());
         _sections.push_back(std::make_unique<MetaDataSection>(generalSettings));
     }
 
@@ -103,7 +89,11 @@ namespace input::restartFile
      *
      * @throw exc::InputFileException if file not found
      */
-    void RestartFileReader::read()
+    void RestartFileReader::read(
+        Settings              &settings,
+        molsys::SimulationBox &simulationBox,
+        out::LogOutput        &logOutput
+    )
     {
         std::string line;
         size_t      lineNumber = 1;
@@ -121,11 +111,11 @@ namespace input::restartFile
 
             auto *section = determineSection(lineElements);
             section->setFilePointer(&_fp);
-            section->process(lineElements, _engine, lineNumber);
+            section->process(lineElements, lineNumber, settings, simulationBox);
             ++lineNumber;
         }
 
-        if (_engine.get_simulationBox().getNumberOfAtoms() == 0)
+        if (simulationBox.getNumberOfAtoms() == 0)
         {
             throw exc::RstFileException(
                 std::format(
@@ -136,15 +126,15 @@ namespace input::restartFile
             );
         }
 
-        const auto stepCount = _timingsSettings->getStartingStepCount();
+        const auto stepCount = settings.timings.getStartingStepCount();
 
-        if (isMDJobType(_engine.getSettings().generalSettings.getJobtype()))
+        if (isMDJobType(settings.generalSettings.getJobtype()))
         {
-            if (stepCount == 0 && !_timingsSettings->isStartingTimeSet())
+            if (stepCount == 0 && !settings.timings.isStartingTimeSet())
             {
-                _timingsSettings->setStartingTimeByUser(0 * fs);
+                settings.timings.setStartingTimeByUser(0 * fs);
             }
-            else if (!_timingsSettings->isStartingTimeSet())
+            else if (!settings.timings.isStartingTimeSet())
             {
                 // this entire message is only needed due to a bug we had
                 // it was not possible to derive the starting and end time of a
@@ -167,79 +157,68 @@ namespace input::restartFile
                     "by providing the starting time in ps explicitly in the "
                     "restart file after the step section e.g.:\n"
                     "step 100 simulation_time 2",
-                    _timingsSettings->getTimeStep().in(fs)
+                    settings.timings.getTimeStep().in(fs)
                 );
 
-                _engine.getLogOutput().writeSetupWarning(message);
+                logOutput.writeSetupWarning(message);
                 out::StdoutOutput::writeSetupWarning(message);
-                _timingsSettings->setStartingTimeByUser(
-                    _timingsSettings->getTimeStep() * stepCount
+                settings.timings.setStartingTimeByUser(
+                    settings.timings.getTimeStep() * stepCount
                 );
             }
         }
 
-        _writeStepInfo();
+        _writeStepInfo(settings, logOutput);
     }
 
     /**
      * @brief wrapper function to construct a RestartFileReader object and call
      * the read function
      *
-     * @param engine Reference to the Engine object
-     * @param noseHooverSettings Reference to the NoseHooverSettings object
-     * @param timingsSettings Reference to the TimingsSettings object
      * @param generalSettings Reference to the GeneralSettings object
      */
     void readRestartFile(
-        engine::Engine     &engine,
-        NoseHooverSettings &noseHooverSettings,
-        TimingsSettings    &timingsSettings,
-        GeneralSettings    &generalSettings
+        Settings              &settings,
+        molsys::SimulationBox &simulationBox,
+        out::LogOutput        &logOutput,
+        GeneralSettings       &generalSettings
     )
     {
-        const auto &fileSettings = engine.getSettings().fileSettings;
-
-        if (!fileSettings.isStartFileNameSetByUser())
+        if (!settings.fileSettings.isStartFileNameSetByUser())
             throw exc::InputFileException(
                 "\"start_file\" not set in input file"
             );
 
-        const auto filename = fileSettings.get_startFile();
+        const auto filename = settings.fileSettings.get_startFile();
 
         out::StdoutOutput::writeRead("Start File", filename);
-        auto &logOutput = engine.getLogOutput();
         logOutput.writeRead("Start File", filename);
 
-        RestartFileReader rstFileReader(
-            filename,
-            engine,
-            noseHooverSettings,
-            timingsSettings,
-            generalSettings
-        );
-        rstFileReader.read();
+        RestartFileReader rstFileReader(filename);
+        rstFileReader.read(settings, simulationBox, logOutput);
     }
 
     /**
      * @brief writes the step information to the log file
      *
      */
-    void RestartFileReader::_writeStepInfo()
+    void RestartFileReader::_writeStepInfo(
+        const Settings &settings,
+        out::LogOutput &logOutput
+    )
     {
-        auto       &logFile = _engine.getLogOutput();
-        const auto &jobType =
-            _engine.getSettings().generalSettings.getJobtype();
+        const auto &jobType = settings.generalSettings.getJobtype();
 
         if (isMDJobType(jobType))
         {
-            const auto timeStep  = _timingsSettings->getTimeStep().in(fs);
-            const auto startStep = _timingsSettings->getStartingStepCount();
-            const auto nSteps    = _timingsSettings->getNumberOfSteps();
-            const auto startTime = _timingsSettings->getStartingTime().in(ps);
+            const auto timeStep  = settings.timings.getTimeStep().in(fs);
+            const auto startStep = settings.timings.getStartingStepCount();
+            const auto nSteps    = settings.timings.getNumberOfSteps();
+            const auto startTime = settings.timings.getStartingTime().in(ps);
             const auto deltaTime =
-                _timingsSettings->calculateSimulationTimeOfRun().in(ps);
+                settings.timings.calculateSimulationTimeOfRun().in(ps);
             const auto finalTime =
-                _timingsSettings->calculateFinalSimulationTime().in(ps);
+                settings.timings.calculateFinalSimulationTime().in(ps);
 
             std::string msg;
             msg += std::format("Time Step:              {}", timeStep) + "\n";
@@ -248,12 +227,12 @@ namespace input::restartFile
             msg += std::format("Starting Time:          {}", startTime) + "\n";
             msg += std::format("Simulation Time of Run: {}", deltaTime) + "\n";
             msg += std::format("Total Simulation Time:  {}", finalTime) + "\n";
-            logFile.writeSetupInfo(msg);
+            logOutput.writeSetupInfo(msg);
         }
         else if (isOptJobType(jobType))
         {
-            const auto  startStep = _timingsSettings->getStartingStepCount();
-            const auto  nSteps    = _timingsSettings->getNumberOfSteps();
+            const auto  startStep = settings.timings.getStartingStepCount();
+            const auto  nSteps    = settings.timings.getNumberOfSteps();
             std::string msg;
             msg += std::format(
                        "Starting Step Count:                  {}",
@@ -265,10 +244,10 @@ namespace input::restartFile
                        nSteps
                    ) +
                    "\n";
-            logFile.writeSetupInfo(msg);
+            logOutput.writeSetupInfo(msg);
         }
 
-        logFile.writeEmptyLine();
+        logOutput.writeEmptyLine();
     }
 
 }   // namespace input::restartFile

@@ -38,17 +38,17 @@
 class OptimizerSettings
 {
    private:
-    Setting<OptimizerType> _optimizer;
-    Setting<LearningRate>  _lRStrategy;
+    Setting<OptimizerType, "Optimizer Type">        _optimizer;
+    Setting<LearningRate, "Learning Rate Strategy"> _lRStrategy;
 
-    Setting<size_t> _nEpochs;
-    Setting<size_t> _lRupdateFrequency;
+    Setting<size_t, "Number of Epochs">               _nEpochs;
+    Setting<size_t, "Learning Rate Update Frequency"> _lRupdateFrequency;
 
-    Setting<double> _initialLearningRate;
-    Setting<double> _minLearningRate;
+    Setting<double, "Initial Learning Rate"> _initialLearningRate;
+    Setting<double, "Minimum Learning Rate"> _minLearningRate;
 
-    Setting<double> _learningRateDecay;
-    Setting<double> _maxLearningRate;
+    Setting<double, "Learning Rate Decay">   _learningRateDecay;
+    Setting<double, "Maximum Learning Rate"> _maxLearningRate;
 
    public:
     OptimizerSettings();

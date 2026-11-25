@@ -39,14 +39,14 @@ class ReferenceSettings;
 class ManostatSettings
 {
    private:
-    Setting<ManostatType> _manostatType;
-    Setting<Isotropy>     _isotropy;
-    Setting<FixedAxis>    _fixedAxis;
+    Setting<ManostatType, "Manostat Type"> _manostatType;
+    Setting<Isotropy, "Isotropy">          _isotropy;
+    Setting<FixedAxis, "Fixed Axis">       _fixedAxis;
 
-    Setting<Pressure> _targetPressure;
+    Setting<Pressure, "Target Pressure"> _targetPressure;
 
-    Setting<Time>            _tau;
-    Setting<Compressibility> _compressibility;
+    Setting<Time, "Tau">                        _tau;
+    Setting<Compressibility, "Compressibility"> _compressibility;
 
     Setting<VirialType, "VirialType"> _virial{VirialType::MOLECULAR};
 

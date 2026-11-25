@@ -34,18 +34,27 @@ namespace engine
     class Engine;   // forward declaration
 }   // namespace engine
 
-class NoseHooverSettings;   // forward declaration
-class TimingsSettings;      // forward declaration
-class GeneralSettings;      // forward declaration
+struct Settings;         // forward declaration
+class GeneralSettings;   // forward declaration
+
+namespace molsys
+{
+    class SimulationBox;   // forward declaration
+}   // namespace molsys
+
+namespace out
+{
+    class LogOutput;   // forward declaration
+}   // namespace out
 
 namespace input::restartFile
 {
     class RestartFileSection;   // forward declaration
 
     void readRestartFile(
-        engine::Engine &,
-        NoseHooverSettings &,
-        TimingsSettings &,
+        Settings              &settings,
+        molsys::SimulationBox &simulationBox,
+        out::LogOutput        &logOutput,
         GeneralSettings &
     );
 
@@ -60,28 +69,28 @@ namespace input::restartFile
        private:
         const std::string _fileName;
         std::ifstream     _fp;
-        engine::Engine   &_engine;
 
         std::unique_ptr<RestartFileSection>              _atomSection;
         std::vector<std::unique_ptr<RestartFileSection>> _sections;
-        mstd::Ref<TimingsSettings>                       _timingsSettings;
 
        public:
-        RestartFileReader(
-            const std::string &,
-            engine::Engine &,
-            NoseHooverSettings &,
-            TimingsSettings &timingsSettings,
-            GeneralSettings &generalSettings
-        );
+        explicit RestartFileReader(const std::string &filename);
 
-        void                read();
+        void read(
+            Settings              &settings,
+            GeneralSettings       &generalSettings,
+            molsys::SimulationBox &simulationBox,
+            out::LogOutput        &logOutput
+        );
         RestartFileSection *determineSection(
             std::vector<std::string> &lineElements
         );
 
        private:
-        void _writeStepInfo();
+        static void _writeStepInfo(
+            const Settings &settings,
+            out::LogOutput &logOutput
+        );
     };
 
 }   // namespace input::restartFile

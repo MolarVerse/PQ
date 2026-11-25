@@ -47,7 +47,12 @@ TEST_F(TestStepCountSection, testNumberOfArguments)
         {
             auto line = std::vector<std::string>(i);
             ASSERT_THROW_MSG(
-                _section->process(line, *_engine, lineNumber),
+                _section->process(
+                    line,
+                    lineNumber,
+                    _settings,
+                    _engine->get_simulationBox()
+                ),
                 exc::RstFileException,
                 "Error in line 0: Step count section must have 2 or 4 elements"
             );
@@ -61,7 +66,12 @@ TEST_F(TestStepCountSection, testNegativeStepCount)
     line[1]           = "-1";
     size_t lineNumber = 0;
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine, lineNumber),
+        _section->process(
+            line,
+            lineNumber,
+            _settings,
+            _engine->get_simulationBox()
+        ),
         exc::RstFileException,
         "Error in line 0: Step count must be positive"
     );
@@ -72,7 +82,8 @@ TEST_F(TestStepCountSection, testProcess)
     auto line         = std::vector<std::string>(2);
     line[1]           = "1000";
     size_t lineNumber = 0;
-    _section->process(line, *_engine, lineNumber);
+    _section
+        ->process(line, lineNumber, _settings, _engine->get_simulationBox());
     EXPECT_EQ(_settings.timings.getStartingStepCount(), 1000);
 }
 
@@ -81,7 +92,8 @@ TEST_F(TestStepCountSection, testProcessWithSimulationTime)
     auto line =
         std::vector<std::string>{"step", "1000", "Simulation_Time", "2.5"};
     size_t lineNumber = 0;
-    _section->process(line, *_engine, lineNumber);
+    _section
+        ->process(line, lineNumber, _settings, _engine->get_simulationBox());
 
     EXPECT_EQ(_settings.timings.getStartingStepCount(), 1000);
     EXPECT_TRUE(_settings.timings.isStartingTimeSet());
@@ -96,7 +108,12 @@ TEST_F(TestStepCountSection, testWrongSimulationTimeKeyword)
     auto   line       = std::vector<std::string>{"step", "1000", "foo", "2.5"};
     size_t lineNumber = 0;
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine, lineNumber),
+        _section->process(
+            line,
+            lineNumber,
+            _settings,
+            _engine->get_simulationBox()
+        ),
         exc::RstFileException,
         "Error in line 0: Expected keyword \"simulation_time\" after the step "
         "count but got \"foo\""
@@ -109,7 +126,12 @@ TEST_F(TestStepCountSection, testInvalidSimulationTime)
         std::vector<std::string>{"step", "1000", "simulation_time", "2.5x"};
     size_t lineNumber = 0;
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine, lineNumber),
+        _section->process(
+            line,
+            lineNumber,
+            _settings,
+            _engine->get_simulationBox()
+        ),
         exc::RstFileException,
         "Error in line 0: Invalid simulation time \"2.5x\""
     );
@@ -121,7 +143,12 @@ TEST_F(TestStepCountSection, testNegativeSimulationTime)
         std::vector<std::string>{"step", "1000", "simulation_time", "-1"};
     size_t lineNumber = 0;
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine, lineNumber),
+        _section->process(
+            line,
+            lineNumber,
+            _settings,
+            _engine->get_simulationBox()
+        ),
         exc::RstFileException,
         "Error in line 0: Simulation time must not be negative"
     );

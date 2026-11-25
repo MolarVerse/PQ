@@ -236,7 +236,7 @@ namespace ff
                 physicalData,
                 *_coulombPotential,
                 *_nonCoulombPot,
-                _hybridSettings->getSmoothingMethod(),
+                _hybridSettings->get_smoothing(),
                 potentialSettings
             );
         };
@@ -267,7 +267,7 @@ namespace ff
                 physicalData,
                 *_coulombPotential,
                 *_nonCoulombPot,
-                _hybridSettings->getSmoothingMethod(),
+                _hybridSettings->get_smoothing(),
                 potentialSettings
             );
         };
@@ -300,7 +300,7 @@ namespace ff
                 false,
                 *_coulombPotential,
                 *_nonCoulombPot,
-                _hybridSettings->getSmoothingMethod(),
+                _hybridSettings->get_smoothing(),
                 potentialSettings
             );
         };
@@ -334,7 +334,7 @@ namespace ff
                 true,
                 *_coulombPotential,
                 *_nonCoulombPot,
-                _hybridSettings->getSmoothingMethod(),
+                _hybridSettings->get_smoothing(),
                 potentialSettings
             );
         };

@@ -48,13 +48,7 @@
 TEST_F(TestRstFileReader, determineSection)
 {
     std::string filename = "examples/setup/h2o_qmcfc.rst";
-    input::restartFile::RestartFileReader rstFileReader(
-        filename,
-        *_engine,
-        _settings.noseHooverSettings,
-        _settings.timings,
-        _settings.generalSettings
-    );
+    input::restartFile::RestartFileReader rstFileReader(filename);
 
     auto  lineElements = std::vector<std::string>{"sTeP", "1"};
     auto *section      = rstFileReader.determineSection(lineElements);
@@ -93,9 +87,9 @@ TEST_F(TestRstFileReader, rstFileReading)
     moldescriptor.read();
     ASSERT_NO_THROW(
         input::restartFile::readRestartFile(
-            *_engine,
-            _settings.noseHooverSettings,
-            _settings.timings,
+            _settings,
+            _engine->get_simulationBox(),
+            _engine->getLogOutput(),
             _settings.generalSettings
         )
     );
@@ -125,9 +119,9 @@ TEST_F(TestRstFileReader, startFileWithoutAtomsIsRefused)
 
         ASSERT_THROW_MSG(
             input::restartFile::readRestartFile(
-                *_engine,
-                _settings.noseHooverSettings,
-                _settings.timings,
+                _settings,
+                _engine->get_simulationBox(),
+                _engine->getLogOutput(),
                 _settings.generalSettings
             ),
             exc::RstFileException,
@@ -159,9 +153,9 @@ TEST_F(TestRstFileReader, writeStepInfoMD)
 
     input::molDescriptor::MoldescriptorReader(*_engine).read();
     input::restartFile::readRestartFile(
-        *_engine,
-        _settings.noseHooverSettings,
-        _settings.timings,
+        _settings,
+        _engine->get_simulationBox(),
+        _engine->getLogOutput(),
         _settings.generalSettings
     );
     _engine->getLogOutput().close();
@@ -207,9 +201,9 @@ TEST_F(TestRstFileReader, writeStepInfoOpt)
 
     input::molDescriptor::MoldescriptorReader(*_engine).read();
     input::restartFile::readRestartFile(
-        *_engine,
-        _settings.noseHooverSettings,
-        _settings.timings,
+        _settings,
+        _engine->get_simulationBox(),
+        _engine->getLogOutput(),
         _settings.generalSettings
     );
     _engine->getLogOutput().close();
@@ -292,9 +286,7 @@ TEST_F(TestRstFileReader, noMetaDataKeepsVersionInvalid)
     _settings.fileSettings.set_molDescriptorFileByUser(
         "examples/setup/moldescriptor.dat"
     );
-    _settings.fileSettings.set_startFileByUser(
-        "examples/setup/h2o-qmcf.rst"
-    );
+    _settings.fileSettings.set_startFileByUser("examples/setup/h2o-qmcf.rst");
 
     input::molDescriptor::MoldescriptorReader(*_engine).read();
     input::restartFile::readRestartFile(

@@ -63,8 +63,9 @@ namespace setup
      * @brief setup the engine
      *
      * @param engine The engine to set up.
-     * @param settings Reference to the Settings object containing all necessary
-     * simulation settings.
+     * @param settings Reference to the Settings object containing all the
+     * necessary configuration for the simulation, including Nose-Hoover,
+     * timings, and potential settings.
      */
     void setupRequestedJob(engine::Engine& engine, Settings& settings)
     {
@@ -116,18 +117,18 @@ namespace setup
      * @brief reads all the files needed for the simulation
      *
      * @param engine
-     * @param settings Reference to the Settings object containing all necessary
-     * simulation settings.
+     * @param settings Reference to the Settings object containing all the
+     * necessary configuration for the simulation, including Nose-Hoover,
+     * timings, and potential settings.
      */
     void readFiles(engine::Engine& engine, Settings& settings)
     {
         input::molDescriptor::readMolDescriptor(engine);
 
         input::restartFile::readRestartFile(
-            engine,
-            settings.noseHooverSettings,
-            settings.timings,
-            settings.generalSettings
+            settings,
+            engine.get_simulationBox(),
+            engine.getLogOutput()
         );
 
         input::topology::readTopologyFile(engine);

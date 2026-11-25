@@ -36,18 +36,26 @@
 class ConvSettings
 {
    private:
-    Setting<double>       _relEnergyConv{defaults::REL_ENERGY_CONV_DEFAULT};
-    Setting<EnergyPerMol> _absEnergyConv{defaults::ABS_ENERGY_CONV_DEFAULT};
+    Setting<double, "Relative Energy Convergence"> _relEnergyConv{
+        defaults::REL_ENERGY_CONV_DEFAULT
+    };
+    Setting<EnergyPerMol, "Absolute Energy Convergence"> _absEnergyConv{
+        defaults::ABS_ENERGY_CONV_DEFAULT
+    };
 
-    Setting<Force> _maxForceConv{defaults::MAX_FORCE_CONV_DEFAULT};
-    Setting<Force> _rmsForceConv{defaults::RMS_FORCE_CONV_DEFAULT};
+    Setting<Force, "Maximum Force Convergence"> _maxForceConv{
+        defaults::MAX_FORCE_CONV_DEFAULT
+    };
+    Setting<Force, "RMS Force Convergence"> _rmsForceConv{
+        defaults::RMS_FORCE_CONV_DEFAULT
+    };
 
-    Setting<bool> _useEnergyConv;
-    Setting<bool> _useForceConv;
-    Setting<bool> _useMaxForceConv;
-    Setting<bool> _useRMSForceConv;
+    Setting<bool, "Use Energy Convergence">        _useEnergyConv;
+    Setting<bool, "Use Force Convergence">         _useForceConv;
+    Setting<bool, "Use Maximum Force Convergence"> _useMaxForceConv;
+    Setting<bool, "Use RMS Force Convergence">     _useRMSForceConv;
 
-    Setting<ConvStrategy> _energyConvStrategy;
+    Setting<ConvStrategy, "Energy Convergence Strategy"> _energyConvStrategy;
 
    public:
     ConvSettings();

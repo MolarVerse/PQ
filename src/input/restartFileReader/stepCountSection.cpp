@@ -28,24 +28,14 @@
 #include <string>
 #include <vector>
 
-#include "engine.hpp"
 #include "exceptions.hpp"
+#include "settings.hpp"
 #include "stringUtilities.hpp"
 #include "timingsSettings.hpp"
 #include "units.hpp"
 
 namespace input::restartFile
 {
-
-    /**
-     * @brief constructs a StepCountSection with the given TimingsSettings
-     *
-     * @param timingsSettings reference to the TimingsSettings object
-     */
-    StepCountSection::StepCountSection(TimingsSettings &timingsSettings)
-        : _timingsSettings(timingsSettings)
-    {
-    }
 
     /**
      * @brief processes the step count section of the rst file
@@ -58,8 +48,9 @@ namespace input::restartFile
      * 4. (optional) total simulation time of all previous steps in ps
      *
      * @param lineElements all elements of the line
-     * @param engine object containing the engine
      * @param lineNumber the line number in the rst file being processed
+     * @param settings reference to the Settings object
+     * @param simulationBox reference to the SimulationBox object
      *
      * @throws RstFileException if the number of elements in the line is not 2
      * or 4
@@ -70,8 +61,9 @@ namespace input::restartFile
      */
     void StepCountSection::process(
         std::vector<std::string> &lineElements,
-        engine::Engine & /*engine*/,
-        size_t &lineNumber
+        size_t                   &lineNumber,
+        Settings                 &settings,
+        molsys::SimulationBox & /*simulationBox*/
     )
     {
         if (lineElements.size() != 2 && lineElements.size() != 4)
@@ -97,7 +89,7 @@ namespace input::restartFile
             );
         }
 
-        _timingsSettings->setStartingStepCountByUser(
+        settings.timings.setStartingStepCountByUser(
             static_cast<size_t>(stepCount)
         );
 
@@ -153,7 +145,7 @@ namespace input::restartFile
                 );
             }
 
-            _timingsSettings->setStartingTimeByUser(Time(startingTime * ps));
+            settings.timings.setStartingTimeByUser(Time(startingTime * ps));
         }
     }
 

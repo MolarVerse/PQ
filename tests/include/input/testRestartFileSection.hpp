@@ -85,9 +85,7 @@ class TestNoseHooverSection : public ::testing::Test
 
 inline void TestNoseHooverSection::SetUp()
 {
-    _section = std::make_unique<input::restartFile::NoseHooverSection>(
-        _settings.noseHooverSettings
-    );
+    _section = std::make_unique<input::restartFile::NoseHooverSection>();
 
     // NOTE: use dummy engine for testing
     //       this is implemented by base class Engine
@@ -113,9 +111,7 @@ class TestStepCountSection : public ::testing::Test
 
 inline void TestStepCountSection::SetUp()
 {
-    _section =
-        std::make_unique<input::restartFile::StepCountSection>(_settings.timings
-        );
+    _section = std::make_unique<input::restartFile::StepCountSection>();
 
     // NOTE: use dummy engine for testing
     //       this is implemented by base class Engine

@@ -44,7 +44,7 @@ TEST_F(TestInputFileReader, parseInnerRegionCenter)
 
     parseFunc({"inner_region_center", "=", "4,2,2"}, 0);
     EXPECT_EQ(
-        hybridSettings.getInnerRegionCenter(),
+        hybridSettings.get_innerRegionCenter(),
         std::vector<size_t>({2, 4})
     );
 }
@@ -62,13 +62,13 @@ TEST_F(TestInputFileReader, parseForcedRegionLists)
     const auto& parseForcedOuterListFunc = funcMap.at("forced_outer_list");
 
     parseForcedCoreListFunc({"forced_core_list", "=", "3,1,3"}, 0);
-    EXPECT_EQ(hybridSettings.getForcedCoreList(), std::vector<int>({1, 3}));
+    EXPECT_EQ(hybridSettings.get_forcedCoreList(), std::vector<int>({1, 3}));
 
     _clearParser(parser);
 
     parseForcedLayerListFunc({"forced_layer_list", "=", "5,7-9,8"}, 0);
     EXPECT_EQ(
-        hybridSettings.getForcedLayerList(),
+        hybridSettings.get_forcedLayerList(),
         std::vector<int>({5, 7, 8, 9})
     );
 
@@ -76,7 +76,7 @@ TEST_F(TestInputFileReader, parseForcedRegionLists)
 
     parseForcedOuterListFunc({"forced_outer_list", "=", "8-10,9"}, 0);
     EXPECT_EQ(
-        hybridSettings.getForcedOuterList(),
+        hybridSettings.get_forcedOuterList(),
         std::vector<int>({8, 9, 10})
     );
 
@@ -101,12 +101,12 @@ TEST_F(TestInputFileReader, parseUseQMCharges)
     const auto& parseUseQMChargesFunc = funcMap.at("qm_charges");
 
     parseUseQMChargesFunc({"qm_charges", "=", "qm"}, 0);
-    EXPECT_TRUE(hybridSettings.getUseQMCharges());
+    EXPECT_TRUE(hybridSettings.get_useQMCharges());
 
     _clearParser(parser);
 
     parseUseQMChargesFunc({"qm_charges", "=", "mm"}, 0);
-    EXPECT_FALSE(hybridSettings.getUseQMCharges());
+    EXPECT_FALSE(hybridSettings.get_useQMCharges());
 
     _clearParser(parser);
 
@@ -130,7 +130,7 @@ TEST_F(TestInputFileReader, parseRegionRadii)
 
     parseCoreRadiusFunc({"core_radius", "=", "3.5"}, 0);
     EXPECT_DOUBLE_EQ(
-        hybridSettings.getCoreRadius().numerical_value_in(angstrom),
+        hybridSettings.get_coreRadius().numerical_value_in(angstrom),
         3.5
     );
 
@@ -138,7 +138,7 @@ TEST_F(TestInputFileReader, parseRegionRadii)
 
     parseLayerRadiusFunc({"layer_radius", "=", "8.25"}, 0);
     EXPECT_DOUBLE_EQ(
-        hybridSettings.getLayerRadius().numerical_value_in(angstrom),
+        hybridSettings.get_layerRadius().numerical_value_in(angstrom),
         8.25
     );
 
@@ -180,7 +180,7 @@ TEST_F(TestInputFileReader, parseThicknesses)
         0
     );
     EXPECT_DOUBLE_EQ(
-        hybridSettings.getSmoothingRegionThickness().numerical_value_in(
+        hybridSettings.get_smoothingRegionThickness().numerical_value_in(
             angstrom
         ),
         1.25
@@ -190,7 +190,7 @@ TEST_F(TestInputFileReader, parseThicknesses)
 
     parsePointChargeThicknessFunc({"point_charge_thickness", "=", "4.75"}, 0);
     EXPECT_DOUBLE_EQ(
-        hybridSettings.getPointChargeThickness().numerical_value_in(angstrom),
+        hybridSettings.get_pointChargeThickness().numerical_value_in(angstrom),
         4.75
     );
 
@@ -232,12 +232,12 @@ TEST_F(TestInputFileReader, parseSmoothingMethod)
     const auto& parseSmoothingMethodFunc = funcMap.at("smoothing_method");
 
     parseSmoothingMethodFunc({"smoothing_method", "=", "hotspot"}, 0);
-    EXPECT_EQ(hybridSettings.getSmoothingMethod(), HOTSPOT);
+    EXPECT_EQ(hybridSettings.get_smoothing(), HOTSPOT);
 
     _clearParser(parser);
 
     parseSmoothingMethodFunc({"smoothing_method", "=", "exact"}, 0);
-    EXPECT_EQ(hybridSettings.getSmoothingMethod(), EXACT);
+    EXPECT_EQ(hybridSettings.get_smoothing(), EXACT);
 
     _clearParser(parser);
 
@@ -364,5 +364,5 @@ TEST_F(TestInputFileReader, innerRegionCenterAcceptsFirstAtom)
     EXPECT_NO_THROW(
         funcMap.at("inner_region_center")({"inner_region_center", "=", "0"}, 0)
     );
-    EXPECT_EQ(hybridSettings.getInnerRegionCenter(), std::vector<size_t>({0}));
+    EXPECT_EQ(hybridSettings.get_innerRegionCenter(), std::vector<size_t>({0}));
 }

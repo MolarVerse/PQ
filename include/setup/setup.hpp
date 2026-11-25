@@ -41,6 +41,8 @@ namespace out
     class LogOutput;   // forward declaration
 }   // namespace out
 
+struct Settings;
+
 /**
  * @namespace setup
  *
@@ -57,7 +59,7 @@ namespace setup
     void startSetup();
     void endSetup(engine::Engine &);
 
-    void readFiles(engine::Engine &, Settings &settings);
+    void readFiles(engine::Engine &engine, Settings &settings);
     void setupEngine(engine::Engine &);
 
     void writeEngineSetupInfo(out::LogOutput &logOutput, JobType jobType);
