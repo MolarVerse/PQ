@@ -125,7 +125,7 @@ namespace input::ringPolymer
     {
         const auto &fileSettings = engine.getSettings().fileSettings;
 
-        const auto filename = fileSettings.getRingPolymerStartFileName();
+        const auto filename = fileSettings.get_rpmdStartFile();
 
         RingPolymerRestartFileReader reader(filename, engine);
 

@@ -242,10 +242,12 @@ TEST_F(TestSetup, setupConvergenceWritesIntoOptimizer)
     _settings->optimizerSettings.setOptimizerByUser(
         OptimizerType::STEEPEST_DESCENT
     );
-    _settings->convSettings.setEnergyConvStrategyByUser(ConvStrategy::RIGOROUS);
-    _settings->convSettings.setUseEnergyConvByUser(true);
-    _settings->convSettings.setUseMaxForceConvByUser(true);
-    _settings->convSettings.setUseRMSForceConvByUser(true);
+    _settings->convSettings.set_energyConvStrategyByUser(
+        ConvStrategy::RIGOROUS
+    );
+    _settings->convSettings.set_useEnergyConvByUser(true);
+    _settings->convSettings.set_useMaxForceConvByUser(true);
+    _settings->convSettings.set_useRMSForceConvByUser(true);
 
     engine::OptEngine     optEngine{*_settings};
     setup::OptimizerSetup setup(optEngine);

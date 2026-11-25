@@ -72,7 +72,7 @@ namespace input::guffdat
             return;
 
         const auto &guffdatFileName =
-            engine.getSettings().fileSettings.getGuffDatFileName();
+            engine.getSettings().fileSettings.get_guffDatFile();
 
         out::StdoutOutput::writeRead("Guffdat File", guffdatFileName);
         engine.getLogOutput().writeRead("Guffdat File", guffdatFileName);
@@ -111,7 +111,7 @@ namespace input::guffdat
      */
     GuffDatReader::GuffDatReader(engine::Engine &engine) : _engine(engine)
     {
-        _fileName = _engine.getSettings().fileSettings.getGuffDatFileName();
+        _fileName = _engine.getSettings().fileSettings.get_guffDatFile();
     }
 
     /**

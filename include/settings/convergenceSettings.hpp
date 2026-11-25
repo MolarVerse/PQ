@@ -52,40 +52,24 @@ class ConvSettings
    public:
     ConvSettings();
 
-   public:
-    /***************************
-     * standard setter methods *
-     ***************************/
-
-    void setRelEnergyConvByUser(double);
-    void setAbsEnergyConvByUser(const EnergyPerMol&);
-
-    void setMaxForceConvByUser(const Force&);
-    void setRMSForceConvByUser(const Force&);
-
-    void setUseEnergyConvByUser(bool);
-    void setUseForceConvByUser(bool);
-    void setUseMaxForceConvByUser(bool);
-    void setUseRMSForceConvByUser(bool);
-
-    void setEnergyConvStrategyByUser(ConvStrategy);
+    SETTING_GETTER_AND_SETTER_BY_USER(_relEnergyConv);
+    SETTING_GETTER_AND_SETTER_BY_USER(_absEnergyConv);
+    SETTING_GETTER_AND_SETTER_BY_USER(_maxForceConv);
+    SETTING_GETTER_AND_SETTER_BY_USER(_rmsForceConv);
+    SETTING_GETTER_AND_SETTER_BY_USER(_energyConvStrategy);
+    SETTING_SETTER_BY_USER(_useEnergyConv);
+    SETTING_SETTER_BY_USER(_useForceConv);
+    SETTING_SETTER_BY_USER(_useMaxForceConv);
+    SETTING_SETTER_BY_USER(_useRMSForceConv);
 
     /***************************
      * standard getter methods *
      ***************************/
 
-    [[nodiscard]] double              getRelEnergyConv() const;
-    [[nodiscard]] const EnergyPerMol& getAbsEnergyConv() const;
-
-    [[nodiscard]] const Force& getMaxForceConv() const;
-    [[nodiscard]] const Force& getRMSForceConv() const;
-
     [[nodiscard]] bool getUseEnergyConv() const;
     [[nodiscard]] bool getUseForceConv() const;
     [[nodiscard]] bool getUseMaxForceConv() const;
     [[nodiscard]] bool getUseRMSForceConv() const;
-
-    [[nodiscard]] ConvStrategy getEnConvStrategy() const;
 
    private:
     [[nodiscard]] bool _anyConvergenceSetByUser() const;

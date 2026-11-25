@@ -138,7 +138,7 @@ namespace setup
         {
             auto             &log  = _engine.getLogOutput();
             const auto *const msg  = "Reading ring polymer restart file: ";
-            const auto       &file = fileSettings.getRingPolymerStartFileName();
+            const auto       &file = fileSettings.get_rpmdStartFile();
 
             log.writeRead(msg, file);
             out::StdoutOutput::writeRead(msg, file);

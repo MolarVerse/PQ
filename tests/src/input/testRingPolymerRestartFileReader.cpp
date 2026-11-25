@@ -82,25 +82,30 @@ class TestRingPolymerRestartFileReader : public ::testing::Test
     std::unique_ptr<Settings>                      _settings;
     std::unique_ptr<engine::RingPolymerQMMDEngine> _engine;
 
-    void SetUp() override
-    {
-        _settings = std::make_unique<Settings>();
-        _settings->generalSettings.setJobtypeByUser(
-            JobType::RING_POLYMER_QM_MD
-        );
-        _settings->ringPolymerSettings.setNumberOfBeadsByUser(2);
-        _settings->fileSettings.setRingPolymerStartFileNameByUser(FILE_NAME);
-        _settings->timings.setNumberOfStepsByUser(1);
+    void SetUp() override;
 
-        _settings->finalize();
-
-        _engine = std::make_unique<engine::RingPolymerQMMDEngine>(*_settings);
-        _engine->addRingPolymerBead(makeBead("H"));
-        _engine->addRingPolymerBead(makeBead("O"));
-    }
-
-    void TearDown() override { std::filesystem::remove(FILE_NAME); }
+    void TearDown() override;
 };
+
+void TestRingPolymerRestartFileReader::SetUp()
+{
+    _settings = std::make_unique<Settings>();
+    _settings->generalSettings.setJobtypeByUser(JobType::RING_POLYMER_QM_MD);
+    _settings->ringPolymerSettings.setNumberOfBeadsByUser(2);
+    _settings->fileSettings.set_rpmdStartFileByUser(FILE_NAME);
+    _settings->timings.setNumberOfStepsByUser(1);
+
+    _settings->finalize();
+
+    _engine = std::make_unique<engine::RingPolymerQMMDEngine>(*_settings);
+    _engine->addRingPolymerBead(makeBead("H"));
+    _engine->addRingPolymerBead(makeBead("O"));
+}
+
+void TestRingPolymerRestartFileReader::TearDown()
+{
+    std::filesystem::remove(FILE_NAME);
+}
 
 /**
  * @brief positions, velocities and forces of every atom of every bead are read

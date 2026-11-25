@@ -66,14 +66,21 @@ namespace engine
 
             takeStep();
 
-            if (_converged || _optStopped)
+            if (_optStopped)
+            {
                 break;
+            }
 
             writeOutput(
                 getSettings().generalSettings.getJobtype(),
                 outputFileSettings
             );
             deleteTmpFiles();
+
+            if (_converged)
+            {
+                break;
+            }
         }
 
         throwIfStopped(
