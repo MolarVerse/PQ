@@ -35,7 +35,7 @@
 class ForceFieldSettings
 {
    private:
-    Setting<ForceFieldType> _type;
+    Setting<ForceFieldType, "Force Field Type"> _type;
 
    public:
     ForceFieldSettings();

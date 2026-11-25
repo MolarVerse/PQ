@@ -45,21 +45,37 @@ class HybridSettings
    private:
     bool _isActive{false};
 
-    Setting<std::vector<size_t>> _innerRegionCenter{std::vector<size_t>{0}};
-    Setting<std::vector<int>>    _forcedCoreList{std::vector<int>{}};
-    Setting<std::vector<int>>    _forcedLayerList{std::vector<int>{}};
-    Setting<std::vector<int>>    _forcedOuterList{std::vector<int>{}};
-    std::optional<std::string>   _innerRegionCenterExpression;
+    Setting<std::vector<size_t>, "Inner Region Center"> _innerRegionCenter{
+        std::vector<size_t>{0}
+    };
+    Setting<std::vector<int>, "Forced Core List"> _forcedCoreList{
+        std::vector<int>{}
+    };
+    Setting<std::vector<int>, "Forced Layer List"> _forcedLayerList{
+        std::vector<int>{}
+    };
+    Setting<std::vector<int>, "Forced Outer List"> _forcedOuterList{
+        std::vector<int>{}
+    };
+    std::optional<std::string> _innerRegionCenterExpression;
 
-    Setting<bool> _useQMCharges{true};
+    Setting<bool, "Use QM Charges"> _useQMCharges{true};
 
-    Setting<Distance> _coreRadius{0.0 * mstd::units::angstrom};
-    Setting<Distance> _layerRadius{0.0 * mstd::units::angstrom};
-    Setting<Distance> _smoothingRegionThickness{0.0 * mstd::units::angstrom};
-    Setting<Distance> _pointChargeThickness{0.0 * mstd::units::angstrom};
+    Setting<Distance, "Core Radius">  _coreRadius{0.0 * mstd::units::angstrom};
+    Setting<Distance, "Layer Radius"> _layerRadius{0.0 * mstd::units::angstrom};
+    Setting<Distance, "Smoothing Region Thickness"> _smoothingRegionThickness{
+        0.0 * mstd::units::angstrom
+    };
+    Setting<Distance, "Point Charge Thickness"> _pointChargeThickness{
+        0.0 * mstd::units::angstrom
+    };
 
-    Setting<SmoothingMethod> _smoothing{SmoothingMethod::HOTSPOT};
-    Setting<QMForceDist>     _qmForceDist{QMForceDist::EQUAL};
+    Setting<SmoothingMethod, "Smoothing Method"> _smoothing{
+        SmoothingMethod::HOTSPOT
+    };
+    Setting<QMForceDist, "QM Force Distribution"> _qmForceDist{
+        QMForceDist::EQUAL
+    };
 
    public:
     void finalize(const FileSettings &fileSettings, JobType jobType);

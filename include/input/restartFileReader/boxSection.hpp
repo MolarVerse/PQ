@@ -40,8 +40,9 @@ namespace input::restartFile
        public:
         void process(
             std::vector<std::string> &lineElements,
-            engine::Engine           &engine,
-            size_t                   &lineNumber
+            size_t                   &lineNumber,
+            Settings                 &settings,
+            molsys::SimulationBox    &simulationBox
         ) override;
 
         [[nodiscard]] std::string keyword() override;

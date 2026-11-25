@@ -36,7 +36,7 @@
 class RingPolymerSettings
 {
    private:
-    Setting<size_t> _numberOfBeads;
+    Setting<size_t, "Number of Beads"> _numberOfBeads;
 
    public:
     void setNumberOfBeadsByUser(size_t numberOfBeads);

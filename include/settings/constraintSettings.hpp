@@ -41,17 +41,17 @@ class WaterModelSettings;
 class ConstraintSettings
 {
    private:
-    Setting<bool> _shakeActive;
-    Setting<bool> _mShakeActive;
-    Setting<bool> _distanceConstsActive;
+    Setting<bool, "Shake Active">                _shakeActive;
+    Setting<bool, "MShake Active">               _mShakeActive;
+    Setting<bool, "Distance Constraints Active"> _distanceConstsActive;
 
-    Setting<size_t> _shakeMaxIter;
-    Setting<size_t> _rattleMaxIter;
-    Setting<size_t> _mshakeMaxIter;
+    Setting<size_t, "Shake Max Iter">  _shakeMaxIter;
+    Setting<size_t, "Rattle Max Iter"> _rattleMaxIter;
+    Setting<size_t, "MShake Max Iter"> _mshakeMaxIter;
 
-    Setting<double>      _shakeTolerance;
-    Setting<MassPerTime> _rattleTolerance;
-    Setting<double>      _mshakeTolerance;
+    Setting<double, "Shake Tolerance">       _shakeTolerance;
+    Setting<MassPerTime, "Rattle Tolerance"> _rattleTolerance;
+    Setting<double, "MShake Tolerance">      _mshakeTolerance;
 
    public:
     ConstraintSettings();
