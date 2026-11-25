@@ -34,7 +34,8 @@ namespace engine
     class Engine;   // forward declaration
 }   // namespace engine
 
-struct Settings;   // forward declaration
+struct Settings;         // forward declaration
+class GeneralSettings;   // forward declaration
 
 namespace molsys
 {

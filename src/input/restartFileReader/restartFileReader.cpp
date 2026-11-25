@@ -30,6 +30,7 @@
 #include "boxSection.hpp"
 #include "exceptions.hpp"
 #include "logOutput.hpp"
+#include "metaDataSection.hpp"
 #include "noseHooverSection.hpp"
 #include "settings.hpp"
 #include "simulationBox.hpp"
@@ -60,6 +61,7 @@ namespace input::restartFile
         _sections.push_back(std::make_unique<BoxSection>());
         _sections.push_back(std::make_unique<NoseHooverSection>());
         _sections.push_back(std::make_unique<StepCountSection>());
+        _sections.push_back(std::make_unique<MetaDataSection>());
     }
 
     /**

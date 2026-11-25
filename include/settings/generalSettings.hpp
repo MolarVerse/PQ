@@ -31,6 +31,7 @@
 #include "enums/integrator.hpp"
 #include "enums/jobtype.hpp"
 #include "setting.hpp"
+#include "version.hpp"
 
 /**
  * @class Settings
@@ -41,6 +42,8 @@
 class GeneralSettings
 {
    private:
+    Setting<SemVer, "Restart Version"> _restartVersion{v0_0_0};
+
     Setting<JobType, "JobType"> _jobtype;
 
     Setting<FPType, "FloatingPointType"> _floatingPointType{FPType::DOUBLE};
@@ -69,6 +72,7 @@ class GeneralSettings
      * standard setter methods *
      ***************************/
 
+    void setRestartVersionByUser(const SemVer& restartVersion);
     void setJobtypeByUser(JobType jobtype);
 
     void setFloatingPointTypeByUser(FPType);
@@ -81,8 +85,9 @@ class GeneralSettings
      * standard getter methods *
      ***************************/
 
-    [[nodiscard]] JobType getJobtype() const;
-    [[nodiscard]] bool    isJobtypeSetByUser() const;
+    [[nodiscard]] const SemVer& getRestartVersion() const;
+    [[nodiscard]] JobType       getJobtype() const;
+    [[nodiscard]] bool          isJobtypeSetByUser() const;
 
     [[nodiscard]] FPType      getFloatingPointType() const;
     [[nodiscard]] std::string getFloatingPointPybindString() const;

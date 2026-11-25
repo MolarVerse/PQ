@@ -25,11 +25,23 @@
 #include <string>
 #include <utility>
 
+#include "version.hpp"
+
 /***************************
  *                         *
  * standard setter methods *
  *                         *
  ***************************/
+
+/**
+ * @brief sets the restart version in the general settings
+ *
+ * @param restartVersion
+ */
+void GeneralSettings::setRestartVersionByUser(const SemVer& restartVersion)
+{
+    _restartVersion.setByUser(restartVersion);
+}
 
 /**
  * @brief sets the jobtype to enum in settings
@@ -96,6 +108,16 @@ size_t GeneralSettings::getNumberOfCells() const
  * standard getter methods *
  *                         *
  ***************************/
+
+/**
+ * @brief get the restart version
+ *
+ * @return const SemVer&
+ */
+const SemVer& GeneralSettings::getRestartVersion() const
+{
+    return _restartVersion.get();
+}
 
 /**
  * @brief get the jobtype
