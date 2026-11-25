@@ -39,7 +39,6 @@
 #include "exceptions.hpp"
 #include "filesInputParser.hpp"
 #include "generalInputParser.hpp"
-#include "generalSettings.hpp"
 #include "hessianInputParser.hpp"
 #include "hybridInputParser.hpp"
 #include "integratorInputParser.hpp"
@@ -354,79 +353,6 @@ namespace input
 
             ++_lineNumber;
         }
-    }
-
-    /**
-     * @brief checks if in the input file jobtype keyword is set and calls the
-     * corresponding parser
-     *
-     * @details this is just the first parsing of the input file and includes
-     * only the jobtype keyword
-     *
-     * @param generalSettings
-     * @param fileName
-     */
-    void readJobType(
-        GeneralSettings   &generalSettings,
-        const std::string &fileName
-    )
-    {
-        std::ifstream inputFile(fileName);
-
-        if (inputFile.fail())
-            throw exc::InputFileException(
-                "\"" + fileName + "\"" + " File not found"
-            );
-
-        std::string line;
-        size_t      lineNumber(1);
-
-        while (getline(inputFile, line))
-        {
-            line = utilities::removeComments(line, "#");
-
-            if (line.empty())
-            {
-                ++lineNumber;
-                continue;
-            }
-
-            auto processInputCommand =
-                [lineNumber, &generalSettings](auto &command)
-            {
-                processEqualSign(command, lineNumber);
-
-                const auto lineElements = utilities::splitString(command);
-                if (!lineElements.empty() && "jobtype" == lineElements[0])
-                {
-                    GeneralInputParser::parseJobTypeForEngine(
-                        generalSettings,
-                        lineElements,
-                        lineNumber
-                    );
-                }
-            };
-
-            try
-            {
-                std::ranges::for_each(
-                    utilities::getLineCommands(line, lineNumber),
-                    processInputCommand
-                );
-            }
-            catch (exc::PQException &exception)
-            {
-                exception.setLineNumber(lineNumber);
-                throw;
-            }
-
-            ++lineNumber;
-        }
-
-        if (!generalSettings.isJobtypeSetByUser())
-            throw exc::InputFileException(
-                "Missing keyword \"jobtype\" in input file"
-            );
     }
 
     /**

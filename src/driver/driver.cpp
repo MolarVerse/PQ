@@ -39,8 +39,6 @@ namespace driver
     void Driver::run(const std::string &inputFileName)
     {
         Settings settings;
-        input::readJobType(settings.generalSettings, inputFileName);
-
         input::readInputFile(inputFileName, settings);
 
         settings.finalize();

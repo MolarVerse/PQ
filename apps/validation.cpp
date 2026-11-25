@@ -528,9 +528,7 @@ cli::ValidationResult cli::validateInputFile(
 
     try
     {
-        Settings settings;
-        input::readJobType(settings.generalSettings, std::string(inputFile));
-
+        Settings               settings;
         input::InputFileReader reader(
             inputFile,
             settings,

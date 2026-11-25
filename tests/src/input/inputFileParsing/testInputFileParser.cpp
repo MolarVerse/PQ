@@ -22,12 +22,10 @@
 
 #include <gtest/gtest.h>
 
-#include <map>
 #include <string>
 #include <vector>
 
 #include "exceptions.hpp"
-#include "generalInputParser.hpp"
 #include "inputFileParser.hpp"
 #include "parserUtils.hpp"
 #include "testInputFileReader.hpp"
@@ -95,33 +93,4 @@ TEST_F(TestInputFileReader, equalSign)
     );
 
     ASSERT_NO_THROW(input::checkEqualSign("=", 1));
-}
-
-/**
- * @brief tests addKeyword function
- *
- * @details it adds a keyword to different keyword maps of an input file parser
- * child object
- *
- */
-TEST_F(TestInputFileReader, addKeyword)
-{
-    GeneralSettings           generalSettings;
-    input::GeneralInputParser parser{generalSettings};
-    const auto initialSizeOfMaps = parser.getKeywordCountMap().size();
-
-    parser.addKeyword(
-        "test",
-        input::bindMember(&input::GeneralInputParser::parseJobType, &parser),
-        true
-    );
-
-    EXPECT_EQ(parser.getKeywordCountMap().size(), 1 + initialSizeOfMaps);
-    EXPECT_EQ(parser.getKeywordCountMap().at("test"), 0);
-
-    EXPECT_EQ(parser.getKeywordFuncMap().size(), 1 + initialSizeOfMaps);
-    EXPECT_NO_THROW(parser.getKeywordFuncMap().at("test"));
-
-    EXPECT_EQ(parser.getKeywordRequiredMap().size(), 1 + initialSizeOfMaps);
-    EXPECT_EQ(parser.getKeywordRequiredMap().at("test"), true);
 }

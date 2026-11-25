@@ -320,28 +320,6 @@ TEST_F(TestInputFileReader, testMoldescriptorFileProcess)
     EXPECT_NO_THROW(_inputFileReader->postProcess());
 }
 
-TEST_F(TestInputFileReader, testReadJobType)
-{
-    std::string filename = "data/inputFileReader/inputFile.txt";
-    ASSERT_NO_THROW(input::readJobType(_settings.generalSettings, filename));
-    EXPECT_EQ(_settings.generalSettings.getJobtype(), JobType::MM_MD);
-
-    filename = "fileNotFound";
-    ASSERT_THROW_MSG(
-        input::readJobType(_settings.generalSettings, filename),
-        exc::InputFileException,
-        "\"fileNotFound\" File not found"
-    );
-
-    _settings.generalSettings = GeneralSettings{};
-    filename                  = "data/inputFileReader/missingJobType.txt";
-    ASSERT_THROW_MSG(
-        input::readJobType(_settings.generalSettings, filename),
-        exc::InputFileException,
-        "Missing keyword \"jobtype\" in input file"
-    );
-}
-
 TEST_F(TestInputFileReader, testAllKeywordsAcceptValidValue)
 {
     std::vector<std::string> keywordsRef(0);

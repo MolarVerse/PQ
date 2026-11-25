@@ -23,17 +23,14 @@
 #include "generalInputParser.hpp"
 
 #include <cstdint>
-#include <format>
 #include <optional>
 
 #include "enums/general.hpp"
-#include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
 #include "keyValidatorBase.hpp"
-#include "parserUtils.hpp"
 #include "rangeValidator.hpp"
 #include "stringUtilities.hpp"
 
@@ -52,72 +49,34 @@ namespace input
     GeneralInputParser::GeneralInputParser(GeneralSettings &generalSettings)
         : _generalSettings(generalSettings)
     {
-        addKeyword(
-            std::string("jobtype"),
-            bindMember(&GeneralInputParser::parseJobType, this),
-            true
-        );
-
+        addJobTypeKey();
         addDimensionalityKey();
         addFloatingPointTypeKey();
         addRandomSeedKey();
     }
 
     /**
-     * @brief parse jobtype of simulation left empty just to not parse it again
-     * after engine is generated
+     * @brief Adds the jobtype key to the input parser and validates its value
+     *
+     *
      */
-    void GeneralInputParser::parseJobType(
-        const std::vector<std::string> & /*lineElements*/,
-        size_t /*lineNumber*/
-    )
+    void GeneralInputParser::addJobTypeKey()
     {
-    }
+        const auto metaData = KeyMetadata{
+            .name         = "jobtype",
+            .title        = "Job Type",
+            .description  = "Specifies the type of job to be performed",
+            .errorMessage = "Invalid job type specified"
+        };
 
-    /**
-     * @brief parse jobtype of simulation and set it in settings and reset
-     * engine unique_ptr
-     *
-     * @details Possible options are:
-     * 1) mm-md
-     * 2) qm-md
-     *
-     * @param generalSettings Reference to the general settings object where the
-     * job type will be set.
-     * @param lineElements
-     * @param lineNumber
-     *
-     * @throw exc::InputFileException if jobtype is not recognised
-     */
-    void GeneralInputParser::parseJobTypeForEngine(
-        GeneralSettings                &generalSettings,
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
-    {
-        checkCommand(lineElements, lineNumber);
+        const auto setValue = [this](JobType jobType)
+        { _generalSettings->setJobtypeByUser(jobType); };
 
-        const auto jobtype =
-            utilities::toLowerAndReplaceDashesCopy(lineElements[2]);
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<JobType>{.metadata = metaData, .onSet = setValue}
+        );
 
-        const auto jobTypeEnum =
-            JobTypeMeta::from_stringCaseInsensitive(jobtype);
-
-        if (!jobTypeEnum.has_value())
-        {
-            throw exc::InputFileException(format(
-                "Invalid jobtype \"{}\" in input file - possible values are:\n"
-                "- mm-opt\n"
-                "- mm-hessian\n"
-                "- mm-md\n"
-                "- qm-md\n"
-                "- qm-rpmd\n"
-                "- qmmm-md\n",
-                lineElements[2]
-            ));
-        }
-
-        generalSettings.setJobtypeByUser(jobTypeEnum.value());
+        addKeyword(metaData.name, adapt(key), true);
     }
 
     void GeneralInputParser::addDimensionalityKey()
