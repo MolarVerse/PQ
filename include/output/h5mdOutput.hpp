@@ -60,7 +60,6 @@ namespace out
         void close();
 
         [[nodiscard]] static bool available();
-        [[nodiscard]] static int  species(const std::string &name);
     };
 
 }   // namespace out

@@ -594,7 +594,7 @@ TEST_F(TestSetup, testFullSetup)
     molsys::OrthorhombicBox orthoBox{
         {10.0 * angstrom, 20.0 * angstrom, 30.0 * angstrom}
     };
-    _settings->fileSettings.setStartFileNameByUser("input.rst");
+    _settings->fileSettings.set_startFileByUser("input.rst");
     _engine->get_simulationBox().setBox(orthoBox, true);
     _settings->potentialSettings.setCoulombRadiusCutoffByUser(4.0 * angstrom);
 
@@ -622,7 +622,7 @@ TEST_F(TestSetup, testWriteSetupInfo)
     };
     simBox.setBox(orthoBox, false);
     _settings->potentialSettings.setCoulombRadiusCutoffByUser(5.79 * angstrom);
-    _settings->fileSettings.setStartFileNameByUser("input.rst");
+    _settings->fileSettings.set_startFileByUser("input.rst");
     setup::SimulationBoxSetup::setZeroVelocities(false);
 
     setup::SimulationBoxSetup(*_engine).writeSetupInfo();
@@ -676,7 +676,7 @@ TEST_F(TestSetup, testWriteSetupInfoMaxwellTrueNonZeroVelocities)
         InitVelocities::TRUE
     );
     setup::SimulationBoxSetup::setZeroVelocities(false);
-    _settings->fileSettings.setStartFileNameByUser("input.rst");
+    _settings->fileSettings.set_startFileByUser("input.rst");
 
     setup::SimulationBoxSetup(*_engine).writeSetupInfo();
     std::ifstream file("default.log");
@@ -766,7 +766,7 @@ void TestZeroVelocityWarning::SetUp()
 std::string TestZeroVelocityWarning::_writeSetupInfoAndReadLog()
 {
     _engine->getEngineOutput().getLogOutput().setFilename("zeroVel.log", false);
-    _settings->fileSettings.setStartFileNameByUser("input.rst");
+    _settings->fileSettings.set_startFileByUser("input.rst");
 
     setup::SimulationBoxSetup(*_engine).writeSetupInfo();
 

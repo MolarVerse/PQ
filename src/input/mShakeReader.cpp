@@ -47,7 +47,7 @@ namespace input::mShake
         if (!fileSettings.isMShakeFileNameSetByUser())
             throw exc::MShakeFileException("MShake file name not set by user");
 
-        MShakeReader mShakeReader(engine, fileSettings.getMShakeFileName());
+        MShakeReader mShakeReader(engine, fileSettings.get_mShakeFile());
         mShakeReader.read();
     }
 
