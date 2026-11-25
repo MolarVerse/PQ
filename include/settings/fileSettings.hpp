@@ -75,30 +75,25 @@ class FileSettings
     FileSettings()  = default;
     ~FileSettings() = default;
 
-    /********************
-     * standard getters *
-     ********************/
+    SETTING_GETTER_AND_SETTER_BY_USER(_molDescriptorFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_guffDatFile);
 
-    [[nodiscard]] const std::string& getMolDescriptorFileName() const;
-    [[nodiscard]] const std::string& getGuffDatFileName() const;
+    SETTING_GETTER_AND_SETTER_BY_USER(_topologyFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_parameterFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_intraNonBondedFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_mShakeFile);
 
-    [[nodiscard]] const std::string& getTopologyFileName() const;
-    [[nodiscard]] const std::string& getParameterFileName() const;
-    [[nodiscard]] const std::string& getIntraNonBondedFileName() const;
+    SETTING_GETTER_AND_SETTER_BY_USER(_startFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_rpmdStartFile);
 
-    [[nodiscard]] const std::string& getStartFileName() const;
-    [[nodiscard]] const std::string& getRingPolymerStartFileName() const;
+    SETTING_GETTER_AND_SETTER_BY_USER(_dftbFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_tmFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_orcaFile);
 
-    [[nodiscard]] const std::string& getDFTBFileName() const;
-    [[nodiscard]] const std::string& getTMFileName() const;
-
-    [[nodiscard]] const std::string& getMShakeFileName() const;
-
-    [[nodiscard]] const std::string& getOrcaFileName() const;
-    [[nodiscard]] const std::string& getPointChargeFileName() const;
-    [[nodiscard]] const std::string& getQMForcesTempFileName() const;
-    [[nodiscard]] const std::string& getQMChargesTempFileName() const;
-    [[nodiscard]] const std::string& getStressTensorTempFileName() const;
+    SETTING_GETTER_AND_SETTER_BY_USER(_pointChargeFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_qmForcesTempFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_qmChargesTempFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_stressTensorTempFile);
 
     [[nodiscard]] bool isTopologyFileNameSetByUser() const;
     [[nodiscard]] bool isParameterFileNameSetByUser() const;
@@ -108,27 +103,6 @@ class FileSettings
     [[nodiscard]] bool isRingPolymerStartFileNameSetByUser() const;
 
     [[nodiscard]] bool isMShakeFileNameSetByUser() const;
-
-    /********************
-     * standard setters *
-     ********************/
-
-    void setMolDescriptorFileNameByUser(const std::string& name);
-    void setGuffDatFileNameByUser(const std::string& name);
-
-    void setTopologyFileNameByUser(const std::string& name);
-    void setParameterFileNameByUser(const std::string& name);
-    void setIntraNonBondedFileNameByUser(const std::string& name);
-
-    void setStartFileNameByUser(const std::string& name);
-    void setRingPolymerStartFileNameByUser(const std::string& name);
-
-    void setDFTBFileNameByUser(const std::string& name);
-    void setTMFileNameByUser(const std::string& name);
-
-    void setMShakeFileNameByUser(const std::string& name);
-    void setOrcaFileNameByUser(const std::string& name);
-    void setPointChargeFileNameByUser(const std::string& name);
 };
 
 #endif   // SETTINGS__FILE_SETTINGS_HPP

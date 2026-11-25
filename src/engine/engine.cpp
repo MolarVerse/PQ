@@ -98,10 +98,10 @@ namespace engine
 
         const auto &fileSettings = getSettings().fileSettings;
 
-        remove(fileSettings.getQMForcesTempFileName());
-        remove(fileSettings.getQMChargesTempFileName());
-        remove(fileSettings.getStressTensorTempFileName());
-        remove(fileSettings.getPointChargeFileName());
+        remove(fileSettings.get_qmForcesTempFile());
+        remove(fileSettings.get_qmChargesTempFile());
+        remove(fileSettings.get_stressTensorTempFile());
+        remove(fileSettings.get_pointChargeFile());
     }
 
     /**

@@ -28,12 +28,12 @@
 TEST(ConvSettingsTest, EnergyConvSettersAndOptionalGetters)
 {
     ConvSettings convSettings;
-    convSettings.setRelEnergyConvByUser(1.0e-5);
-    EXPECT_DOUBLE_EQ(convSettings.getRelEnergyConv(), 1.0e-5);
+    convSettings.set_relEnergyConvByUser(1.0e-5);
+    EXPECT_DOUBLE_EQ(convSettings.get_relEnergyConv(), 1.0e-5);
 
-    convSettings.setAbsEnergyConvByUser(1.0e-4 * kcal_per_mol);
+    convSettings.set_absEnergyConvByUser(1.0e-4 * kcal_per_mol);
     EXPECT_DOUBLE_EQ(
-        convSettings.getAbsEnergyConv().numerical_value_in(kcal_per_mol),
+        convSettings.get_absEnergyConv().numerical_value_in(kcal_per_mol),
         1.0e-4
     );
 }
@@ -41,17 +41,17 @@ TEST(ConvSettingsTest, EnergyConvSettersAndOptionalGetters)
 TEST(ConvSettingsTest, ForceConvSettersAndOptionalGetters)
 {
     ConvSettings convSettings;
-    convSettings.setMaxForceConvByUser(1.0e-2 * kcal_per_mol / angstrom);
+    convSettings.set_maxForceConvByUser(1.0e-2 * kcal_per_mol / angstrom);
     EXPECT_DOUBLE_EQ(
-        convSettings.getMaxForceConv().numerical_value_in(
+        convSettings.get_maxForceConv().numerical_value_in(
             kcal_per_mol / angstrom
         ),
         1.0e-2
     );
 
-    convSettings.setRMSForceConvByUser(1.0e-3 * kcal_per_mol / angstrom);
+    convSettings.set_rmsForceConvByUser(1.0e-3 * kcal_per_mol / angstrom);
     EXPECT_DOUBLE_EQ(
-        convSettings.getRMSForceConv().numerical_value_in(
+        convSettings.get_rmsForceConv().numerical_value_in(
             kcal_per_mol / angstrom
         ),
         1.0e-3

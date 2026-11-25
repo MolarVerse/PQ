@@ -1,0 +1,1 @@
+- `mm-opt` now writes its converged final step, so the last `.rst` is the optimized geometry (#1338).
