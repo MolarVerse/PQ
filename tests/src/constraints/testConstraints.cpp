@@ -415,11 +415,8 @@ TEST_F(TestConstraints, applyDistanceConstraintsUsesTheTimeSinceStart)
     }
 
     physicalData::PhysicalData physicalData;
-    constraints.applyDistanceConstraints(
-        *simulationBox,
-        physicalData,
-        3.0 * fs
-    );
+    constraints
+        .applyDistanceConstraints(*simulationBox, physicalData, 3.0 * fs);
 
     EXPECT_NEAR(
         physicalData.get_upperDistanceConstraints().numerical_value_in(
