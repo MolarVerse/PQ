@@ -30,7 +30,6 @@
 #include <vector>
 
 #include "atom.hpp"
-#include "engine.hpp"
 #include "exceptions.hpp"
 #include "intraNonBondedMap.hpp"
 #include "molecule.hpp"
@@ -222,12 +221,11 @@ namespace input::restartFile
      */
     void AtomSection::process(
         std::vector<std::string> &lineElements,
-        engine::Engine           &engine,
-        size_t                   &lineNumber
+        size_t                   &lineNumber,
+        Settings & /*settings*/,
+        molsys::SimulationBox &simulationBox
     )
     {
-        auto &simulationBox = engine.get_simulationBox();
-
         _checkNumberOfLineArguments(lineElements, lineNumber);
 
         /**********************************

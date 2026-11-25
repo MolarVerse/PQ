@@ -29,11 +29,11 @@
 #include <vector>
 
 #include "constants.hpp"
-#include "engine.hpp"
 #include "exceptions.hpp"
-#include "generalSettings.hpp"
 #include "mathUtilities.hpp"
 #include "orthorhombicBox.hpp"
+#include "settings.hpp"
+#include "simulationBox.hpp"
 #include "triclinicBox.hpp"
 #include "units.hpp"
 
@@ -61,8 +61,9 @@ namespace input::restartFile
      */
     void BoxSection::process(
         std::vector<std::string> &lineElements,
-        engine::Engine           &engine,
-        size_t                   &lineNumber
+        size_t                   &lineNumber,
+        Settings                 &settings,
+        molsys::SimulationBox    &simulationBox
     )
     {
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
@@ -116,7 +117,7 @@ namespace input::restartFile
             TRICLINIC_BOX_ANGLE_THRESHOLD
         );
 
-        const auto &manostatSettings = engine.getSettings().manostatSettings;
+        const auto &manostatSettings = settings.manostatSettings;
         const bool  isFullAnisotropic =
             manostatSettings.getIsotropy() == Isotropy::FULL_ANISOTROPIC;
 
@@ -130,8 +131,7 @@ namespace input::restartFile
 
         if (hasTriclinicAngles || needsShearableBox)
         {
-            const auto jobType =
-                engine.getSettings().generalSettings.getJobtype();
+            const auto jobType = settings.generalSettings.getJobtype();
 
             // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/910
             if (jobType != JobType::QM_MD &&
@@ -152,12 +152,12 @@ namespace input::restartFile
                 boxAngles,
                 isFullAnisotropic
             };
-            engine.get_simulationBox().setBox(box, true);
+            simulationBox.setBox(box, true);
         }
         else
         {
             molsys::OrthorhombicBox box(boxDimensions);
-            engine.get_simulationBox().setBox(box, true);
+            simulationBox.setBox(box, true);
         }
     }
 

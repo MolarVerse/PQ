@@ -46,12 +46,7 @@
 TEST_F(TestRstFileReader, determineSection)
 {
     std::string filename = "examples/setup/h2o_qmcfc.rst";
-    input::restartFile::RestartFileReader rstFileReader(
-        filename,
-        *_engine,
-        _settings.noseHooverSettings,
-        _settings.timings
-    );
+    input::restartFile::RestartFileReader rstFileReader(filename);
 
     auto  lineElements = std::vector<std::string>{"sTeP", "1"};
     auto *section      = rstFileReader.determineSection(lineElements);
@@ -86,9 +81,9 @@ TEST_F(TestRstFileReader, rstFileReading)
     moldescriptor.read();
     ASSERT_NO_THROW(
         input::restartFile::readRestartFile(
-            *_engine,
-            _settings.noseHooverSettings,
-            _settings.timings
+            _settings,
+            _engine->get_simulationBox(),
+            _engine->getLogOutput()
         )
     );
 }
@@ -117,9 +112,9 @@ TEST_F(TestRstFileReader, startFileWithoutAtomsIsRefused)
 
         ASSERT_THROW_MSG(
             input::restartFile::readRestartFile(
-                *_engine,
-                _settings.noseHooverSettings,
-                _settings.timings
+                _settings,
+                _engine->get_simulationBox(),
+                _engine->getLogOutput()
             ),
             exc::RstFileException,
             "Start file \"start_file_without_atoms.rst\" contains no atoms - a "
@@ -152,9 +147,9 @@ TEST_F(TestRstFileReader, writeStepInfoMD)
 
     input::molDescriptor::MoldescriptorReader(*_engine).read();
     input::restartFile::readRestartFile(
-        *_engine,
-        _settings.noseHooverSettings,
-        _settings.timings
+        _settings,
+        _engine->get_simulationBox(),
+        _engine->getLogOutput()
     );
     _engine->getLogOutput().close();
 
@@ -201,9 +196,9 @@ TEST_F(TestRstFileReader, writeStepInfoOpt)
 
     input::molDescriptor::MoldescriptorReader(*_engine).read();
     input::restartFile::readRestartFile(
-        *_engine,
-        _settings.noseHooverSettings,
-        _settings.timings
+        _settings,
+        _engine->get_simulationBox(),
+        _engine->getLogOutput()
     );
     _engine->getLogOutput().close();
 
