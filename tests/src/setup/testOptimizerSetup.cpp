@@ -316,7 +316,7 @@ TEST_F(TestSetup, hessianOptimizationValidatesLearningRateBounds)
     _settings->optimizerSettings.setMinLearningRateByUser(0.5);
     _settings->optimizerSettings.setMaxLearningRateByUser(0.5);
 
-    _settings->hessianSettings.setOptimizeBeforeHessianByUser(true);
+    _settings->hessianSettings.set_optimizeBeforeHessianByUser(true);
     engine::HessianEngine hessianEngine{*_settings};
     EXPECT_THROW_MSG(
         hessianEngine.run(),

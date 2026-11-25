@@ -67,7 +67,7 @@ void TestInputValidation::SetUp()
 {
     _settings.generalSettings.setJobtypeByUser(static_cast<JobType>(0));
 
-    _settings.hessianSettings.setOptimizeBeforeHessianByUser(false);
+    _settings.hessianSettings.set_optimizeBeforeHessianByUser(false);
 
     _settings.optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::CONSTANT
@@ -162,7 +162,7 @@ TEST_F(TestInputValidation, requiresNumberOfStepsForOptimization)
 TEST_F(TestInputValidation, requiresNumberOfStepsForPreoptimizedHessian)
 {
     _settings.generalSettings.setJobtypeByUser(JobType::MM_HESSIAN);
-    _settings.hessianSettings.setOptimizeBeforeHessianByUser(true);
+    _settings.hessianSettings.set_optimizeBeforeHessianByUser(true);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),

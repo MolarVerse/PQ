@@ -258,7 +258,7 @@ namespace setup
 
         if (_engine.getSettings().generalSettings.getJobtype() ==
                 JobType::MM_HESSIAN &&
-            _engine.getSettings().hessianSettings.optimizeBeforeHessian())
+            _engine.getSettings().hessianSettings.get_optimizeBeforeHessian())
         {
             auto &hessianEngine =
                 dynamic_cast<engine::HessianEngine &>(_engine);

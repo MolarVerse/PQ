@@ -7,3 +7,4 @@
 - add short macros for getter and setters in `Filesettings`, `ConvSettings` 
 - add short macros for getter and setters in `ConstraintSettings` 
 - add short macros for getter and setters in `ForceFieldSettings` 
+- add short macros for getter and setters in `HessianSettings` 

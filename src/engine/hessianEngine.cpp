@@ -72,8 +72,8 @@ namespace engine
         )
         {
             return opt::makeHessianBuilder(
-                hessianSettings.getBuilder(),
-                hessianSettings.getDisplacement()
+                hessianSettings.get_builder(),
+                hessianSettings.get_displacement()
             );
         }
 
@@ -193,7 +193,7 @@ namespace engine
             const HessianSettings &hessianSettings
         )
         {
-            std::ofstream file(hessianSettings.getHessianFile());
+            std::ofstream file(hessianSettings.get_hessianFile());
 
             if (file.fail())
                 throw exc::UserInputException(
@@ -229,7 +229,7 @@ namespace engine
             const HessianSettings &hessianSettings
         )
         {
-            std::ofstream file(hessianSettings.getHessianInfoFile());
+            std::ofstream file(hessianSettings.get_hessianInfoFile());
 
             if (file.fail())
                 throw exc::UserInputException(
@@ -237,17 +237,19 @@ namespace engine
                 );
 
             file << "format = pq-hessian-info-v1\n";
-            file << "hessian_file = " << hessianSettings.getHessianFile()
+            file << "hessian_file = " << hessianSettings.get_hessianFile()
                  << '\n';
             file << "hessian_builder = "
-                 << HessianBuilderTypeMeta::toString(hessianSettings.getBuilder(
-                    ))
+                 << HessianBuilderTypeMeta::toString(
+                        hessianSettings.get_builder()
+                    )
                  << '\n';
             file << "optimize_before_hessian = "
-                 << (hessianSettings.optimizeBeforeHessian() ? "true" : "false")
+                 << (hessianSettings.get_optimizeBeforeHessian() ? "true"
+                                                                 : "false")
                  << '\n';
             file << "hessian_displacement = "
-                 << hessianSettings.getDisplacement() << '\n';
+                 << hessianSettings.get_displacement() << '\n';
             file << "hessian_definition = -dF_i/dx_j\n";
             file << "hessian_unit = kcal_mol-1_angstrom-2\n";
             file << "rows = " << hessian.size() << '\n';
@@ -261,7 +263,7 @@ namespace engine
         auto        evaluator       = _setupEvaluator();
         const auto &hessianSettings = getSettings().hessianSettings;
 
-        if (hessianSettings.optimizeBeforeHessian())
+        if (hessianSettings.get_optimizeBeforeHessian())
         {
             _setupOptimization(evaluator);
             _runOptimization();
@@ -555,8 +557,9 @@ namespace engine
         getEngineOutput().getLogOutput().writeSetupInfo(
             std::format(
                 "Optimize before Hessian:    {}",
-                getSettings().hessianSettings.optimizeBeforeHessian() ? "true"
-                                                                      : "false"
+                getSettings().hessianSettings.get_optimizeBeforeHessian()
+                    ? "true"
+                    : "false"
             )
         );
         getEngineOutput().getLogOutput().writeSetupInfo(
