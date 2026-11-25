@@ -143,7 +143,7 @@ namespace benchInputReaders
             (directory / "topology.top").string()
         );
 
-        settings.forceFieldSettings.setTypeByUser(ForceFieldType::BONDED);
+        settings.forceFieldSettings.set_typeByUser(ForceFieldType::BONDED);
 
         std::size_t atoms = 0;
 
