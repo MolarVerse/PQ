@@ -54,7 +54,7 @@ namespace input
             const auto  optimizerActive =
                 isOptJobType(jobType) ||
                 (jobType == JobType::MM_HESSIAN &&
-                 settings.hessianSettings.optimizeBeforeHessian());
+                 settings.hessianSettings.get_optimizeBeforeHessian());
 
             if (!optimizerActive)
                 return;
@@ -116,7 +116,7 @@ namespace input
         const auto requiresNumberOfSteps =
             isMDJobType(jobType) || isOptJobType(jobType) ||
             (jobType == MM_HESSIAN &&
-             settings.hessianSettings.optimizeBeforeHessian());
+             settings.hessianSettings.get_optimizeBeforeHessian());
 
         if (requiresNumberOfSteps && !getKeywordSet("nstep"))
         {

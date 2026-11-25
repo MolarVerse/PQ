@@ -64,16 +64,16 @@ namespace
     {
         settings.generalSettings.setJobtypeByUser(JobType::QMMM_MD);
         settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
-        settings.hybridSettings.setForcedCoreListByUser({});
-        settings.hybridSettings.setForcedLayerListByUser({});
-        settings.hybridSettings.setForcedOuterListByUser({});
-        settings.hybridSettings.setUseQMChargesByUser(true);
-        settings.hybridSettings.setCoreRadiusByUser(2.0 * angstrom);
-        settings.hybridSettings.setLayerRadiusByUser(4.0 * angstrom);
-        settings.hybridSettings.setSmoothingRegionThicknessByUser(
+        settings.hybridSettings.set_forcedCoreListByUser({});
+        settings.hybridSettings.set_forcedLayerListByUser({});
+        settings.hybridSettings.set_forcedOuterListByUser({});
+        settings.hybridSettings.set_useQMChargesByUser(true);
+        settings.hybridSettings.set_coreRadiusByUser(2.0 * angstrom);
+        settings.hybridSettings.set_layerRadiusByUser(4.0 * angstrom);
+        settings.hybridSettings.set_smoothingRegionThicknessByUser(
             1.0 * angstrom
         );
-        settings.hybridSettings.setPointChargeThicknessByUser(2.0 * angstrom);
+        settings.hybridSettings.set_pointChargeThicknessByUser(2.0 * angstrom);
 
         molsys::OrthorhombicBox orthoBox{
             {40.0 * angstrom, 40.0 * angstrom, 40.0 * angstrom}
@@ -112,7 +112,7 @@ TEST_F(TestSetup, setupHybridConfiguresDefaultCenter)
 
     EXPECT_NO_THROW(setup::setupHybrid(*_engine));
     EXPECT_EQ(
-        _settings->hybridSettings.getInnerRegionCenter(),
+        _settings->hybridSettings.get_innerRegionCenter(),
         std::vector<size_t>{0}
     );
 }
@@ -121,11 +121,11 @@ TEST_F(TestSetup, setupHybridConfiguresExplicitLists)
 {
     configureValidHybridSettings(*_settings, *_engine);
     _settings->qmSettings.setQMMethodByUser(QMMethod::TURBOMOLE);
-    _settings->hybridSettings.setInnerRegionCenterByUser({0, 1});
-    _settings->hybridSettings.setForcedCoreListByUser({0});
-    _settings->hybridSettings.setForcedLayerListByUser({1});
-    _settings->hybridSettings.setForcedOuterListByUser({2});
-    _settings->hybridSettings.setUseQMChargesByUser(false);
+    _settings->hybridSettings.set_innerRegionCenterByUser({0, 1});
+    _settings->hybridSettings.set_forcedCoreListByUser({0});
+    _settings->hybridSettings.set_forcedLayerListByUser({1});
+    _settings->hybridSettings.set_forcedOuterListByUser({2});
+    _settings->hybridSettings.set_useQMChargesByUser(false);
     addSingleAtomMolecule(*_engine, MolType{1});
     addSingleAtomMolecule(*_engine, MolType{2});
     addSingleAtomMolecule(*_engine, MolType{3});
@@ -173,19 +173,23 @@ TEST_F(TestSetup, hybridSetupValidatesZoneRadii)
     _engine->get_simulationBox().setBox(orthoBox, false);
     setup::HybridSetup setup{*_engine};
 
-    _settings->hybridSettings.setCoreRadiusByUser(5.0 * angstrom);
-    _settings->hybridSettings.setLayerRadiusByUser(4.0 * angstrom);
-    _settings->hybridSettings.setSmoothingRegionThicknessByUser(1.0 * angstrom);
-    _settings->hybridSettings.setPointChargeThicknessByUser(0.0 * angstrom);
+    _settings->hybridSettings.set_coreRadiusByUser(5.0 * angstrom);
+    _settings->hybridSettings.set_layerRadiusByUser(4.0 * angstrom);
+    _settings->hybridSettings.set_smoothingRegionThicknessByUser(
+        1.0 * angstrom
+    );
+    _settings->hybridSettings.set_pointChargeThicknessByUser(0.0 * angstrom);
     EXPECT_THROW_MSG(
         setup.checkZoneRadii(),
         exc::InputFileException,
         "Core radius (5 Å) cannot be larger than layer radius (4 Å)"
     );
 
-    _settings->hybridSettings.setCoreRadiusByUser(3.5 * angstrom);
-    _settings->hybridSettings.setLayerRadiusByUser(4.0 * angstrom);
-    _settings->hybridSettings.setSmoothingRegionThicknessByUser(1.0 * angstrom);
+    _settings->hybridSettings.set_coreRadiusByUser(3.5 * angstrom);
+    _settings->hybridSettings.set_layerRadiusByUser(4.0 * angstrom);
+    _settings->hybridSettings.set_smoothingRegionThicknessByUser(
+        1.0 * angstrom
+    );
     EXPECT_THROW_MSG(
         setup.checkZoneRadii(),
         exc::InputFileException,
@@ -193,9 +197,11 @@ TEST_F(TestSetup, hybridSetupValidatesZoneRadii)
         "core (3.5 Å) and layer radius (4 Å)"
     );
 
-    _settings->hybridSettings.setCoreRadiusByUser(2.0 * angstrom);
-    _settings->hybridSettings.setLayerRadiusByUser(11.0 * angstrom);
-    _settings->hybridSettings.setSmoothingRegionThicknessByUser(1.0 * angstrom);
+    _settings->hybridSettings.set_coreRadiusByUser(2.0 * angstrom);
+    _settings->hybridSettings.set_layerRadiusByUser(11.0 * angstrom);
+    _settings->hybridSettings.set_smoothingRegionThicknessByUser(
+        1.0 * angstrom
+    );
     EXPECT_THROW_MSG(
         setup.checkZoneRadii(),
         exc::InputFileException,
@@ -204,10 +210,12 @@ TEST_F(TestSetup, hybridSetupValidatesZoneRadii)
         "the minimum image convention."
     );
 
-    _settings->hybridSettings.setCoreRadiusByUser(1.0 * angstrom);
-    _settings->hybridSettings.setLayerRadiusByUser(2.0 * angstrom);
-    _settings->hybridSettings.setSmoothingRegionThicknessByUser(0.5 * angstrom);
-    _settings->hybridSettings.setPointChargeThicknessByUser(59.0 * angstrom);
+    _settings->hybridSettings.set_coreRadiusByUser(1.0 * angstrom);
+    _settings->hybridSettings.set_layerRadiusByUser(2.0 * angstrom);
+    _settings->hybridSettings.set_smoothingRegionThicknessByUser(
+        0.5 * angstrom
+    );
+    _settings->hybridSettings.set_pointChargeThicknessByUser(59.0 * angstrom);
     EXPECT_THROW_MSG(
         setup.checkZoneRadii(),
         exc::InputFileException,
@@ -217,7 +225,7 @@ TEST_F(TestSetup, hybridSetupValidatesZoneRadii)
         "immediate neighboring cells."
     );
 
-    _settings->hybridSettings.setPointChargeThicknessByUser(2.0 * angstrom);
+    _settings->hybridSettings.set_pointChargeThicknessByUser(2.0 * angstrom);
     EXPECT_NO_THROW(setup.checkZoneRadii());
 }
 
@@ -226,7 +234,7 @@ TEST_F(TestSetup, hybridSetupRejectsMmChargesForMoltypeZero)
     _engine->get_simulationBox().addMoleculeType(
         molsys::MoleculeType(MolType{0})
     );
-    _settings->hybridSettings.setUseQMChargesByUser(false);
+    _settings->hybridSettings.set_useQMChargesByUser(false);
     setup::HybridSetup setup{*_engine};
 
     EXPECT_THROW_MSG(
@@ -238,7 +246,7 @@ TEST_F(TestSetup, hybridSetupRejectsMmChargesForMoltypeZero)
         "moltype."
     );
 
-    _settings->hybridSettings.setUseQMChargesByUser(true);
+    _settings->hybridSettings.set_useQMChargesByUser(true);
     EXPECT_NO_THROW(setup.validateQMChargeSettings());
 }
 

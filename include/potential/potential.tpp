@@ -94,7 +94,7 @@ namespace pot
         molsys::Atom &atom
     ) const
     {
-        const auto useQMCharges = _hybridSettings->getUseQMCharges();
+        const auto useQMCharges = _hybridSettings->get_useQMCharges();
 
         if (atom.getQMCharge() && useQMCharges)
             return atom.getQMCharge().value();
