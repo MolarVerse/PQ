@@ -30,10 +30,10 @@
 TEST(HybridSettingsTest, InnerRegionCenterRoundTrip)
 {
     HybridSettings hybridSettings;
-    hybridSettings.setInnerRegionCenterByUser({4, 2, 9});
+    hybridSettings.set_innerRegionCenterByUser({4, 2, 9});
 
     EXPECT_EQ(
-        hybridSettings.getInnerRegionCenter(),
+        hybridSettings.get_innerRegionCenter(),
         std::vector<size_t>({4, 2, 9})
     );
 }
@@ -41,51 +41,54 @@ TEST(HybridSettingsTest, InnerRegionCenterRoundTrip)
 TEST(HybridSettingsTest, ForcedRegionListsRoundTrip)
 {
     HybridSettings hybridSettings;
-    hybridSettings.setForcedCoreListByUser({1, 3, 5});
-    EXPECT_EQ(hybridSettings.getForcedCoreList(), std::vector<int>({1, 3, 5}));
+    hybridSettings.set_forcedCoreListByUser({1, 3, 5});
+    EXPECT_EQ(hybridSettings.get_forcedCoreList(), std::vector<int>({1, 3, 5}));
 
-    hybridSettings.setForcedLayerListByUser({7, 9, 11});
+    hybridSettings.set_forcedLayerListByUser({7, 9, 11});
     EXPECT_EQ(
-        hybridSettings.getForcedLayerList(),
+        hybridSettings.get_forcedLayerList(),
         std::vector<int>({7, 9, 11})
     );
 
-    hybridSettings.setForcedOuterListByUser({2, 4, 6});
-    EXPECT_EQ(hybridSettings.getForcedOuterList(), std::vector<int>({2, 4, 6}));
+    hybridSettings.set_forcedOuterListByUser({2, 4, 6});
+    EXPECT_EQ(
+        hybridSettings.get_forcedOuterList(),
+        std::vector<int>({2, 4, 6})
+    );
 }
 
 TEST(HybridSettingsTest, BoolAndRadiusSettingsRoundTrip)
 {
     HybridSettings hybridSettings;
-    hybridSettings.setUseQMChargesByUser(false);
-    EXPECT_FALSE(hybridSettings.getUseQMCharges());
+    hybridSettings.set_useQMChargesByUser(false);
+    EXPECT_FALSE(hybridSettings.get_useQMCharges());
 
-    hybridSettings.setUseQMChargesByUser(true);
-    EXPECT_TRUE(hybridSettings.getUseQMCharges());
+    hybridSettings.set_useQMChargesByUser(true);
+    EXPECT_TRUE(hybridSettings.get_useQMCharges());
 
-    hybridSettings.setCoreRadiusByUser(2.5 * angstrom);
+    hybridSettings.set_coreRadiusByUser(2.5 * angstrom);
     EXPECT_DOUBLE_EQ(
-        hybridSettings.getCoreRadius().numerical_value_in(angstrom),
+        hybridSettings.get_coreRadius().numerical_value_in(angstrom),
         2.5
     );
 
-    hybridSettings.setLayerRadiusByUser(6.75 * angstrom);
+    hybridSettings.set_layerRadiusByUser(6.75 * angstrom);
     EXPECT_DOUBLE_EQ(
-        hybridSettings.getLayerRadius().numerical_value_in(angstrom),
+        hybridSettings.get_layerRadius().numerical_value_in(angstrom),
         6.75
     );
 
-    hybridSettings.setSmoothingRegionThicknessByUser(1.25 * angstrom);
+    hybridSettings.set_smoothingRegionThicknessByUser(1.25 * angstrom);
     EXPECT_DOUBLE_EQ(
-        hybridSettings.getSmoothingRegionThickness().numerical_value_in(
+        hybridSettings.get_smoothingRegionThickness().numerical_value_in(
             angstrom
         ),
         1.25
     );
 
-    hybridSettings.setPointChargeThicknessByUser(4.5 * angstrom);
+    hybridSettings.set_pointChargeThicknessByUser(4.5 * angstrom);
     EXPECT_DOUBLE_EQ(
-        hybridSettings.getPointChargeThickness().numerical_value_in(angstrom),
+        hybridSettings.get_pointChargeThickness().numerical_value_in(angstrom),
         4.5
     );
 }
@@ -96,18 +99,18 @@ TEST(HybridSettingsTest, EnumSettingsRoundTrip)
     using enum QMForceDist;
 
     HybridSettings hybridSettings;
-    hybridSettings.setSmoothingMethodByUser(HOTSPOT);
-    EXPECT_EQ(hybridSettings.getSmoothingMethod(), HOTSPOT);
+    hybridSettings.set_smoothingByUser(HOTSPOT);
+    EXPECT_EQ(hybridSettings.get_smoothing(), HOTSPOT);
 
-    hybridSettings.setSmoothingMethodByUser(EXACT);
-    EXPECT_EQ(hybridSettings.getSmoothingMethod(), EXACT);
+    hybridSettings.set_smoothingByUser(EXACT);
+    EXPECT_EQ(hybridSettings.get_smoothing(), EXACT);
 
-    hybridSettings.setQMForceDistByUser(EQUAL);
-    EXPECT_EQ(hybridSettings.getQMForceDist(), EQUAL);
+    hybridSettings.set_qmForceDistByUser(EQUAL);
+    EXPECT_EQ(hybridSettings.get_qmForceDist(), EQUAL);
 
-    hybridSettings.setQMForceDistByUser(RANDOM);
-    EXPECT_EQ(hybridSettings.getQMForceDist(), RANDOM);
+    hybridSettings.set_qmForceDistByUser(RANDOM);
+    EXPECT_EQ(hybridSettings.get_qmForceDist(), RANDOM);
 
-    hybridSettings.setQMForceDistByUser(DISTANCE_WEIGHTED);
-    EXPECT_EQ(hybridSettings.getQMForceDist(), DISTANCE_WEIGHTED);
+    hybridSettings.set_qmForceDistByUser(DISTANCE_WEIGHTED);
+    EXPECT_EQ(hybridSettings.get_qmForceDist(), DISTANCE_WEIGHTED);
 }

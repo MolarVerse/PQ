@@ -115,7 +115,7 @@ int main()
 
     CALLGRIND_ZERO_STATS;
 
-    const auto smoothing = settings.hybridSettings.getSmoothingMethod();
+    const auto smoothing = settings.hybridSettings.get_smoothing();
 
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
