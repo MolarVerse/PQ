@@ -137,7 +137,7 @@ namespace input
         };
 
         const auto setValue = [this](auto value)
-        { _constraintSettings->setShakeToleranceByUser(value); };
+        { _constraintSettings->set_shakeToleranceByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -170,7 +170,7 @@ namespace input
         const RangeValidator<size_t> rangeValidator{1, std::nullopt};
 
         const auto setValue = [this](auto value)
-        { _constraintSettings->setShakeMaxIterByUser(value); };
+        { _constraintSettings->set_shakeMaxIterByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<size_t>{
@@ -207,7 +207,7 @@ namespace input
 
         const auto setValue = [this](auto value)
         {
-            _constraintSettings->setRattleToleranceByUser(
+            _constraintSettings->set_rattleToleranceByUser(
                 value * g_per_mol / s
             );
         };
@@ -243,7 +243,7 @@ namespace input
         const RangeValidator<size_t> rangeValidator{1, std::nullopt};
 
         const auto setValue = [this](auto value)
-        { _constraintSettings->setRattleMaxIterByUser(value); };
+        { _constraintSettings->set_rattleMaxIterByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<size_t>{
@@ -278,7 +278,7 @@ namespace input
         };
 
         const auto setValue = [this](auto value)
-        { _constraintSettings->setMShakeToleranceByUser(value); };
+        { _constraintSettings->set_mshakeToleranceByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -311,7 +311,7 @@ namespace input
         const RangeValidator<size_t> rangeValidator{1, std::nullopt};
 
         const auto setValue = [this](auto value)
-        { _constraintSettings->setMShakeMaxIterByUser(value); };
+        { _constraintSettings->set_mshakeMaxIterByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<size_t>{
