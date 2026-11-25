@@ -33,7 +33,7 @@
 
 namespace out
 {
-    namespace
+    namespace detail
     {
         constexpr std::size_t EXTXYZ_VEL_WIDTH  = 20;
         constexpr int         LATTICE_PRECISION = 8;
@@ -42,7 +42,7 @@ namespace out
         constexpr auto PROPERTIES =
             "species:S:1:pos:R:3:vel:R:3:forces:R:3:charge:R:1";
 
-    }   // namespace
+    }   // namespace detail
 
     /**
      * @brief write one frame
@@ -75,17 +75,17 @@ namespace out
                     _buffer.put(' ');
                 }
 
-                _buffer.fixed(matrix[i][vector], 0, LATTICE_PRECISION);
+                _buffer.fixed(matrix[i][vector], 0, detail::LATTICE_PRECISION);
             }
         }
 
-        _buffer.append("\" Properties=").append(PROPERTIES);
+        _buffer.append("\" Properties=").append(detail::PROPERTIES);
         _buffer.append(" pbc=\"T T T\" step=").left(step, 0);
         _buffer.append(" energy=")
             .fixed(
                 frame.potentialEnergy.numerical_value_in(kcal_per_mol),
                 0,
-                ENERGY_PRECISION
+                detail::ENERGY_PRECISION
             );
         _buffer.append(" units=pq\n");
 
@@ -107,7 +107,8 @@ namespace out
 
             for (const double value : {vel[0], vel[1], vel[2]})
             {
-                _buffer.put(' ').scientific(value, EXTXYZ_VEL_WIDTH, PRECISION);
+                _buffer.put(' ')
+                    .scientific(value, detail::EXTXYZ_VEL_WIDTH, PRECISION);
             }
 
             for (const double value : {force[0], force[1], force[2]})
