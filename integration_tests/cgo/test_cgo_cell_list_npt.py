@@ -126,8 +126,13 @@ START_FILE = "cgo-mm-00.rst"
 
 
 def _read_restart_box(path):
-    """First box length of a restart file ("Step ..." is line 1, "Box ..." 2)."""
-    line = pathlib.Path(path).read_text().splitlines()[1]
+    """First box length of a restart file ("Step ..." is line 1, "Box ..." 2,
+    after the optional "!META_DATA" lines)."""
+    lines = [
+        line for line in pathlib.Path(path).read_text().splitlines()
+        if not line.startswith("!META_DATA")
+    ]
+    line = lines[1]
     assert line.startswith("Box")
     return float(line.split()[1])
 
