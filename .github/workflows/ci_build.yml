@@ -536,10 +536,10 @@ jobs:
             -DBUILD_WITH_NATIVE=OFF \
             -DBUILD_WITH_TESTS=ON \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
-          cmake --build build --parallel "$(nproc)" --target PQ testSelection
+          cmake --build build --parallel "$(nproc)" --target PQ testSelection testPythonError
 
       - name: Run the Python-binding tests
-        run: ctest --test-dir build --output-on-failure -R 'testPQCli|testSelection'
+        run: ctest --test-dir build --output-on-failure -R 'testPQCli|testSelection|testPythonError'
 
   ci-build-gate:
     if: always()

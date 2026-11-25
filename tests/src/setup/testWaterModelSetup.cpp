@@ -159,7 +159,7 @@ TEST_F(TestSetup, waterModelSetupCoversAllIntermolecularModels)
         WaterInterModel::SPC_MTR
     );
 
-    GeneralSettings::activateCellList();
+    _settings->generalSettings.activateCellListByUser();
     setupInterModel<waterModel::TIP3PmTRInterParam>(
         *_mdEngine,
         *_settings,
@@ -277,7 +277,7 @@ TEST_F(TestSetup, waterModelSetupRejectsWaterBondsInTopology)
         WaterIntraModel::SPC_FW
     );
     addWaterSystem(*_mdEngine);
-    _settings->fileSettings.setTopologyFileNameByUser("topology.top");
+    _settings->fileSettings.set_topologyFileByUser("topology.top");
     auto *water = &_mdEngine->get_simulationBox().getMolecule(0);
     _mdEngine->getForceField()->addBond(
         ff::BondForceField(water, water, AtomIndex{0}, AtomIndex{1}, BondId{0})
@@ -303,7 +303,7 @@ TEST_F(TestSetup, waterModelSetupRejectsWaterAnglesInTopology)
         WaterIntraModel::SPC_FW
     );
     addWaterSystem(*_mdEngine);
-    _settings->fileSettings.setTopologyFileNameByUser("topology.top");
+    _settings->fileSettings.set_topologyFileByUser("topology.top");
     auto *water = &_mdEngine->get_simulationBox().getMolecule(0);
     _mdEngine->getForceField()->addAngle(
         ff::AngleForceField(

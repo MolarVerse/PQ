@@ -76,7 +76,7 @@ namespace setup
         const auto &manostatSettings = _engine.getSettings().manostatSettings;
 
         if (manostatSettings.isBerendsenBased() &&
-            GeneralSettings::getVirialType() == VirialType::ATOMIC &&
+            manostatSettings.getVirialType() == VirialType::ATOMIC &&
             std::ranges::any_of(
                 _engine.get_simulationBox().getMolecules(),
                 [](const auto &molecule)

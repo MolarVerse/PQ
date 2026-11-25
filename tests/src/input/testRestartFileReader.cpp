@@ -82,13 +82,13 @@ TEST_F(TestRstFileReader, rstFileReading)
     _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
     _settings.timings.setTimeStepByUser(0.5 * fs);
     _settings.timings.setNumberOfStepsByUser(100);
-    _settings.fileSettings.setMolDescriptorFileNameByUser(
+    _settings.fileSettings.set_molDescriptorFileByUser(
         "examples/setup/moldescriptor.dat"
     );
     input::molDescriptor::MoldescriptorReader moldescriptor(*_engine);
 
     std::string filename = "examples/setup/h2o-qmcf.rst";
-    _settings.fileSettings.setStartFileNameByUser(filename);
+    _settings.fileSettings.set_startFileByUser(filename);
 
     moldescriptor.read();
     ASSERT_NO_THROW(
@@ -121,7 +121,7 @@ TEST_F(TestRstFileReader, startFileWithoutAtomsIsRefused)
             file << content;
         }
 
-        _settings.fileSettings.setStartFileNameByUser(filename);
+        _settings.fileSettings.set_startFileByUser(filename);
 
         ASSERT_THROW_MSG(
             input::restartFile::readRestartFile(
@@ -150,12 +150,10 @@ TEST_F(TestRstFileReader, writeStepInfoMD)
     _settings.timings.setTimeStepByUser(0.5 * fs);
     _settings.timings.setNumberOfStepsByUser(100);
     _settings.timings.setStartingTimeByUser(2 * ps);
-    _settings.fileSettings.setMolDescriptorFileNameByUser(
+    _settings.fileSettings.set_molDescriptorFileByUser(
         "examples/setup/moldescriptor.dat"
     );
-    _settings.fileSettings.setStartFileNameByUser(
-        "examples/setup/h2o-qmcf.rst"
-    );
+    _settings.fileSettings.set_startFileByUser("examples/setup/h2o-qmcf.rst");
     const auto _ = std::remove("default.log");
     _engine->getLogOutput().setFilename("default.log", false);
 
@@ -200,12 +198,10 @@ TEST_F(TestRstFileReader, writeStepInfoOpt)
 {
     _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings.timings.setNumberOfStepsByUser(100);
-    _settings.fileSettings.setMolDescriptorFileNameByUser(
+    _settings.fileSettings.set_molDescriptorFileByUser(
         "examples/setup/moldescriptor.dat"
     );
-    _settings.fileSettings.setStartFileNameByUser(
-        "examples/setup/h2o-qmcf.rst"
-    );
+    _settings.fileSettings.set_startFileByUser("examples/setup/h2o-qmcf.rst");
     const auto _ = std::remove("default.log");
     _engine->getLogOutput().setFilename("default.log", false);
 
@@ -256,13 +252,13 @@ TEST_F(TestRstFileReader, readsMetaData)
     _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
     _settings.timings.setTimeStepByUser(0.5 * fs);
     _settings.timings.setNumberOfStepsByUser(100);
-    _settings.fileSettings.setMolDescriptorFileNameByUser(
+    _settings.fileSettings.set_molDescriptorFileByUser(
         "examples/setup/moldescriptor.dat"
     );
 
     const std::string filename = "metaDataTest.rst";
     writeRstFileWithHeader(filename, "!META_DATA version v1.2.3\n");
-    _settings.fileSettings.setStartFileNameByUser(filename);
+    _settings.fileSettings.set_startFileByUser(filename);
 
     input::molDescriptor::MoldescriptorReader(*_engine).read();
 
@@ -293,10 +289,10 @@ TEST_F(TestRstFileReader, noMetaDataKeepsVersionInvalid)
     _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
     _settings.timings.setTimeStepByUser(0.5 * fs);
     _settings.timings.setNumberOfStepsByUser(100);
-    _settings.fileSettings.setMolDescriptorFileNameByUser(
+    _settings.fileSettings.set_molDescriptorFileByUser(
         "examples/setup/moldescriptor.dat"
     );
-    _settings.fileSettings.setStartFileNameByUser(
+    _settings.fileSettings.set_startFileByUser(
         "examples/setup/h2o-qmcf.rst"
     );
 
@@ -320,13 +316,13 @@ TEST_F(TestRstFileReader, malformedMetaDataThrows)
     _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
     _settings.timings.setTimeStepByUser(0.5 * fs);
     _settings.timings.setNumberOfStepsByUser(100);
-    _settings.fileSettings.setMolDescriptorFileNameByUser(
+    _settings.fileSettings.set_molDescriptorFileByUser(
         "examples/setup/moldescriptor.dat"
     );
 
     const std::string filename = "malformedMetaDataTest.rst";
     writeRstFileWithHeader(filename, "!META_DATA colour red\n");
-    _settings.fileSettings.setStartFileNameByUser(filename);
+    _settings.fileSettings.set_startFileByUser(filename);
 
     input::molDescriptor::MoldescriptorReader(*_engine).read();
 

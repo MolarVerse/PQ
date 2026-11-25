@@ -38,6 +38,18 @@
 namespace maxwellBoltzmann
 {
     /**
+     * @brief Construct a new MaxwellBoltzmann object
+     *
+     * @param generalSettings The general settings used to configure the
+     * MaxwellBoltzmann object, such as computational resources and execution
+     * preferences.
+     */
+    MaxwellBoltzmann::MaxwellBoltzmann(const GeneralSettings &generalSettings)
+        : _rng(rng::RandomNumberGenerator::create(generalSettings))
+    {
+    }
+
+    /**
      * @brief generate boltzmann distributed velocities for all atoms in the
      * simulation box
      *
@@ -62,12 +74,9 @@ namespace maxwellBoltzmann
 
             atom->setVelocity(
                 Vel3D{
-                    _randomNumberGenerator
-                        .getNormalDistribution(Vel::zero(), stddev),
-                    _randomNumberGenerator
-                        .getNormalDistribution(Vel::zero(), stddev),
-                    _randomNumberGenerator
-                        .getNormalDistribution(Vel::zero(), stddev)
+                    _rng.getNormalDistribution(Vel::zero(), stddev),
+                    _rng.getNormalDistribution(Vel::zero(), stddev),
+                    _rng.getNormalDistribution(Vel::zero(), stddev)
                 }
             );
         };

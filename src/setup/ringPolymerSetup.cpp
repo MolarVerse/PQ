@@ -138,7 +138,7 @@ namespace setup
         {
             auto             &log  = _engine.getLogOutput();
             const auto *const msg  = "Reading ring polymer restart file: ";
-            const auto       &file = fileSettings.getRingPolymerStartFileName();
+            const auto       &file = fileSettings.get_rpmdStartFile();
 
             log.writeRead(msg, file);
             out::StdoutOutput::writeRead(msg, file);
@@ -159,7 +159,9 @@ namespace setup
     {
         // one generator for all beads: a generator per bead would be seeded
         // with the same user seed and give every bead the same velocities
-        maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
+        maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann{
+            _engine.getSettings().generalSettings
+        };
 
         const auto &startTemperature =
             _engine.getSettings().kinetics.getStartTemperature();

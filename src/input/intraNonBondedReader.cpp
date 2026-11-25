@@ -42,20 +42,13 @@ namespace input::intraNonBondedReader
 {
 
     /**
-     * @brief checks if the intra non bonded interactions are needed
-     *
-     * @return bool
-     */
-    bool isNeeded() { return GeneralSettings::isIntraNonBondedActivated(); }
-
-    /**
      * @brief construct IntraNonBondedReader object and read the file
      *
      * @param engine
      */
     void readIntraNonBondedFile(engine::Engine &engine)
     {
-        if (!isNeeded())
+        if (!engine.getSettings().generalSettings.isIntraNonBondedActivated())
             return;
 
         auto       &log          = engine.getLogOutput();
@@ -66,7 +59,7 @@ namespace input::intraNonBondedReader
                 "Intra non bonded file not provided by the user"
             );
 
-        const auto filename = fileSettings.getIntraNonBondedFileName();
+        const auto filename = fileSettings.get_intraNonBondedFile();
 
         out::StdoutOutput::writeRead("Intra Non-Bonded File", filename);
         log.writeRead("Intra Non-Bonded File", filename);

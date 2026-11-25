@@ -125,13 +125,19 @@ namespace input
      * @param validateFilePaths Flag indicating whether to validate file paths
      * @param fileSettings Reference to the FileSettings object to be used for
      * storing file names and managing the state of which files have been set.
+     * @param generalSettings Reference to the GeneralSettings object to be used
+     * for configuring general computational resources and execution
+     * preferences.
      *
      */
     FilesInputParser::FilesInputParser(
-        bool          validateFilePaths,
-        FileSettings &fileSettings
+        bool             validateFilePaths,
+        FileSettings    &fileSettings,
+        GeneralSettings &generalSettings
     )
-        : _validateFilePaths(validateFilePaths), _fileSettings(fileSettings)
+        : _validateFilePaths(validateFilePaths),
+          _fileSettings(fileSettings),
+          _generalSettings(generalSettings)
     {
         addIntraNonBondedFileKey();
         addTopologyFileKey();
@@ -162,13 +168,12 @@ namespace input
 
         const auto setValue = [this]<typename T>(const T &value) -> void
         {
-            GeneralSettings::activateIntraNonBonded();
+            _generalSettings->activateIntraNonBondedByUser();
 
             if constexpr (std::is_same_v<T, std::string>)
-                _fileSettings->setIntraNonBondedFileNameByUser(value);
+                _fileSettings->set_intraNonBondedFileByUser(value);
             else
-                _fileSettings->setIntraNonBondedFileNameByUser(value.fileName()
-                );
+                _fileSettings->set_intraNonBondedFileByUser(value.fileName());
         };
 
         addFileKeyword(
@@ -197,9 +202,9 @@ namespace input
         const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                _fileSettings->setTopologyFileNameByUser(value);
+                _fileSettings->set_topologyFileByUser(value);
             else
-                _fileSettings->setTopologyFileNameByUser(value.fileName());
+                _fileSettings->set_topologyFileByUser(value.fileName());
         };
 
         addFileKeyword(
@@ -228,9 +233,9 @@ namespace input
         const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                _fileSettings->setParameterFileNameByUser(value);
+                _fileSettings->set_parameterFileByUser(value);
             else
-                _fileSettings->setParameterFileNameByUser(value.fileName());
+                _fileSettings->set_parameterFileByUser(value.fileName());
         };
 
         addFileKeyword(
@@ -261,9 +266,9 @@ namespace input
         const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                _fileSettings->setStartFileNameByUser(value);
+                _fileSettings->set_startFileByUser(value);
             else
-                _fileSettings->setStartFileNameByUser(value.fileName());
+                _fileSettings->set_startFileByUser(value.fileName());
         };
 
         addFileKeyword(
@@ -295,11 +300,11 @@ namespace input
         const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                _fileSettings->setRingPolymerStartFileNameByUser(value);
+                _fileSettings->set_rpmdStartFileByUser(value);
             else
             {
                 const auto &name = value.fileName();
-                _fileSettings->setRingPolymerStartFileNameByUser(name);
+                _fileSettings->set_rpmdStartFileByUser(name);
             }
         };
 
@@ -331,9 +336,9 @@ namespace input
         const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                _fileSettings->setMolDescriptorFileNameByUser(value);
+                _fileSettings->set_molDescriptorFileByUser(value);
             else
-                _fileSettings->setMolDescriptorFileNameByUser(value.fileName());
+                _fileSettings->set_molDescriptorFileByUser(value.fileName());
         };
 
         addFileKeyword(
@@ -364,9 +369,9 @@ namespace input
         const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                _fileSettings->setGuffDatFileNameByUser(value);
+                _fileSettings->set_guffDatFileByUser(value);
             else
-                _fileSettings->setGuffDatFileNameByUser(value.fileName());
+                _fileSettings->set_guffDatFileByUser(value.fileName());
         };
 
         addFileKeyword(
@@ -397,9 +402,9 @@ namespace input
         const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                _fileSettings->setMShakeFileNameByUser(value);
+                _fileSettings->set_mShakeFileByUser(value);
             else
-                _fileSettings->setMShakeFileNameByUser(value.fileName());
+                _fileSettings->set_mShakeFileByUser(value.fileName());
         };
 
         addFileKeyword(
@@ -430,9 +435,9 @@ namespace input
         const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                _fileSettings->setDFTBFileNameByUser(value);
+                _fileSettings->set_dftbFileByUser(value);
             else
-                _fileSettings->setDFTBFileNameByUser(value.fileName());
+                _fileSettings->set_dftbFileByUser(value.fileName());
         };
 
         addFileKeyword(
@@ -463,9 +468,9 @@ namespace input
         const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                _fileSettings->setTMFileNameByUser(value);
+                _fileSettings->set_tmFileByUser(value);
             else
-                _fileSettings->setTMFileNameByUser(value.fileName());
+                _fileSettings->set_tmFileByUser(value.fileName());
         };
 
         addFileKeyword(
@@ -496,9 +501,9 @@ namespace input
         const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                _fileSettings->setOrcaFileNameByUser(value);
+                _fileSettings->set_orcaFileByUser(value);
             else
-                _fileSettings->setOrcaFileNameByUser(value.fileName());
+                _fileSettings->set_orcaFileByUser(value.fileName());
         };
 
         addFileKeyword(

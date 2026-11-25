@@ -78,7 +78,7 @@ namespace input
         };
 
         const auto setValue = [this](ConvStrategy strategy)
-        { _convSettings->setEnergyConvStrategyByUser(strategy); };
+        { _convSettings->set_energyConvStrategyByUser(strategy); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<ConvStrategy>{.metadata = metaData, .onSet = setValue}
@@ -97,7 +97,7 @@ namespace input
         };
 
         const auto setValue = [this](bool useEnergyConv)
-        { _convSettings->setUseEnergyConvByUser(useEnergyConv); };
+        { _convSettings->set_useEnergyConvByUser(useEnergyConv); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{.metadata = metaData, .onSet = setValue}
@@ -116,7 +116,7 @@ namespace input
         };
 
         const auto setValue = [this](bool useForceConv)
-        { _convSettings->setUseForceConvByUser(useForceConv); };
+        { _convSettings->set_useForceConvByUser(useForceConv); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{.metadata = metaData, .onSet = setValue}
@@ -135,7 +135,7 @@ namespace input
         };
 
         const auto setValue = [this](bool useMaxForceConv)
-        { _convSettings->setUseMaxForceConvByUser(useMaxForceConv); };
+        { _convSettings->set_useMaxForceConvByUser(useMaxForceConv); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{.metadata = metaData, .onSet = setValue}
@@ -154,7 +154,7 @@ namespace input
         };
 
         const auto setValue = [this](bool useRMSForceConv)
-        { _convSettings->setUseRMSForceConvByUser(useRMSForceConv); };
+        { _convSettings->set_useRMSForceConvByUser(useRMSForceConv); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{.metadata = metaData, .onSet = setValue}
@@ -174,7 +174,7 @@ namespace input
         };
 
         const auto setValue = [this](double relEnergyConv)
-        { _convSettings->setRelEnergyConvByUser(relEnergyConv); };
+        { _convSettings->set_relEnergyConvByUser(relEnergyConv); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -200,7 +200,9 @@ namespace input
 
         const auto setValue = [this](double absEnergyConv)
         {
-            _convSettings->setAbsEnergyConvByUser(absEnergyConv * kcal_per_mol);
+            _convSettings->set_absEnergyConvByUser(
+                absEnergyConv * kcal_per_mol
+            );
         };
 
         auto &key = _getRegistry().registerKey(
@@ -227,7 +229,7 @@ namespace input
 
         const auto setValue = [this](double rmsForceConv)
         {
-            _convSettings->setRMSForceConvByUser(
+            _convSettings->set_rmsForceConvByUser(
                 rmsForceConv * kcal_per_mol / angstrom
             );
         };
@@ -256,7 +258,7 @@ namespace input
 
         const auto setValue = [this](double maxForceConv)
         {
-            _convSettings->setMaxForceConvByUser(
+            _convSettings->set_maxForceConvByUser(
                 maxForceConv * kcal_per_mol / angstrom
             );
         };

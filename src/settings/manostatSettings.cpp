@@ -115,6 +115,16 @@ void ManostatSettings::setCompressibilityByUser(
     _compressibility.setByUser(compressibility);
 }
 
+/**
+ * @brief sets the virial type
+ *
+ * @param virialType
+ */
+void ManostatSettings::setVirialTypeByUser(VirialType virialType)
+{
+    _virial.setByUser(virialType);
+}
+
 /***************************
  *                         *
  * standard getter methods *
@@ -184,6 +194,13 @@ const Compressibility& ManostatSettings::getCompressibility() const
 {
     return _compressibility.get();
 }
+
+/**
+ * @brief get the virial type
+ *
+ * @return VirialType
+ */
+VirialType ManostatSettings::getVirialType() const { return _virial.get(); }
 
 /**
  * @brief adds the appropriate reference file for the current manostat type

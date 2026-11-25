@@ -810,10 +810,8 @@ TEST_F(TestGuffDatReader, readGuffDat)
 {
     _guffDatReader->setFilename("data/guffDatReader/guff.dat");
     _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
-    _settings.forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
-    _settings.fileSettings.setGuffDatFileNameByUser(
-        "data/guffDatReader/guff.dat"
-    );
+    _settings.forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
+    _settings.fileSettings.set_guffDatFileByUser("data/guffDatReader/guff.dat");
     EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
 
     auto &potential = dynamic_cast<pot::GuffNonCoulomb &>(
@@ -835,7 +833,7 @@ TEST_F(TestGuffDatReader, readGuffDatErrorButNoThrowNotActivated)
 {
     _guffDatReader->setFilename("");   // just to produce any kind of error
     _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
-    _settings.forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    _settings.forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
 }
 
@@ -843,7 +841,7 @@ TEST_F(TestGuffDatReader, readGuffDatErrorButNoThrowMMNotActivated)
 {
     _guffDatReader->setFilename("");   // just to produce any kind of error
     _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
-    _settings.forceFieldSettings.setTypeByUser(ForceFieldType::ON);
+    _settings.forceFieldSettings.set_typeByUser(ForceFieldType::ON);
     EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
 }
 
@@ -861,9 +859,9 @@ TEST_F(TestGuffDatReader, isNeeded)
     EXPECT_FALSE(input::guffdat::isNeeded(settings));
 
     settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
-    settings.forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    settings.forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     EXPECT_TRUE(input::guffdat::isNeeded(settings));
 
-    settings.forceFieldSettings.setTypeByUser(ForceFieldType::ON);
+    settings.forceFieldSettings.set_typeByUser(ForceFieldType::ON);
     EXPECT_FALSE(input::guffdat::isNeeded(settings));
 }

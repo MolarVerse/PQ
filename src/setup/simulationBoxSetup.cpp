@@ -452,7 +452,9 @@ namespace setup
              !getZeroVelocities()))
             return;
 
-        maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
+        maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann{
+            _engine.getSettings().generalSettings
+        };
         maxwellBoltzmann.initializeVelocities(
             _engine.get_simulationBox(),
             _engine.getSettings().kinetics.getStartTemperature()
@@ -574,7 +576,7 @@ namespace setup
                 std::format(
                     "Ignoring 'init_velocities' because non-zero velocities in "
                     "\"{}\"",
-                    _engine.getSettings().fileSettings.getStartFileName()
+                    _engine.getSettings().fileSettings.get_startFile()
                 )
             );
         }
@@ -596,7 +598,7 @@ namespace setup
                     "Set 'init_velocities = true' to draw them from a "
                     "Maxwell-Boltzmann distribution; 'start_temp' only starts "
                     "the temperature ramp",
-                    _engine.getSettings().fileSettings.getStartFileName()
+                    _engine.getSettings().fileSettings.get_startFile()
                 )
             );
         }
@@ -613,7 +615,7 @@ namespace setup
             log.writeSetupInfo(
                 std::format(
                     "velocities taken from start file \"{}\"",
-                    _engine.getSettings().fileSettings.getStartFileName()
+                    _engine.getSettings().fileSettings.get_startFile()
                 )
             );
         }

@@ -23,6 +23,8 @@
 #include <gtest/gtest.h>
 
 #include <cstddef>
+#include <cstdint>
+#include <cstring>
 #include <filesystem>
 #include <fstream>
 #include <memory>
@@ -124,7 +126,7 @@ namespace
                     simulationBox,
                     thermostat,
                     step,
-                    -1.5 * static_cast<double>(step),
+                    -1.5 * static_cast<double>(step) * kcal_per_mol,
                     100 * fs
                 );
             }
@@ -171,6 +173,52 @@ TEST(TestEngineOutputFrames, extxyzReplacesTheXyzFiles)
         std::string::npos
     );
     EXPECT_NE(content.find("units=pq"), std::string::npos);
+}
+
+TEST(TestEngineOutputFrames, aseTrajReplacesTheXyzFiles)
+{
+    const std::string prefix = "engineOutputAse";
+
+    OutputFileSettings outputFileSettings;
+    outputFileSettings.setAsyncOutputByUser(false);
+    const ReferenceSettings referenceSettings;
+
+    {
+        engine::EngineOutput output{outputFileSettings, referenceSettings};
+        output.getRstFileOutput().setFilename(prefix + ".rst", true);
+        output.openAseTrajOutput(prefix + ".ase.traj", true);
+
+        const auto                   simulationBox = makeSimulationBox();
+        const thermostat::Thermostat thermostat{};
+
+        for (std::size_t step = 1; step <= 3; ++step)
+        {
+            output.writeFrame(
+                simulationBox,
+                thermostat,
+                step,
+                -1.5 * kcal_per_mol,
+                100 * fs
+            );
+        }
+
+        output.waitForFrames();
+    }
+
+    const auto   content = readFile(prefix + ".ase.traj");
+    std::int64_t nItems  = 0;
+    std::memcpy(&nItems, content.substr(32, 8).data(), sizeof(nItems));
+
+    EXPECT_EQ(nItems, 3);
+    EXPECT_NE(content.find(R"("info": {"step": 3}})"), std::string::npos);
+
+    for (const auto *suffix : {".xyz", ".vel", ".force", ".chrg"})
+    {
+        EXPECT_FALSE(std::filesystem::exists(prefix + suffix)) << suffix;
+    }
+
+    std::filesystem::remove(prefix + ".ase.traj");
+    std::filesystem::remove(prefix + ".rst");
 }
 
 TEST(TestEngineOutputFrames, asyncOutputFitsInHalfOfTheMemory)

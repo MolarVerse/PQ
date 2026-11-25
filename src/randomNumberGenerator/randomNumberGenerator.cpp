@@ -42,12 +42,27 @@ namespace rng
      *
      */
     // NOLINTNEXTLINE(cert-msc51-cpp, cert-msc32-c)
-    RandomNumberGenerator::RandomNumberGenerator()
+    RandomNumberGenerator::RandomNumberGenerator(
+        const GeneralSettings& generalSettings
+    )
     {
-        if (GeneralSettings::isRandomSeedSet())
-            _generator.seed(GeneralSettings::getRandomSeed());
+        if (generalSettings.isRandomSeedSetByUser())
+            _generator.seed(generalSettings.getRandomSeed());
         else
             _generator.seed(_randomDevice());
+    }
+
+    /**
+     * @brief create a RandomNumberGenerator instance
+     *
+     * @param generalSettings
+     * @return RandomNumberGenerator
+     */
+    RandomNumberGenerator RandomNumberGenerator::create(
+        const GeneralSettings& generalSettings
+    )
+    {
+        return RandomNumberGenerator(generalSettings);
     }
 
     /**

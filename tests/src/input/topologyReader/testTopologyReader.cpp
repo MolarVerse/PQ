@@ -47,7 +47,7 @@ TEST_F(TestTopologyReader, isNeeded)
     EXPECT_TRUE(input::topology::isNeeded(settings));
 
     settings.constraintSettings.deactivateShakeByUser();
-    settings.forceFieldSettings.setTypeByUser(ForceFieldType::ON);
+    settings.forceFieldSettings.set_typeByUser(ForceFieldType::ON);
     EXPECT_TRUE(input::topology::isNeeded(settings));
 }
 
@@ -77,7 +77,7 @@ TEST_F(TestTopologyReader, read)
 
     _settings.constraintSettings.activateShakeByUser();
     _topologyReader = std::make_unique<input::topology::TopologyReader>(
-        _settings.fileSettings.getTopologyFileName(),
+        _settings.fileSettings.get_topologyFile(),
         *_engine
     );
     EXPECT_NO_THROW(_topologyReader->read());
@@ -97,6 +97,6 @@ TEST_F(TestTopologyReader, read)
  */
 TEST_F(TestTopologyReader, readTopologyFile)
 {
-    _settings.fileSettings.setTopologyFileNameByUser("topology.top");
+    _settings.fileSettings.set_topologyFileByUser("topology.top");
     input::topology::readTopologyFile(*_engine);
 }

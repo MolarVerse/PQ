@@ -173,8 +173,8 @@ namespace QM
             charge,
             runTMDefine,
             usePointCharges,
-            utilities::shellQuote(fileSettings.getTMFileName()),
-            utilities::shellQuote(fileSettings.getPointChargeFileName())
+            utilities::shellQuote(fileSettings.get_tmFile()),
+            utilities::shellQuote(fileSettings.get_pointChargeFile())
         );
         _executeCommand(command, "Turbomole");
 

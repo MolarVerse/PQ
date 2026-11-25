@@ -27,7 +27,6 @@
 #include "box.hpp"
 #include "enums/manostat.hpp"
 #include "exceptions.hpp"
-#include "generalSettings.hpp"
 #include "globalTimer.hpp"
 #include "manostatSettings.hpp"
 #include "physicalData.hpp"
@@ -59,9 +58,8 @@ namespace manostat
         physicalData::PhysicalData  &physicalData
     )
     {
-        const auto ekinVirial = physicalData.getKinEnergyVirialTensor(
-            GeneralSettings::getVirialType()
-        );
+        const auto ekinVirial =
+            physicalData.getKinEnergyVirialTensor(_settings->getVirialType());
         const auto forceVirial = physicalData.get_virial();
         const auto volume      = simulationBox.getVolume();
 

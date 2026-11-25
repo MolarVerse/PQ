@@ -137,7 +137,7 @@ TEST_F(TestParameterFileReader, deleteSection)
  */
 TEST_F(TestParameterFileReader, readFileNameEmpty)
 {
-    _settings.forceFieldSettings.setTypeByUser(ForceFieldType::ON);
+    _settings.forceFieldSettings.set_typeByUser(ForceFieldType::ON);
     _settings.fileSettings = FileSettings{};
     EXPECT_THROW_MSG(
         input::parameterFile::readParameterFile(
@@ -156,7 +156,7 @@ TEST_F(TestParameterFileReader, readFileNameEmpty)
  */
 TEST_F(TestParameterFileReader, readFileDoesNotExist)
 {
-    _settings.fileSettings.setParameterFileNameByUser(
+    _settings.fileSettings.set_parameterFileByUser(
         "data/parameterFileReader/doesNotExist.param"
     );
     auto reader = input::parameterFile::ParameterFileReader(
@@ -174,7 +174,7 @@ TEST_F(TestParameterFileReader, readFileDoesNotExist)
  */
 TEST_F(TestParameterFileReader, readParameterFile)
 {
-    _settings.fileSettings.setParameterFileNameByUser(
+    _settings.fileSettings.set_parameterFileByUser(
         "data/parameterFileReader/param.param"
     );
     _engine->getPotential()->makeNonCoulombPotential(
@@ -195,7 +195,7 @@ TEST_F(TestParameterFileReader, readParameterFile)
  */
 TEST_F(TestParameterFileReader, readParameterFileDuplicateSection)
 {
-    _settings.fileSettings.setParameterFileNameByUser(
+    _settings.fileSettings.set_parameterFileByUser(
         "data/parameterFileReader/paramDuplicateSection.param"
     );
     auto reader = input::parameterFile::ParameterFileReader(
@@ -216,7 +216,7 @@ TEST_F(TestParameterFileReader, readParameterFileDuplicateSection)
  */
 TEST_F(TestParameterFileReader, readParameterFileUnknownSection)
 {
-    _settings.fileSettings.setParameterFileNameByUser(
+    _settings.fileSettings.set_parameterFileByUser(
         "data/parameterFileReader/paramUnknownSection.param"
     );
     auto reader = input::parameterFile::ParameterFileReader(
@@ -237,7 +237,7 @@ TEST_F(TestParameterFileReader, readParameterFileUnknownSection)
  */
 TEST_F(TestParameterFileReader, readParameterFileWithComments)
 {
-    _settings.fileSettings.setParameterFileNameByUser(
+    _settings.fileSettings.set_parameterFileByUser(
         "data/parameterFileReader/paramWithComments.param"
     );
     _engine->getPotential()->makeNonCoulombPotential(
@@ -258,11 +258,11 @@ TEST_F(TestParameterFileReader, readParameterFileWithComments)
  */
 TEST_F(TestParameterFileReader, readParameterFileFreeFunction)
 {
-    _settings.forceFieldSettings.setTypeByUser(ForceFieldType::ON);
+    _settings.forceFieldSettings.set_typeByUser(ForceFieldType::ON);
     _engine->getPotential()->makeNonCoulombPotential(
         pot::ForceFieldNonCoulomb()
     );
-    _settings.fileSettings.setParameterFileNameByUser(
+    _settings.fileSettings.set_parameterFileByUser(
         "data/parameterFileReader/param.param"
     );
     EXPECT_NO_THROW(
@@ -275,7 +275,7 @@ TEST_F(TestParameterFileReader, readParameterFileFreeFunction)
 
 TEST_F(TestParameterFileReader, nameNotSetButNotNeeded)
 {
-    _settings.forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    _settings.forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     EXPECT_NO_THROW(
         input::parameterFile::readParameterFile(
             *_engine,

@@ -23,6 +23,7 @@
 #include "generalSettings.hpp"
 
 #include <string>
+#include <utility>
 
 #include "version.hpp"
 
@@ -57,9 +58,9 @@ void GeneralSettings::setJobtypeByUser(JobType jobtype)
  *
  * @param floatingPointType
  */
-void GeneralSettings::setFloatingPointType(FPType floatingPointType)
+void GeneralSettings::setFloatingPointTypeByUser(FPType floatingPointType)
 {
-    _floatingPointType = floatingPointType;
+    _floatingPointType.setByUser(floatingPointType);
 }
 
 /**
@@ -67,29 +68,9 @@ void GeneralSettings::setFloatingPointType(FPType floatingPointType)
  *
  * @param randomSeed
  */
-void GeneralSettings::setRandomSeed(uint_fast32_t randomSeed)
+void GeneralSettings::setRandomSeedByUser(uint_fast32_t randomSeed)
 {
-    _randomSeed = randomSeed;
-}
-
-/**
- * @brief sets if the random seed value has been set
- *
- * @param isRandomSeedSet
- */
-void GeneralSettings::setIsRandomSeedSet(bool isRandomSeedSet)
-{
-    _isRandomSeedset = isRandomSeedSet;
-}
-
-/**
- * @brief sets the virial type
- *
- * @param virialType
- */
-void GeneralSettings::setVirialType(VirialType virialType)
-{
-    _virial = virialType;
+    _randomSeed.setByUser(randomSeed);
 }
 
 /**
@@ -97,9 +78,9 @@ void GeneralSettings::setVirialType(VirialType virialType)
  *
  * @param integratorType
  */
-void GeneralSettings::setIntegratorType(IntegratorType integratorType)
+void GeneralSettings::setIntegratorTypeByUser(IntegratorType integratorType)
 {
-    _integrator = integratorType;
+    _integrator.setByUser(integratorType);
 }
 
 /**
@@ -107,9 +88,9 @@ void GeneralSettings::setIntegratorType(IntegratorType integratorType)
  *
  * @param numberOfCells
  */
-void GeneralSettings::setNumberOfCells(size_t numberOfCells)
+void GeneralSettings::setNumberOfCellsByUser(size_t numberOfCells)
 {
-    _numberOfCells = numberOfCells;
+    _numberOfCells.setByUser(numberOfCells);
 }
 
 /**
@@ -117,7 +98,10 @@ void GeneralSettings::setNumberOfCells(size_t numberOfCells)
  *
  * @return size_t
  */
-size_t GeneralSettings::getNumberOfCells() { return _numberOfCells; }
+size_t GeneralSettings::getNumberOfCells() const
+{
+    return _numberOfCells.get();
+}
 
 /***************************
  *                         *
@@ -157,19 +141,25 @@ bool GeneralSettings::isJobtypeSetByUser() const
  *
  * @return FPType
  */
-FPType GeneralSettings::getFloatingPointType() { return _floatingPointType; }
+FPType GeneralSettings::getFloatingPointType() const
+{
+    return _floatingPointType.get();
+}
 
 /**
  * @brief get the floating point string representation used in pybind11
  * bindings
  *
  */
-std::string GeneralSettings::getFloatingPointPybindString()
+std::string GeneralSettings::getFloatingPointPybindString() const
 {
-    if (_floatingPointType == FPType::FLOAT)
-        return "float32";
+    switch (_floatingPointType.get())
+    {
+        case FPType::FLOAT: return "float32";
+        case FPType::DOUBLE: return "float64";
+    }
 
-    return "float64";
+    std::unreachable();
 }
 
 /**
@@ -177,28 +167,30 @@ std::string GeneralSettings::getFloatingPointPybindString()
  *
  * @return uint_fast32_t
  */
-uint_fast32_t GeneralSettings::getRandomSeed() { return _randomSeed; }
+uint_fast32_t GeneralSettings::getRandomSeed() const
+{
+    return _randomSeed.get();
+}
 
 /**
  * @brief get if the random seed value has been set
  *
  * @return bool
  */
-bool GeneralSettings::isRandomSeedSet() { return _isRandomSeedset; }
-
-/**
- * @brief get the virial type
- *
- * @return VirialType
- */
-VirialType GeneralSettings::getVirialType() { return _virial; }
+bool GeneralSettings::isRandomSeedSetByUser() const
+{
+    return _randomSeed.isSetByUser();
+}
 
 /**
  * @brief get the integrator type
  *
  * @return IntegratorType
  */
-IntegratorType GeneralSettings::getIntegratorType() { return _integrator; }
+IntegratorType GeneralSettings::getIntegratorType() const
+{
+    return _integrator.get();
+}
 
 /******************************
  *                            *
@@ -212,7 +204,10 @@ IntegratorType GeneralSettings::getIntegratorType() { return _integrator; }
  * @return true/false
  *
  */
-bool GeneralSettings::isCellListActivated() { return _isCellListActivated; }
+bool GeneralSettings::isCellListActivated() const
+{
+    return _isCellListActivated.get();
+}
 
 /**
  * @brief Returns true if the intra non-bonded interactions are activated
@@ -220,9 +215,9 @@ bool GeneralSettings::isCellListActivated() { return _isCellListActivated; }
  * @return true/false
  *
  */
-bool GeneralSettings::isIntraNonBondedActivated()
+bool GeneralSettings::isIntraNonBondedActivated() const
 {
-    return _isIntraNonBondedActivated;
+    return _isIntraNonBondedActivated.get();
 }
 
 /*****************************
@@ -235,28 +230,34 @@ bool GeneralSettings::isIntraNonBondedActivated()
  * @brief activate cell list
  *
  */
-void GeneralSettings::activateCellList() { _isCellListActivated = true; }
+void GeneralSettings::activateCellListByUser()
+{
+    _isCellListActivated.setByUser(true);
+}
 
 /**
  * @brief deactivate cell list
  *
  */
-void GeneralSettings::deactivateCellList() { _isCellListActivated = false; }
+void GeneralSettings::deactivateCellListByUser()
+{
+    _isCellListActivated.setByUser(false);
+}
 
 /**
  * @brief activate intra non-bonded interactions
  *
  */
-void GeneralSettings::activateIntraNonBonded()
+void GeneralSettings::activateIntraNonBondedByUser()
 {
-    _isIntraNonBondedActivated = true;
+    _isIntraNonBondedActivated.setByUser(true);
 }
 
 /**
  * @brief deactivate intra non-bonded interactions
  *
  */
-void GeneralSettings::deactivateIntraNonBonded()
+void GeneralSettings::deactivateIntraNonBondedByUser()
 {
-    _isIntraNonBondedActivated = false;
+    _isIntraNonBondedActivated.setByUser(false);
 }

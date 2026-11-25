@@ -148,8 +148,9 @@ namespace input
         ) const;
         void        _validateRingPolymer(JobType jobtype) const;
         static void _validateCellList(
-            const Distance &coulombRadiusCutoff,
-            JobType         jobType
+            const Distance        &coulombRadiusCutoff,
+            JobType                jobType,
+            const GeneralSettings &generalSettings
         );
     };
 

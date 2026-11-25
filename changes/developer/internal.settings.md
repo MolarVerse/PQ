@@ -4,3 +4,7 @@
 - start making `PotentialSettings` non-static - additionally use a single source of truth for coulomb cutoff
 - finish making `PotentialSettings` non-static
 - remove static access for jobtype
+- finish removing all static accesses of settings
+- add short macros for getter and setters in `Filesettings`, `ConvSettings` 
+- add short macros for getter and setters in `ConstraintSettings` 
+- add short macros for getter and setters in `ForceFieldSettings` 
