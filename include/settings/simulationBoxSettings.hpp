@@ -36,9 +36,9 @@
 class SimulationBoxSettings
 {
    private:
-    Setting<Density> _density;
+    Setting<Density, "Density"> _density;
 
-    Setting<InitVelocities> _initializeVelocities;
+    Setting<InitVelocities, "Initialize Velocities"> _initializeVelocities;
 
    public:
     SimulationBoxSettings();
