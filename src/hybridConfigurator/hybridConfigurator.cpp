@@ -60,7 +60,7 @@ namespace configurator
         molsys::SimulationBox& simulationBox
     )
     {
-        const auto& indices = _hybridSettings->getInnerRegionCenter();
+        const auto& indices = _hybridSettings->get_innerRegionCenter();
 
         if (indices.empty())
         {
@@ -182,12 +182,12 @@ namespace configurator
         molsys::SimulationBox& simulationBox
     ) const
     {
-        const auto coreRadius  = _hybridSettings->getCoreRadius();
-        const auto layerRadius = _hybridSettings->getLayerRadius();
+        const auto coreRadius  = _hybridSettings->get_coreRadius();
+        const auto layerRadius = _hybridSettings->get_layerRadius();
         const auto smoothingRegionThickness =
-            _hybridSettings->getSmoothingRegionThickness();
+            _hybridSettings->get_smoothingRegionThickness();
         const auto pointChargeThickness =
-            _hybridSettings->getPointChargeThickness();
+            _hybridSettings->get_pointChargeThickness();
         const auto coreEpsilon = std::numeric_limits<Pos>::epsilon();
         const bool coreEnabled = coreRadius > coreEpsilon;
 
@@ -373,8 +373,8 @@ namespace configurator
         molsys::SimulationBox& simulationBox
     ) const
     {
-        const auto layer     = _hybridSettings->getLayerRadius();
-        const auto thickness = _hybridSettings->getSmoothingRegionThickness();
+        const auto layer     = _hybridSettings->get_layerRadius();
+        const auto thickness = _hybridSettings->get_smoothingRegionThickness();
 
         for (auto& mol : simulationBox.getMoleculesInsideZone(
                  molsys::HybridZone::SMOOTHING

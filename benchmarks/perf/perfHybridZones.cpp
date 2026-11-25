@@ -97,10 +97,10 @@ namespace
 int main()
 {
     HybridSettings hybridSettings;
-    hybridSettings.setCoreRadiusByUser(4.0 * angstrom);
-    hybridSettings.setLayerRadiusByUser(12.0 * angstrom);
-    hybridSettings.setSmoothingRegionThicknessByUser(3.0 * angstrom);
-    hybridSettings.setPointChargeThicknessByUser(6.0 * angstrom);
+    hybridSettings.set_coreRadiusByUser(4.0 * angstrom);
+    hybridSettings.set_layerRadiusByUser(12.0 * angstrom);
+    hybridSettings.set_smoothingRegionThicknessByUser(3.0 * angstrom);
+    hybridSettings.set_pointChargeThicknessByUser(6.0 * angstrom);
 
     auto                    box = molsys::SimulationBox();
     molsys::OrthorhombicBox orthoBox{
@@ -112,7 +112,7 @@ int main()
 
     // the QM molecule defines the inner region center
     addWater(box, {half, half, half});
-    hybridSettings.setInnerRegionCenterByUser({0, 1, 2});
+    hybridSettings.set_innerRegionCenterByUser({0, 1, 2});
 
     for (std::size_t x = 0; x < PER_SIDE; ++x)
     {
