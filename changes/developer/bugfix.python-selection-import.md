@@ -1,0 +1,1 @@
+- `pq_python::select` checks every Python C-API result and throws `InputFileException` with the failed step and the Python exception; the helpers live in `pq_python::error` (`pythonError.hpp`, `testPythonError`), and `testSelection` blocks PQAnalysis and `lark` with an import hook (#1334).
