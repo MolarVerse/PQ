@@ -305,7 +305,8 @@ namespace
         EXPECT_THROW_MSG(
             static_cast<void>(setting.get()),
             exc::SettingsException,
-            "Settings: Setting value is not set and no default is available."
+            "Test Setting: Setting value is not set and no default is "
+            "available."
         );
 
         const Setting<TypeParam, "LocalTag"> localSetting;
@@ -334,7 +335,8 @@ namespace
         EXPECT_THROW_MSG(
             static_cast<void>(copy.get()),
             exc::SettingsException,
-            "Settings: Setting value is not set and no default is available."
+            "Test Setting: Setting value is not set and no default is "
+            "available."
         );
     }
 
