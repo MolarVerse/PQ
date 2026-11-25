@@ -27,10 +27,12 @@
 #include <string>
 #include <vector>
 
-namespace engine
+struct Settings;   // forward declaration
+
+namespace molsys
 {
-    class Engine;   // forward declaration
-}   // namespace engine
+    class SimulationBox;   // forward declaration
+}   // namespace molsys
 
 namespace input::restartFile
 {
@@ -52,8 +54,9 @@ namespace input::restartFile
         virtual bool        isHeader() = 0;
         virtual void        process(
                    std::vector<std::string> &lineElements,
-                   engine::Engine           &engine,
-                   size_t                   &lineNumber
+                   size_t                   &lineNumber,
+                   Settings                 &settings,
+                   molsys::SimulationBox    &simulationBox
                ) = 0;
 
         void setFilePointer(std::ifstream *file);
