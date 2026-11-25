@@ -44,6 +44,8 @@ namespace out
     class LogOutput;   // forward declaration
 }   // namespace out
 
+struct Settings;
+
 /**
  * @namespace setup
  *
@@ -55,22 +57,12 @@ namespace out
  */
 namespace setup
 {
-    void setupRequestedJob(
-        engine::Engine     &engine,
-        NoseHooverSettings &nhSettings,
-        TimingsSettings    &timingsSettings,
-        PotentialSettings  &potentialSettings
-    );
+    void setupRequestedJob(engine::Engine &engine, Settings &settings);
 
     void startSetup();
     void endSetup(engine::Engine &);
 
-    void readFiles(
-        engine::Engine &,
-        NoseHooverSettings &,
-        TimingsSettings &,
-        PotentialSettings &
-    );
+    void readFiles(engine::Engine &engine, Settings &settings);
     void setupEngine(engine::Engine &);
 
     void writeEngineSetupInfo(out::LogOutput &logOutput, JobType jobType);
