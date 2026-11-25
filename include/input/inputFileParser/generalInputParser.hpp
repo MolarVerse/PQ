@@ -24,6 +24,7 @@
 #define INPUT__INPUT_FILE_PARSER__GENERAL_INPUT_PARSER_HPP
 
 #include <cstddef>
+#include <mstd/types.hpp>
 #include <string>
 #include <vector>
 
@@ -46,8 +47,10 @@ namespace input
      */
     class GeneralInputParser : public InputFileParser
     {
+        mstd::Ref<GeneralSettings> _generalSettings;
+
        public:
-        GeneralInputParser();
+        explicit GeneralInputParser(GeneralSettings &generalSettings);
 
         void addFloatingPointTypeKey();
         void addDimensionalityKey();

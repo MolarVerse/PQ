@@ -62,6 +62,7 @@ namespace out
                     .force           = atom.getForce(),
                     .charge =
                         atom.getQMCharge().value_or(atom.getPartialCharge()),
+                    .mass = atom.getMass(),
                 });
             }
         }

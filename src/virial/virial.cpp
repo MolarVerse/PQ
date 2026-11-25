@@ -22,8 +22,8 @@
 
 #include "virial.hpp"
 
-#include "generalSettings.hpp"
 #include "globalTimer.hpp"
+#include "manostatSettings.hpp"
 #include "simulationBox.hpp"
 #include "timerId.hpp"
 #include "unit_types.hpp"
@@ -110,10 +110,14 @@ namespace virial
      * member state or PhysicalData.
      *
      * @param simulationBox simulation box containing molecules
+     * @param manostatSettings The settings object containing information about
+     * the virial calculation type and other relevant parameters.
+     *
      * @return linalg::tensor3D Intramolecular virial correction tensor
      */
     VirialPerMol intraMolecularVirialCorrection(
-        const molsys::SimulationBox &simulationBox
+        const molsys::SimulationBox &simulationBox,
+        const ManostatSettings      &manostatSettings
     )
     {
         auto _ =
@@ -121,7 +125,7 @@ namespace virial
 
         VirialPerMol virial = VirialPerMol::zero();
 
-        if (GeneralSettings::getVirialType() == VirialType::ATOMIC)
+        if (manostatSettings.getVirialType() == VirialType::ATOMIC)
             return virial;
 
         for (const auto &molecule : simulationBox.getMolecules())

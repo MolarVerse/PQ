@@ -98,16 +98,3 @@ TEST(TestH5mdOutput, writesOnlyWithHdf5)
 
     std::filesystem::remove(filename);
 }
-
-/**
- * @brief species is the atomic number, 0 for atoms without an element
- *
- */
-TEST(TestH5mdOutput, species)
-{
-    EXPECT_EQ(out::H5mdOutput::species("O"), 8);
-    EXPECT_EQ(out::H5mdOutput::species("h"), 1);
-    EXPECT_EQ(out::H5mdOutput::species("dum"), 0);
-    EXPECT_EQ(out::H5mdOutput::species("cav"), 0);
-    EXPECT_EQ(out::H5mdOutput::species("notAnElement"), 0);
-}

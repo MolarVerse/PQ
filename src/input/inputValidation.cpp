@@ -93,7 +93,8 @@ namespace input
         _validateManostat(settings.manostatSettings, settings.timings, jobType);
         _validateCellList(
             settings.potentialSettings.getCoulombRadiusCutoff(),
-            jobType
+            jobType,
+            settings.generalSettings
         );
         _validateReactionFieldCoulomb(
             settings.potentialSettings.getCoulombLongRangeType()
@@ -345,11 +346,12 @@ namespace input
      * with the selected potential
      */
     void InputFileReader::_validateCellList(
-        const Distance& coulombRadiusCutoff,
-        JobType         jobType
+        const Distance&        coulombRadiusCutoff,
+        JobType                jobType,
+        const GeneralSettings& generalSettings
     )
     {
-        if (!GeneralSettings::isCellListActivated())
+        if (!generalSettings.isCellListActivated())
             return;
 
         if (isQMOnlyJobtype(jobType))

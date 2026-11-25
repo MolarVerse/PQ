@@ -46,9 +46,11 @@ namespace maxwellBoltzmann
     class MaxwellBoltzmann
     {
        private:
-        rng::RandomNumberGenerator _randomNumberGenerator;
+        rng::RandomNumberGenerator _rng;
 
        public:
+        explicit MaxwellBoltzmann(const GeneralSettings &generalSettings);
+
         void initializeVelocities(
             molsys::SimulationBox &simulationBox,
             const Temperature     &targetTemperature

@@ -49,7 +49,8 @@ namespace input
      * (required)
      *
      */
-    GeneralInputParser::GeneralInputParser()
+    GeneralInputParser::GeneralInputParser(GeneralSettings &generalSettings)
+        : _generalSettings(generalSettings)
     {
         addKeyword(
             std::string("jobtype"),
@@ -178,8 +179,8 @@ namespace input
                 "or double)"
         };
 
-        const auto setValue = [](FPType value)
-        { GeneralSettings::setFloatingPointType(value); };
+        const auto setValue = [this](FPType value)
+        { _generalSettings->setFloatingPointTypeByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<FPType>{.metadata = metaData, .onSet = setValue}
@@ -196,11 +197,8 @@ namespace input
             .description = "Specifies the random seed for the simulation"
         };
 
-        const auto setValue = [](std::uint_fast32_t value)
-        {
-            GeneralSettings::setRandomSeed(value);
-            GeneralSettings::setIsRandomSeedSet(true);
-        };
+        const auto setValue = [this](std::uint_fast32_t value)
+        { _generalSettings->setRandomSeedByUser(value); };
 
         const auto validator = RangeValidator<std::uint_fast32_t>{
             0,

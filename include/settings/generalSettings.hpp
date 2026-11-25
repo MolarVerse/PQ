@@ -30,7 +30,6 @@
 #include "enums/general.hpp"
 #include "enums/integrator.hpp"
 #include "enums/jobtype.hpp"
-#include "enums/virial.hpp"
 #include "setting.hpp"
 
 /**
@@ -44,24 +43,26 @@ class GeneralSettings
    private:
     Setting<JobType, "JobType"> _jobtype;
 
-    static inline FPType        _floatingPointType = FPType::DOUBLE;
-    static inline uint_fast32_t _randomSeed;
-    static inline bool          _isRandomSeedset = false;
-
-    static inline VirialType _virial = VirialType::MOLECULAR;
+    Setting<FPType, "FloatingPointType"> _floatingPointType{FPType::DOUBLE};
+    Setting<uint_fast32_t, "RandomSeed"> _randomSeed;
 
     // setting velocity verlet as default integrator type for backward
     // compatibility until 0.7.0 it was not necessary to specify the
     // integrator type in the input file, so we set it to velocity verlet by
     // default
-    static inline IntegratorType _integrator = IntegratorType::VELOCITY_VERLET;
+    Setting<IntegratorType, "IntegratorType"> _integrator{
+        IntegratorType::VELOCITY_VERLET
+    };
 
-    static inline bool _isCellListActivated =
-        defaults::CELL_LIST_IS_ACTIVE_DEFAULT;
+    Setting<bool, "CellListActivated"> _isCellListActivated{
+        defaults::CELL_LIST_IS_ACTIVE_DEFAULT
+    };
 
-    static inline size_t _numberOfCells = defaults::NUMBER_OF_CELLS_DEFAULT;
+    Setting<size_t, "NumberOfCells"> _numberOfCells{
+        defaults::NUMBER_OF_CELLS_DEFAULT
+    };
 
-    static inline bool _isIntraNonBondedActivated = false;
+    Setting<bool, "IntraNonBondedActivated"> _isIntraNonBondedActivated{false};
 
    public:
     /***************************
@@ -70,15 +71,11 @@ class GeneralSettings
 
     void setJobtypeByUser(JobType jobtype);
 
-    static void setFloatingPointType(FPType);
+    void setFloatingPointTypeByUser(FPType);
+    void setRandomSeedByUser(uint_fast32_t randomSeed);
 
-    static void setRandomSeed(uint_fast32_t randomSeed);
-    static void setIsRandomSeedSet(bool isRandomSeedSet);
-
-    static void setVirialType(VirialType virialType);
-    static void setIntegratorType(IntegratorType integratorType);
-
-    static void setNumberOfCells(size_t numberOfCells);
+    void setIntegratorTypeByUser(IntegratorType integratorType);
+    void setNumberOfCellsByUser(size_t numberOfCells);
 
     /***************************
      * standard getter methods *
@@ -87,27 +84,26 @@ class GeneralSettings
     [[nodiscard]] JobType getJobtype() const;
     [[nodiscard]] bool    isJobtypeSetByUser() const;
 
-    [[nodiscard]] static FPType      getFloatingPointType();
-    [[nodiscard]] static std::string getFloatingPointPybindString();
+    [[nodiscard]] FPType      getFloatingPointType() const;
+    [[nodiscard]] std::string getFloatingPointPybindString() const;
 
-    [[nodiscard]] static uint_fast32_t getRandomSeed();
-    [[nodiscard]] static bool          isRandomSeedSet();
+    [[nodiscard]] uint_fast32_t getRandomSeed() const;
+    [[nodiscard]] bool          isRandomSeedSetByUser() const;
 
-    [[nodiscard]] static VirialType     getVirialType();
-    [[nodiscard]] static IntegratorType getIntegratorType();
-    [[nodiscard]] static size_t         getNumberOfCells();
+    [[nodiscard]] IntegratorType getIntegratorType() const;
+    [[nodiscard]] size_t         getNumberOfCells() const;
 
     /******************************
      * standard is-active methods *
      ******************************/
 
-    static void activateCellList();
-    static void deactivateCellList();
-    static void activateIntraNonBonded();
-    static void deactivateIntraNonBonded();
+    void activateCellListByUser();
+    void deactivateCellListByUser();
+    void activateIntraNonBondedByUser();
+    void deactivateIntraNonBondedByUser();
 
-    [[nodiscard]] static bool isCellListActivated();
-    [[nodiscard]] static bool isIntraNonBondedActivated();
+    [[nodiscard]] bool isCellListActivated() const;
+    [[nodiscard]] bool isIntraNonBondedActivated() const;
 };
 
 #endif   // SETTINGS__GENERAL_SETTINGS_HPP

@@ -332,6 +332,22 @@ namespace engine
     }
 
     /**
+     * @brief write every MD frame to an ASE trajectory file instead of the
+     * xyz, velocity, force and charge files
+     *
+     * @param filename
+     * @param overwrite whether an existing file may be replaced
+     */
+    void EngineOutput::openAseTrajOutput(
+        const std::string &filename,
+        bool               overwrite
+    )
+    {
+        _aseTrajOutput = std::make_unique<out::AseTrajOutput>(filename);
+        _aseTrajOutput->setFilename(filename, overwrite);
+    }
+
+    /**
      * @brief write every MD frame to an extxyz file instead of the xyz,
      * velocity, force and charge files
      *
@@ -359,7 +375,7 @@ namespace engine
      * @param simulationBox
      * @param thermostat
      * @param step
-     * @param potentialEnergy written to the extxyz file
+     * @param potentialEnergy written to the extxyz, H5MD and ASE files
      * @param finalTime
      *
      * @throw the first error of an earlier frame write
@@ -368,7 +384,7 @@ namespace engine
         const molsys::SimulationBox  &simulationBox,
         const thermostat::Thermostat &thermostat,
         size_t                        step,
-        double                        potentialEnergy,
+        const EnergyPerMol           &potentialEnergy,
         const std::optional<Time>    &finalTime
     )
     {
@@ -453,7 +469,7 @@ namespace engine
 
     /**
      * @brief write the trajectory files (xyz, velocity, force and charge,
-     * or one extxyz or H5MD file) and the restart file of one frame
+     * or one extxyz, H5MD or ASE file) and the restart file of one frame
      *
      * @param frame
      * @param step
@@ -475,6 +491,10 @@ namespace engine
         else if (_h5mdOutput)
         {
             _h5mdOutput->write(frame, step);
+        }
+        else if (_aseTrajOutput)
+        {
+            _aseTrajOutput->write(frame, step);
         }
         else
         {

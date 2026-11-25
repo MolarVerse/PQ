@@ -88,7 +88,7 @@ namespace setup
 
             case NOSE_HOOVER: setupNoseHooverThermostat(); break;
 
-            case NONE: _engine.makeThermostat(thermostat::Thermostat());
+            case NONE: _engine.makeThermostat<thermostat::Thermostat>();
         }
 
         writeSetupInfo();
@@ -105,7 +105,7 @@ namespace setup
         const auto tau =
             _engine.getSettings().thermostatSettings.getRelaxationTime();
 
-        _engine.makeThermostat(thermostat::BerendsenThermostat(tau));
+        _engine.makeThermostat<thermostat::BerendsenThermostat>(tau);
     }
 
     /**
@@ -120,7 +120,10 @@ namespace setup
         const auto tau =
             _engine.getSettings().thermostatSettings.getRelaxationTime();
 
-        _engine.makeThermostat(thermostat::VelocityRescalingThermostat(tau));
+        _engine.makeThermostat<thermostat::VelocityRescalingThermostat>(
+            tau,
+            _engine.getSettings().generalSettings
+        );
     }
 
     /**
@@ -134,7 +137,10 @@ namespace setup
         const auto friction =
             _engine.getSettings().thermostatSettings.getFriction();
 
-        _engine.makeThermostat(thermostat::LangevinThermostat(friction));
+        _engine.makeThermostat<thermostat::LangevinThermostat>(
+            friction,
+            _engine.getSettings().generalSettings
+        );
     }
 
     /**
@@ -147,9 +153,7 @@ namespace setup
     {
         const auto &settings = _engine.getSettings().noseHooverSettings;
 
-        auto thermostat = thermostat::NoseHooverThermostat(settings);
-
-        _engine.makeThermostat(thermostat);
+        _engine.makeThermostat<thermostat::NoseHooverThermostat>(settings);
     }
 
     void ThermostatSetup::writeSetupInfo() const

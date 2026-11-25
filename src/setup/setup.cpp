@@ -148,14 +148,15 @@ namespace setup
      */
     void setupEngine(engine::Engine& engine)
     {
-        const auto& settings = engine.getSettings();
+        const auto& settings        = engine.getSettings();
+        const auto& generalSettings = settings.generalSettings;
 
-        if (isQMActivated(engine.getSettings().generalSettings.getJobtype()))
+        if (isQMActivated(generalSettings.getJobtype()))
             setupQM(engine);
 
-        if (isMDJobType(engine.getSettings().generalSettings.getJobtype()))
+        if (isMDJobType(generalSettings.getJobtype()))
         {
-            switch (GeneralSettings::getIntegratorType())
+            switch (generalSettings.getIntegratorType())
             {
                 case IntegratorType::VELOCITY_VERLET:
                 {

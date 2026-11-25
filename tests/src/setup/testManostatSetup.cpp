@@ -411,7 +411,7 @@ TEST_F(TestSetup, setupMolecularManostatsWarnForAtomicVirial)
         molecule.addAtom(atom);
     }
     _mdEngine->get_simulationBox().addMolecule(molecule);
-    GeneralSettings::setVirialType(VirialType::ATOMIC);
+    _settings->manostatSettings.setVirialTypeByUser(VirialType::ATOMIC);
     _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
     _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
     _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
@@ -461,7 +461,6 @@ TEST_F(TestSetup, setupMolecularManostatsWarnForAtomicVirial)
         }
         EXPECT_EQ(std::remove("atomic-virial-warning.log"), 0);
     }
-    GeneralSettings::setVirialType(VirialType::MOLECULAR);
 }
 
 /* ---------- what the setup writes into the log ---------- */

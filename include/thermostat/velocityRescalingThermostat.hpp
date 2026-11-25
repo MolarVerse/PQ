@@ -46,21 +46,16 @@ namespace thermostat
     class VelocityRescalingThermostat : public Thermostat
     {
        private:
-        rng::RandomNumberGenerator _randomNumberGenerator;
+        rng::RandomNumberGenerator _rng;
 
         Time _tau;
 
        public:
-        explicit VelocityRescalingThermostat(const Time &);
-        ~VelocityRescalingThermostat() override = default;
-
-        // copy constructor and copy assignment needed for random number
-        // generator
-        VelocityRescalingThermostat(const VelocityRescalingThermostat &);
-        VelocityRescalingThermostat &operator=(
-            const VelocityRescalingThermostat &
+        explicit VelocityRescalingThermostat(
+            const Time &,
+            const GeneralSettings &
         );
-        MSTD_NO_MOVE(VelocityRescalingThermostat);
+        ~VelocityRescalingThermostat() override = default;
 
         void applyThermostat(
             molsys::SimulationBox      &simulationBox,

@@ -308,6 +308,25 @@ TEST_F(TestInputFileReader, testH5mdFilename)
 }
 
 /**
+ * @brief tests parsing the "ase_traj_file" command
+ *
+ */
+TEST_F(TestInputFileReader, testAseTrajFilename)
+{
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
+    const auto               funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("ase_traj_file"));
+
+    const auto &parseFunc = funcMap.at("ase_traj_file");
+
+    _fileName                             = "traj.ase.traj";
+    std::vector<std::string> lineElements = {"ase_traj_file", "=", _fileName};
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(outputFileSettings.getAseTrajFileName(), _fileName);
+}
+
+/**
  * @brief tests parsing the "traj_format" command
  *
  */
@@ -332,6 +351,12 @@ TEST_F(TestInputFileReader, testTrajectoryFormat)
     lineElements = {"traj_format", "=", "h5md"};
     h5mdParser.getKeywordFuncMap().at("traj_format")(lineElements, 0);
     EXPECT_EQ(h5mdSettings.getTrajectoryFormat(), TrajectoryFormat::H5MD);
+
+    OutputFileSettings       aseSettings;
+    input::OutputInputParser aseParser(aseSettings);
+    lineElements = {"traj_format", "=", "ase"};
+    aseParser.getKeywordFuncMap().at("traj_format")(lineElements, 0);
+    EXPECT_EQ(aseSettings.getTrajectoryFormat(), TrajectoryFormat::ASE);
 }
 
 /**
