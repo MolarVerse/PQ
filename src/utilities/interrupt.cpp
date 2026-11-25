@@ -22,6 +22,8 @@
 
 #include "interrupt.hpp"
 
+#include "interruptDetail.hpp"
+
 #ifdef WITH_PYBIND11
 #include <pybind11/pybind11.h>
 #endif
@@ -32,16 +34,10 @@
 #include <csignal>
 #include <stdexcept>
 
-namespace
+namespace utilities::detail
 {
-    struct InterruptState
-    {
-        static inline volatile std::sig_atomic_t interrupted = 0;
-        static inline volatile std::sig_atomic_t wakeOnly    = 0;
-    };
-
     constexpr int _exitCodeInterrupted = 128 + SIGINT;
-}   // namespace
+}   // namespace utilities::detail
 
 /**
  * @brief the first Ctrl-C stops PQ at the next step, the second one exits at
@@ -51,8 +47,11 @@ namespace
  */
 // NOLINTNEXTLINE(misc-use-internal-linkage): C linkage requires external
 // linkage
-extern "C" void pqOnInterrupt(const int /*signalNumber*/)
+extern "C" void pqOnInterrupt(int /*signalNumber*/)
 {
+    using utilities::detail::_exitCodeInterrupted;
+    using utilities::detail::InterruptState;
+
     if (InterruptState::wakeOnly != 0)
     {
         InterruptState::wakeOnly = 0;
@@ -90,7 +89,7 @@ namespace utilities
             return;
         }
 #if !defined(_WIN32)
-        if (InterruptState::interrupted != 0)
+        if (detail::InterruptState::interrupted != 0)
         {
             throw std::runtime_error("KeyboardInterrupt");
         }
@@ -110,7 +109,8 @@ namespace utilities
         ::sigemptyset(&action.sa_mask);
         ::sigaction(SIGINT, &action, nullptr);
 
-        if (InterruptState::interrupted != 0 && ::Py_IsInitialized() != 0)
+        if (detail::InterruptState::interrupted != 0 &&
+            ::Py_IsInitialized() != 0)
         {
             ::PyErr_SetInterrupt();
         }
@@ -140,7 +140,7 @@ namespace utilities
             return;
 
         if (current.sa_handler == pqOnInterrupt)
-            InterruptState::wakeOnly = 1;
+            detail::InterruptState::wakeOnly = 1;
 
         ::pthread_kill(thread, SIGINT);
     }

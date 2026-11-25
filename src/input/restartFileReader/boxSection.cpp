@@ -122,7 +122,7 @@ namespace input::restartFile
 
         const auto &manostatSettings = settings.manostatSettings;
         const bool  isFullAnisotropic =
-            manostatSettings.getIsotropy() == Isotropy::FULL_ANISOTROPIC;
+            manostatSettings.get_isotropy() == Isotropy::FULL_ANISOTROPIC;
 
         // A manostat with full anisotropic coupling shears the box, so it needs
         // a box that may change its angles, also if it starts with 90 degrees:
@@ -130,7 +130,7 @@ namespace input::restartFile
         // the molecules are scaled with all of it.
         const bool needsShearableBox =
             isFullAnisotropic &&
-            manostatSettings.getManostatType() != ManostatType::NONE;
+            manostatSettings.get_manostatType() != ManostatType::NONE;
 
         if (hasTriclinicAngles || needsShearableBox)
         {

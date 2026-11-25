@@ -39,7 +39,6 @@
 #include "exceptions.hpp"
 #include "filesInputParser.hpp"
 #include "generalInputParser.hpp"
-#include "generalSettings.hpp"
 #include "hessianInputParser.hpp"
 #include "hybridInputParser.hpp"
 #include "integratorInputParser.hpp"
@@ -58,6 +57,25 @@
 
 namespace input
 {
+    namespace
+    {
+        /**
+         * @brief throws if the input file cannot be opened
+         *
+         * @param fileName
+         *
+         * @throw exc::InputFileException if file not found
+         */
+        void checkInputFileExists(const std::string &fileName)
+        {
+            if (std::ifstream(fileName).fail())
+            {
+                throw exc::InputFileException(
+                    "\"" + fileName + "\"" + " File not found"
+                );
+            }
+        }
+    }   // namespace
 
     /**
      * @brief Construct a new Input File Reader:: Input File Reader object
@@ -311,12 +329,9 @@ namespace input
      */
     void InputFileReader::read()
     {
-        std::ifstream inputFile(_fileName);
+        checkInputFileExists(_fileName);
 
-        if (inputFile.fail())
-            throw exc::InputFileException(
-                "\"" + _fileName + "\"" + " File not found"
-            );
+        std::ifstream inputFile(_fileName);
 
         std::string line;
 
@@ -357,79 +372,6 @@ namespace input
     }
 
     /**
-     * @brief checks if in the input file jobtype keyword is set and calls the
-     * corresponding parser
-     *
-     * @details this is just the first parsing of the input file and includes
-     * only the jobtype keyword
-     *
-     * @param generalSettings
-     * @param fileName
-     */
-    void readJobType(
-        GeneralSettings   &generalSettings,
-        const std::string &fileName
-    )
-    {
-        std::ifstream inputFile(fileName);
-
-        if (inputFile.fail())
-            throw exc::InputFileException(
-                "\"" + fileName + "\"" + " File not found"
-            );
-
-        std::string line;
-        size_t      lineNumber(1);
-
-        while (getline(inputFile, line))
-        {
-            line = utilities::removeComments(line, "#");
-
-            if (line.empty())
-            {
-                ++lineNumber;
-                continue;
-            }
-
-            auto processInputCommand =
-                [lineNumber, &generalSettings](auto &command)
-            {
-                processEqualSign(command, lineNumber);
-
-                const auto lineElements = utilities::splitString(command);
-                if (!lineElements.empty() && "jobtype" == lineElements[0])
-                {
-                    GeneralInputParser::parseJobTypeForEngine(
-                        generalSettings,
-                        lineElements,
-                        lineNumber
-                    );
-                }
-            };
-
-            try
-            {
-                std::ranges::for_each(
-                    utilities::getLineCommands(line, lineNumber),
-                    processInputCommand
-                );
-            }
-            catch (exc::PQException &exception)
-            {
-                exception.setLineNumber(lineNumber);
-                throw;
-            }
-
-            ++lineNumber;
-        }
-
-        if (!generalSettings.isJobtypeSetByUser())
-            throw exc::InputFileException(
-                "Missing keyword \"jobtype\" in input file"
-            );
-    }
-
-    /**
      * @brief wrapper function to construct InputFileReader and call read() and
      * postProcess()
      *
@@ -439,6 +381,9 @@ namespace input
      */
     void readInputFile(const std::string_view &fileName, Settings &settings)
     {
+        // check first so that nothing is written to stdout for a missing file
+        checkInputFileExists(std::string(fileName));
+
         out::StdoutOutput::writeRead("Input File", std::string(fileName));
 
         InputFileReader inputFileReader(fileName, settings);

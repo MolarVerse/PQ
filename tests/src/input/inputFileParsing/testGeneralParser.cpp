@@ -40,63 +40,55 @@
  */
 TEST_F(TestInputFileReader, JobType)
 {
+    GeneralSettings           generalSettings;
+    input::GeneralInputParser parser(generalSettings);
+    const auto&               funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("jobtype"));
+    const auto& parseFunc = funcMap.at("jobtype");
+
     std::vector<std::string> lineElements = {"jobtype", "=", "mm-md"};
-    GeneralSettings          generalSettings;
-    input::GeneralInputParser::parseJobTypeForEngine(
-        generalSettings,
-        lineElements,
-        0
-    );
+    parseFunc(lineElements, 0);
     EXPECT_EQ(generalSettings.getJobtype(), JobType::MM_MD);
     EXPECT_EQ(isMMActivated(generalSettings.getJobtype()), true);
 
+    _clearParser(parser);
+
     lineElements = {"jobtype", "=", "qm-md"};
-    input::GeneralInputParser::parseJobTypeForEngine(
-        generalSettings,
-        lineElements,
-        0
-    );
+    parseFunc(lineElements, 0);
     EXPECT_EQ(generalSettings.getJobtype(), JobType::QM_MD);
     EXPECT_EQ(isQMActivated(generalSettings.getJobtype()), true);
 
+    _clearParser(parser);
+
     lineElements = {"jobtype", "=", "qm-rpmd"};
-    input::GeneralInputParser::parseJobTypeForEngine(
-        generalSettings,
-        lineElements,
-        0
-    );
+    parseFunc(lineElements, 0);
     EXPECT_EQ(generalSettings.getJobtype(), JobType::RING_POLYMER_QM_MD);
     EXPECT_EQ(isQMActivated(generalSettings.getJobtype()), true);
     EXPECT_EQ(isRingPolymerMDActivated(generalSettings.getJobtype()), true);
 
+    _clearParser(parser);
+
     lineElements = {"jobtype", "=", "mm-opt"};
-    input::GeneralInputParser::parseJobTypeForEngine(
-        generalSettings,
-        lineElements,
-        0
-    );
+    parseFunc(lineElements, 0);
     EXPECT_EQ(generalSettings.getJobtype(), JobType::MM_OPT);
     EXPECT_EQ(isOptJobType(generalSettings.getJobtype()), true);
     EXPECT_EQ(isMMActivated(generalSettings.getJobtype()), true);
 
+    _clearParser(parser);
+
     lineElements = {"jobtype", "=", "mm-hessian"};
-    input::GeneralInputParser::parseJobTypeForEngine(
-        generalSettings,
-        lineElements,
-        0
-    );
+    parseFunc(lineElements, 0);
     EXPECT_EQ(generalSettings.getJobtype(), JobType::MM_HESSIAN);
     EXPECT_EQ(isMMActivated(generalSettings.getJobtype()), true);
 
+    _clearParser(parser);
+
     lineElements = {"jobtype", "=", "notValid"};
     EXPECT_THROW_MSG(
-        input::GeneralInputParser::parseJobTypeForEngine(
-            generalSettings,
-            lineElements,
-            0
-        ),
+        parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Invalid jobtype \"notValid\" in input file - possible values are:\n"
+        "Invalid value \"notValid\" for key \"jobtype\" at line 0 in input "
+        "file: Invalid job type specified - possible values are:\n"
         "- mm-opt\n"
         "- mm-hessian\n"
         "- mm-md\n"
@@ -104,9 +96,6 @@ TEST_F(TestInputFileReader, JobType)
         "- qm-rpmd\n"
         "- qmmm-md\n"
     );
-
-    input::GeneralInputParser parser{generalSettings};
-    EXPECT_NO_THROW(parser.parseJobType(lineElements, 0));
 }
 
 /**

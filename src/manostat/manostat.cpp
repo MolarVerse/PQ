@@ -59,7 +59,7 @@ namespace manostat
     )
     {
         const auto ekinVirial =
-            physicalData.getKinEnergyVirialTensor(_settings->getVirialType());
+            physicalData.getKinEnergyVirialTensor(_settings->get_virial());
         const auto forceVirial = physicalData.get_virial();
         const auto volume      = simulationBox.getVolume();
 
@@ -78,7 +78,7 @@ namespace manostat
                               box.getBoxMatrix();
         }
 
-        const auto fixedAxis = _settings->getFixedAxis();
+        const auto fixedAxis = _settings->get_fixedAxis();
         const auto p_xyz     = diagonal(_pressureTensor);
 
         size_t   numFree = 0;

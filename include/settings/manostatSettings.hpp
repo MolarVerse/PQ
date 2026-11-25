@@ -55,35 +55,15 @@ class ManostatSettings
 
     void finalize(ReferenceSettings& referenceSettings);
 
-    /***************************
-     * standard setter methods *
-     ***************************/
-
-    void setManostatTypeByUser(ManostatType manostatType);
-    void setIsotropyByUser(Isotropy isotropy);
-
-    void setFixedAxisByUser(FixedAxis fixedAxis);
-
-    void setTargetPressureByUser(const Pressure& targetPressure);
-    void setTauByUser(const Time& tau);
-    void setCompressibilityByUser(const Compressibility& compressibility);
-
-    void setVirialTypeByUser(VirialType virialType);
-
-    /***************************
-     * standard getter methods *
-     ***************************/
+    SETTING_GETTER_AND_SETTER_BY_USER(_manostatType);
+    SETTING_GETTER_AND_SETTER_BY_USER(_isotropy);
+    SETTING_GETTER_AND_SETTER_BY_USER(_fixedAxis);
+    SETTING_GETTER_AND_SETTER_BY_USER(_targetPressure);
+    SETTING_GETTER_AND_SETTER_BY_USER(_tau);
+    SETTING_GETTER_AND_SETTER_BY_USER(_compressibility);
+    SETTING_GETTER_AND_SETTER_BY_USER(_virial);
 
     [[nodiscard]] bool isBerendsenBased() const;
-
-    [[nodiscard]] ManostatType           getManostatType() const;
-    [[nodiscard]] Isotropy               getIsotropy() const;
-    [[nodiscard]] FixedAxis              getFixedAxis() const;
-    [[nodiscard]] const Pressure&        getTargetPressure() const;
-    [[nodiscard]] const Time&            getTau() const;
-    [[nodiscard]] const Compressibility& getCompressibility() const;
-
-    [[nodiscard]] VirialType getVirialType() const;
 
    private:
     void _addReferenceFile(ReferenceSettings& referenceSettings);
