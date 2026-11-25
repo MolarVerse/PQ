@@ -212,8 +212,10 @@ namespace input::restartFile
      * next molecule)
      *
      * @param lineElements all elements of the line
-     * @param engine
      * @param lineNumber the line number in the rst file being processed
+     * @param settings the simulation settings (currently unused in this
+     * function)
+     * @param simulationBox the simulation box to which the atoms are added
      *
      * @throws RstFileException if the molecule type is not found
      * @throws RstFileException if the number of atoms in the

@@ -49,8 +49,11 @@ namespace input::restartFile
      * dimensions, the next 3 elements are the box angles.
      *
      * @param lineElements all elements of the line
-     * @param engine object containing the engine
      * @param lineNumber the line number in the rst file being processed
+     * @param settings the simulation settings (currently unused in this
+     * function)
+     * @param simulationBox the simulation box to which the box dimensions and
+     * angles are applied
      *
      * @throws exc::RstFileException if the number of elements in the
      * line is not 4 or 7

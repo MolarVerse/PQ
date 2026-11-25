@@ -51,8 +51,6 @@ namespace input::restartFile
      *
      *
      * @param filename
-     * @param noseHooverSettings Reference to the NoseHooverSettings object
-     * @param timingsSettings Reference to the TimingsSettings object
      */
     RestartFileReader::RestartFileReader(const std::string &filename)
         : _fileName(filename),

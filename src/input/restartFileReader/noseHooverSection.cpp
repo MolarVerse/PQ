@@ -39,6 +39,9 @@ namespace input::restartFile
      *
      * @param lineElements all elements of the line
      * @param lineNumber the line number in the rst file being processed
+     * @param settings the simulation settings
+     * @param simulationBox the simulation box (currently unused in this
+     * function)
      *
      * @throws exc::RstFileException if the number of arguments is not
      * correct
