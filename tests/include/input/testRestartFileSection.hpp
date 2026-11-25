@@ -195,9 +195,7 @@ class TestMetaDataSection : public ::testing::Test
 
 inline void TestMetaDataSection::SetUp()
 {
-    _section = std::make_unique<input::restartFile::MetaDataSection>(
-        _settings.generalSettings
-    );
+    _section = std::make_unique<input::restartFile::MetaDataSection>();
 
     // NOTE: use dummy engine for testing
     //       this is implemented by base class Engine

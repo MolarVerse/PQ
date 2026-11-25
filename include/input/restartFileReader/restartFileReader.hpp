@@ -54,8 +54,7 @@ namespace input::restartFile
     void readRestartFile(
         Settings              &settings,
         molsys::SimulationBox &simulationBox,
-        out::LogOutput        &logOutput,
-        GeneralSettings &
+        out::LogOutput        &logOutput
     );
 
     /**
@@ -78,7 +77,6 @@ namespace input::restartFile
 
         void read(
             Settings              &settings,
-            GeneralSettings       &generalSettings,
             molsys::SimulationBox &simulationBox,
             out::LogOutput        &logOutput
         );

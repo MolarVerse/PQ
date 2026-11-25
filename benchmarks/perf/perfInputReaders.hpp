@@ -160,8 +160,7 @@ namespace benchInputReaders
             input::restartFile::readRestartFile(
                 settings,
                 engine.get_simulationBox(),
-                engine.getLogOutput(),
-                settings.generalSettings
+                engine.getLogOutput()
             );
             input::topology::readTopologyFile(engine);
 

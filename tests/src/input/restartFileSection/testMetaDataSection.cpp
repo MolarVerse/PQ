@@ -59,7 +59,8 @@ TEST_F(TestMetaDataSection, processVersion)
 
     auto   line = std::vector<std::string>{"!meta_data", "version", "v2.1.3"};
     size_t lineNumber = 7;
-    _section->process(line, *_engine, lineNumber);
+    _section
+        ->process(line, lineNumber, _settings, _engine->get_simulationBox());
 
     const auto version = _settings.generalSettings.getRestartVersion();
     EXPECT_TRUE(isValid(version));
@@ -74,7 +75,8 @@ TEST_F(TestMetaDataSection, processVersionCaseInsensitive)
 {
     auto   line = std::vector<std::string>{"!meta_data", "VeRsIoN", "v1.2.0"};
     size_t lineNumber = 1;
-    _section->process(line, *_engine, lineNumber);
+    _section
+        ->process(line, lineNumber, _settings, _engine->get_simulationBox());
 
     EXPECT_EQ(
         _settings.generalSettings.getRestartVersion(),
@@ -95,7 +97,8 @@ TEST_F(TestMetaDataSection, processUpperCaseKeyword)
         "v1.4.0"
     };
     size_t lineNumber = 1;
-    _section->process(line, *_engine, lineNumber);
+    _section
+        ->process(line, lineNumber, _settings, _engine->get_simulationBox());
 
     EXPECT_EQ(
         _settings.generalSettings.getRestartVersion(),
@@ -112,7 +115,8 @@ TEST_F(TestMetaDataSection, processVersionWithHash)
     auto line =
         std::vector<std::string>{"!meta_data", "version", "v2.0.0+abc123"};
     size_t lineNumber = 1;
-    _section->process(line, *_engine, lineNumber);
+    _section
+        ->process(line, lineNumber, _settings, _engine->get_simulationBox());
 
     EXPECT_EQ(
         _settings.generalSettings.getRestartVersion(),
@@ -130,14 +134,24 @@ TEST_F(TestMetaDataSection, wrongKeyword)
 
     auto line = std::vector<std::string>{"box", "version", "v1.0.0"};
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine, lineNumber),
+        _section->process(
+            line,
+            lineNumber,
+            _settings,
+            _engine->get_simulationBox()
+        ),
         exc::RstFileException,
         "Expected keyword !meta_data at line 3"
     );
 
     line = {};
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine, lineNumber),
+        _section->process(
+            line,
+            lineNumber,
+            _settings,
+            _engine->get_simulationBox()
+        ),
         exc::RstFileException,
         "Expected keyword !meta_data at line 3"
     );
@@ -165,7 +179,12 @@ TEST_F(TestMetaDataSection, numberOfArguments)
         }
 
         ASSERT_THROW_MSG(
-            _section->process(line, *_engine, lineNumber),
+            _section->process(
+                line,
+                lineNumber,
+                _settings,
+                _engine->get_simulationBox()
+            ),
             exc::RstFileException,
             count == 0 ? "Expected keyword !meta_data at line 4"
                        : "Expected 3 elements for !meta_data at line 4"
@@ -183,7 +202,12 @@ TEST_F(TestMetaDataSection, unknownKey)
     size_t lineNumber = 5;
 
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine, lineNumber),
+        _section->process(
+            line,
+            lineNumber,
+            _settings,
+            _engine->get_simulationBox()
+        ),
         exc::RstFileException,
         "Unrecognized metadata key 'colour' at line 5"
     );
@@ -197,12 +221,18 @@ TEST_F(TestMetaDataSection, duplicateKey)
 {
     size_t lineNumber = 1;
     auto   line = std::vector<std::string>{"!meta_data", "version", "v1.0.0"};
-    _section->process(line, *_engine, lineNumber);
+    _section
+        ->process(line, lineNumber, _settings, _engine->get_simulationBox());
 
     lineNumber = 2;
     line       = {"!meta_data", "version", "v2.0.0"};
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine, lineNumber),
+        _section->process(
+            line,
+            lineNumber,
+            _settings,
+            _engine->get_simulationBox()
+        ),
         exc::RstFileException,
         "Duplicate metadata key 'version' at line 2"
     );
@@ -222,13 +252,18 @@ TEST_F(TestMetaDataSection, invalidVersion)
     for (const auto *version : {"abc", "1.2", "v1.2", "v1.2.x", "v1.2.3+"})
     {
         // a fresh section, as the section remembers parsed keys
-        input::restartFile::MetaDataSection section(_settings.generalSettings);
+        input::restartFile::MetaDataSection section;
 
         auto line = std::vector<std::string>{"!meta_data", "version", version};
         size_t lineNumber = 9;
 
         ASSERT_THROW_MSG(
-            section.process(line, *_engine, lineNumber),
+            section.process(
+                line,
+                lineNumber,
+                _settings,
+                _engine->get_simulationBox()
+            ),
             exc::RstFileException,
             "Invalid version '" + std::string(version) +
                 "' at line 9, expected format 'vMAJOR.MINOR.PATCH'"

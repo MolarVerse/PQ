@@ -89,8 +89,7 @@ TEST_F(TestRstFileReader, rstFileReading)
         input::restartFile::readRestartFile(
             _settings,
             _engine->get_simulationBox(),
-            _engine->getLogOutput(),
-            _settings.generalSettings
+            _engine->getLogOutput()
         )
     );
 }
@@ -121,8 +120,7 @@ TEST_F(TestRstFileReader, startFileWithoutAtomsIsRefused)
             input::restartFile::readRestartFile(
                 _settings,
                 _engine->get_simulationBox(),
-                _engine->getLogOutput(),
-                _settings.generalSettings
+                _engine->getLogOutput()
             ),
             exc::RstFileException,
             "Start file \"start_file_without_atoms.rst\" contains no atoms - a "
@@ -155,8 +153,7 @@ TEST_F(TestRstFileReader, writeStepInfoMD)
     input::restartFile::readRestartFile(
         _settings,
         _engine->get_simulationBox(),
-        _engine->getLogOutput(),
-        _settings.generalSettings
+        _engine->getLogOutput()
     );
     _engine->getLogOutput().close();
 
@@ -203,8 +200,7 @@ TEST_F(TestRstFileReader, writeStepInfoOpt)
     input::restartFile::readRestartFile(
         _settings,
         _engine->get_simulationBox(),
-        _engine->getLogOutput(),
-        _settings.generalSettings
+        _engine->getLogOutput()
     );
     _engine->getLogOutput().close();
 
@@ -258,10 +254,9 @@ TEST_F(TestRstFileReader, readsMetaData)
 
     ASSERT_NO_THROW(
         input::restartFile::readRestartFile(
-            *_engine,
-            _settings.noseHooverSettings,
-            _settings.timings,
-            _settings.generalSettings
+            _settings,
+            _engine->get_simulationBox(),
+            _engine->getLogOutput()
         )
     );
 
@@ -290,10 +285,9 @@ TEST_F(TestRstFileReader, noMetaDataKeepsVersionInvalid)
 
     input::molDescriptor::MoldescriptorReader(*_engine).read();
     input::restartFile::readRestartFile(
-        *_engine,
-        _settings.noseHooverSettings,
-        _settings.timings,
-        _settings.generalSettings
+        _settings,
+        _engine->get_simulationBox(),
+        _engine->getLogOutput()
     );
 
     EXPECT_FALSE(isValid(_settings.generalSettings.getRestartVersion()));
@@ -320,10 +314,9 @@ TEST_F(TestRstFileReader, malformedMetaDataThrows)
 
     EXPECT_THROW_MSG(
         input::restartFile::readRestartFile(
-            *_engine,
-            _settings.noseHooverSettings,
-            _settings.timings,
-            _settings.generalSettings
+            _settings,
+            _engine->get_simulationBox(),
+            _engine->getLogOutput()
         ),
         exc::RstFileException,
         "Unrecognized metadata key 'colour' at line 1"

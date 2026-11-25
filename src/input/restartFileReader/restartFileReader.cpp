@@ -62,7 +62,7 @@ namespace input::restartFile
         _sections.push_back(std::make_unique<BoxSection>());
         _sections.push_back(std::make_unique<NoseHooverSection>());
         _sections.push_back(std::make_unique<StepCountSection>());
-        _sections.push_back(std::make_unique<MetaDataSection>(generalSettings));
+        _sections.push_back(std::make_unique<MetaDataSection>());
     }
 
     /**
@@ -175,13 +175,11 @@ namespace input::restartFile
      * @brief wrapper function to construct a RestartFileReader object and call
      * the read function
      *
-     * @param generalSettings Reference to the GeneralSettings object
      */
     void readRestartFile(
         Settings              &settings,
         molsys::SimulationBox &simulationBox,
-        out::LogOutput        &logOutput,
-        GeneralSettings       &generalSettings
+        out::LogOutput        &logOutput
     )
     {
         if (!settings.fileSettings.isStartFileNameSetByUser())

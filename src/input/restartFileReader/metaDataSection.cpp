@@ -27,20 +27,11 @@
 #include "enums/rstMetaData.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
+#include "settings.hpp"
 #include "stringUtilities.hpp"
 
 namespace input::restartFile
 {
-    /**
-     * @brief Constructs a MetaDataSection with the given general settings.
-     *
-     * @param generalSettings Reference to the general settings object.
-     */
-    MetaDataSection::MetaDataSection(GeneralSettings &generalSettings)
-        : _generalSettings(generalSettings)
-    {
-    }
-
     /**
      * @brief Returns the keyword identifying the metadata section in the
      * restart file.
@@ -64,8 +55,9 @@ namespace input::restartFile
      */
     void MetaDataSection::process(
         std::vector<std::string> &lineElements,
-        engine::Engine & /* engine */,
-        size_t &lineNumber
+        size_t                   &lineNumber,
+        Settings                 &settings,
+        molsys::SimulationBox & /* simulationBox */
     )
     {
         if (lineElements.empty() ||
@@ -117,7 +109,7 @@ namespace input::restartFile
         switch (enumValue)
         {
             case RestartFileMetaData::Version:
-                _setVersion(lineElements[2], lineNumber);
+                _setVersion(lineElements[2], lineNumber, settings);
                 break;
         }
     }
@@ -133,12 +125,13 @@ namespace input::restartFile
      */
     void MetaDataSection::_setVersion(
         const std::string &version,
-        size_t             lineNumber
+        size_t             lineNumber,
+        Settings          &settings
     )
     {
         try
         {
-            _generalSettings->setRestartVersionByUser(
+            settings.generalSettings.setRestartVersionByUser(
                 SemVer::from_string(version)
             );
         }

@@ -44,23 +44,25 @@ namespace input::restartFile
      */
     class MetaDataSection : public RestartFileSection
     {
-        mstd::Ref<GeneralSettings>              _generalSettings;
         std::unordered_set<RestartFileMetaData> _parsedKeywords;
 
        public:
-        explicit MetaDataSection(GeneralSettings &generalSettings);
-
         [[nodiscard]]
         std::string keyword() override;
 
         void process(
             std::vector<std::string> &lineElements,
-            engine::Engine           &engine,
-            size_t                   &lineNumber
+            size_t                   &lineNumber,
+            Settings                 &settings,
+            molsys::SimulationBox    &simulationBox
         ) override;
 
        private:
-        void _setVersion(const std::string &version, size_t lineNumber);
+        static void _setVersion(
+            const std::string &version,
+            size_t             lineNumber,
+            Settings          &settings
+        );
     };
 }   // namespace input::restartFile
 
