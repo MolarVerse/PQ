@@ -81,7 +81,7 @@ namespace
             std::make_shared<ff::ForceField>(settings.hybridSettings)
         );
 
-        settings.manostatSettings.setVirialTypeByUser(VirialType::MOLECULAR);
+        settings.manostatSettings.set_virialByUser(VirialType::MOLECULAR);
     }
 }   // namespace
 
@@ -155,7 +155,7 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
         std::make_shared<ff::ForceField>(settings.hybridSettings)
     );
 
-    settings.manostatSettings.setVirialTypeByUser(VirialType::MOLECULAR);
+    settings.manostatSettings.set_virialByUser(VirialType::MOLECULAR);
 
     eval2.evaluate(physicalData, box, intraNonBonded);
 

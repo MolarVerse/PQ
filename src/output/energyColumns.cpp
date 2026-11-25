@@ -175,7 +175,7 @@ namespace out
             });
         }
 
-        if (settings.manostatSettings.getManostatType() != ManostatType::NONE)
+        if (settings.manostatSettings.get_manostatType() != ManostatType::NONE)
         {
             _add({
                 .name = "VOLUME",
@@ -190,7 +190,7 @@ namespace out
                     physicalData.get_density().numerical_value_in(kg_per_litre),
             });
 
-            if (settings.manostatSettings.getFixedAxis() != FixedAxis::NONE)
+            if (settings.manostatSettings.get_fixedAxis() != FixedAxis::NONE)
             {
                 _add({
                     .name  = "P(COUPLED)",

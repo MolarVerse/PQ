@@ -76,7 +76,7 @@ namespace setup
         const auto &manostatSettings = _engine.getSettings().manostatSettings;
 
         if (manostatSettings.isBerendsenBased() &&
-            manostatSettings.getVirialType() == VirialType::ATOMIC &&
+            manostatSettings.get_virial() == VirialType::ATOMIC &&
             std::ranges::any_of(
                 _engine.get_simulationBox().getMolecules(),
                 [](const auto &molecule)
@@ -104,9 +104,9 @@ namespace setup
     {
         const auto &manostatSettings = _engine.getSettings().manostatSettings;
 
-        const auto isotropy     = manostatSettings.getIsotropy();
-        const auto fixedAxis    = manostatSettings.getFixedAxis();
-        const auto manostatType = manostatSettings.getManostatType();
+        const auto isotropy     = manostatSettings.get_isotropy();
+        const auto fixedAxis    = manostatSettings.get_fixedAxis();
+        const auto manostatType = manostatSettings.get_manostatType();
 
         if (manostatType != ManostatType::NONE && fixedAxis == FixedAxis::ALL)
         {
@@ -146,7 +146,7 @@ namespace setup
         if (manostatSettings.isBerendsenBased())
             _writeBerendsenSetup(logOutput, manostatSettings);
 
-        if (manostatSettings.getManostatType() != ManostatType::NONE)
+        if (manostatSettings.get_manostatType() != ManostatType::NONE)
             _writeIsotropy(logOutput, manostatSettings);
     }
 
@@ -159,7 +159,7 @@ namespace setup
         const ManostatSettings &manostatSettings
     )
     {
-        switch (manostatSettings.getManostatType())
+        switch (manostatSettings.get_manostatType())
         {
             using enum ManostatType;
 
@@ -188,9 +188,9 @@ namespace setup
         const ManostatSettings &settings
     )
     {
-        const auto pressure = settings.getTargetPressure();
-        const auto tau      = settings.getTau();
-        const auto compr    = settings.getCompressibility();
+        const auto pressure = settings.get_targetPressure();
+        const auto tau      = settings.get_tau();
+        const auto compr    = settings.get_compressibility();
 
         logOutput.writeSetupInfo(
             std::format("Target pressure: {}", pressure.in(bar))
@@ -213,7 +213,7 @@ namespace setup
         const ManostatSettings &settings
     )
     {
-        const auto &isotropy = settings.getIsotropy();
+        const auto &isotropy = settings.get_isotropy();
 
         switch (isotropy)
         {

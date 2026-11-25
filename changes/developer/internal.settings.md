@@ -10,3 +10,5 @@
 - add short macros for getter and setters in `ForceFieldSettings` 
 - add short macros for getter and setters in `HessianSettings` 
 - add short macros for getter and setters in `HybridSettings` 
+- add short macros for getter and setters in `ManostatSettings` 
+- add short macros for getter and setters in `OptimizerSettings` 

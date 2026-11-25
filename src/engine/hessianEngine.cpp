@@ -87,8 +87,8 @@ namespace engine
             const OptimizerSettings &settings
         )
         {
-            const auto alpha0     = settings.getInitialLearningRate();
-            const auto lrStrategy = settings.getLearningRateStrategy();
+            const auto alpha0     = settings.get_initialLearningRate();
+            const auto lrStrategy = settings.get_lRStrategy();
 
             settings.validateLearningRateStrategy();
 
@@ -101,22 +101,22 @@ namespace engine
 
                 case CONSTANT_DECAY:
                 {
-                    const auto alphaFreq = settings.getLRUpdateFrequency();
+                    const auto alphaFreq = settings.get_lRupdateFrequency();
 
                     return std::make_shared<opt::ConstantDecayLRStrategy>(
                         alpha0,
-                        settings.getLearningRateDecay(),
+                        settings.get_learningRateDecay(),
                         alphaFreq
                     );
                 }
 
                 case EXPONENTIAL_DECAY:
                 {
-                    const auto alphaFreq = settings.getLRUpdateFrequency();
+                    const auto alphaFreq = settings.get_lRupdateFrequency();
 
                     return std::make_shared<opt::ExpDecayLR>(
                         alpha0,
-                        settings.getLearningRateDecay(),
+                        settings.get_learningRateDecay(),
                         alphaFreq
                     );
                 }
@@ -141,7 +141,7 @@ namespace engine
             const OptimizerSettings                    &settings
         )
         {
-            const auto minLR = settings.getMinLearningRate();
+            const auto minLR = settings.get_minLearningRate();
             const auto maxLR = settings.getMaxLearningRate();
 
             settings.validateLearningRateBounds();
@@ -517,7 +517,7 @@ namespace engine
     std::shared_ptr<opt::Optimizer> HessianEngine::_setupEmptyOptimizer()
     {
         const auto optimizerType =
-            getSettings().optimizerSettings.getOptimizer();
+            getSettings().optimizerSettings.get_optimizer();
 
         std::shared_ptr<opt::Optimizer> optimizer;
 
@@ -566,7 +566,7 @@ namespace engine
             std::format(
                 "Optimizer:                  {}",
                 OptimizerTypeMeta::toString(
-                    getSettings().optimizerSettings.getOptimizer()
+                    getSettings().optimizerSettings.get_optimizer()
                 )
             )
         );
@@ -574,7 +574,7 @@ namespace engine
             std::format(
                 "Learning rate strategy:     {}",
                 LearningRateMeta::toString(
-                    getSettings().optimizerSettings.getLearningRateStrategy()
+                    getSettings().optimizerSettings.get_lRStrategy()
                 )
             )
         );

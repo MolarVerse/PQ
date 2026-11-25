@@ -125,7 +125,7 @@ namespace virial
 
         VirialPerMol virial = VirialPerMol::zero();
 
-        if (manostatSettings.getVirialType() == VirialType::ATOMIC)
+        if (manostatSettings.get_virial() == VirialType::ATOMIC)
             return virial;
 
         for (const auto &molecule : simulationBox.getMolecules())

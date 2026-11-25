@@ -314,7 +314,7 @@ namespace input
         JobType                 jobType
     ) const
     {
-        const auto manostatType = manostatSettings.getManostatType();
+        const auto manostatType = manostatSettings.get_manostatType();
 
         if (manostatType == ManostatType::NONE)
             return;
@@ -331,7 +331,7 @@ namespace input
 
         // only an MD job has a time step
         if (isMDJobType(jobType) &&
-            timings.getTimeStep() > manostatSettings.getTau())
+            timings.getTimeStep() > manostatSettings.get_tau())
         {
             throw exc::InputFileException(
                 "The timestep must not exceed the manostat relaxation time"
