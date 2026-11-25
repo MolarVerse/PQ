@@ -1,0 +1,1 @@
+- `HessianEngine::_runOptimization` writes the output of the converged step before it leaves the loop; a regression test checks the last `.rst` step (#1336).
