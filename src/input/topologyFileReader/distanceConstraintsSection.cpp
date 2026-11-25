@@ -109,7 +109,7 @@ namespace input::topology
             );
         }
 
-        auto &simBox = engine.getSimulationBox();
+        auto &simBox = engine.get_simulationBox();
 
         const auto [molecule1, atomIndex1] =
             simBox.findMoleculeByGlobalAtomIndex(atom1);
@@ -127,7 +127,7 @@ namespace input::topology
             dSpringConstantDt
         );
 
-        engine.getConstraints()->addDistanceConstraint(distanceConstraint);
+        engine.get_constraints().addDistanceConstraint(distanceConstraint);
     }
 
     /**

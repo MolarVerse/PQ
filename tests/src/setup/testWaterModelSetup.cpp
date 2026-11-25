@@ -52,7 +52,7 @@ namespace
         const std::vector<std::string> &atomNames
     )
     {
-        auto &simBox = engine.getSimulationBox();
+        auto &simBox = engine.get_simulationBox();
         simBox.setWaterType(kWaterType);
 
         molsys::MoleculeType waterType{kWaterType};
@@ -88,7 +88,7 @@ namespace
     )
     {
         const auto state = waterModel::makeInterWaterState<Parameter>();
-        engine.getSimulationBox().getMolecule(0).setPartialCharges(
+        engine.get_simulationBox().getMolecule(0).setPartialCharges(
             {state.oxygenCharge, state.hydrogenCharge, state.hydrogenCharge}
         );
         settings.waterModelSettings.setWaterInterModelByUser(model);
@@ -195,8 +195,8 @@ TEST_F(TestSetup, waterModelSetupCoversAllIntramolecularModels)
         setup::WaterModelSetup(*_mdEngine).setup();
     }
 
-    const auto &constraints = _mdEngine->getConstraints();
-    EXPECT_EQ(constraints->getNumberOfBondConstraints(), 18);
+    const auto &constraints = _mdEngine->get_constraints();
+    EXPECT_EQ(constraints.getNumberOfBondConstraints(), 18);
 }
 
 TEST_F(TestSetup, waterModelSetupRejectsMissingWaterType)
@@ -277,8 +277,8 @@ TEST_F(TestSetup, waterModelSetupRejectsWaterBondsInTopology)
         WaterIntraModel::SPC_FW
     );
     addWaterSystem(*_mdEngine);
-    _settings->fileSettings.setTopologyFileNameByUser("topology.top");
-    auto *water = &_mdEngine->getSimulationBox().getMolecule(0);
+    _settings->fileSettings.set_topologyFileByUser("topology.top");
+    auto *water = &_mdEngine->get_simulationBox().getMolecule(0);
     _mdEngine->getForceField()->addBond(
         ff::BondForceField(water, water, AtomIndex{0}, AtomIndex{1}, BondId{0})
     );
@@ -303,8 +303,8 @@ TEST_F(TestSetup, waterModelSetupRejectsWaterAnglesInTopology)
         WaterIntraModel::SPC_FW
     );
     addWaterSystem(*_mdEngine);
-    _settings->fileSettings.setTopologyFileNameByUser("topology.top");
-    auto *water = &_mdEngine->getSimulationBox().getMolecule(0);
+    _settings->fileSettings.set_topologyFileByUser("topology.top");
+    auto *water = &_mdEngine->get_simulationBox().getMolecule(0);
     _mdEngine->getForceField()->addAngle(
         ff::AngleForceField(
             {water, water, water},

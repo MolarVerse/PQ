@@ -74,7 +74,7 @@ namespace
      */
     void fillEngineBox(engine::RingPolymerQMMDEngine &ringPolymerEngine)
     {
-        auto &simulationBox = ringPolymerEngine.getSimulationBox();
+        auto &simulationBox = ringPolymerEngine.get_simulationBox();
 
         for (size_t index = 0; index < N_TEST_ATOMS; ++index)
         {
@@ -149,7 +149,7 @@ TEST_F(TestSetup, ringPolymerSetupBeadsAreIndependentCopiesOfTheBox)
         ASSERT_EQ(bead.getNumberOfAtoms(), N_TEST_ATOMS);
         EXPECT_EQ(
             bead.getPositions(),
-            rpEngine.getSimulationBox().getPositions()
+            rpEngine.get_simulationBox().getPositions()
         );
     }
 
@@ -162,7 +162,7 @@ TEST_F(TestSetup, ringPolymerSetupBeadsAreIndependentCopiesOfTheBox)
         linalg::Vec3D(5, 2.0 * std::sin(5.0), 3.0 * std::cos(3.5)) * angstrom
     );
     EXPECT_EQ(
-        rpEngine.getSimulationBox().getAtoms()[5]->getPosition(),
+        rpEngine.get_simulationBox().getAtoms()[5]->getPosition(),
         linalg::Vec3D(5, 2.0 * std::sin(5.0), 3.0 * std::cos(3.5)) * angstrom
     );
     EXPECT_NE(beads[0].getAtoms()[5], beads[1].getAtoms()[5]);
@@ -286,7 +286,7 @@ TEST_F(TestSetup, ringPolymerSetupReadsBeadsFromRestartFile)
 
     Settings settings;
     settings.ringPolymerSettings.setNumberOfBeadsByUser(2);
-    settings.fileSettings.setRingPolymerStartFileNameByUser(fileName);
+    settings.fileSettings.set_rpmdStartFileByUser(fileName);
     engine::RingPolymerQMMDEngine rpEngine{settings};
     fillEngineBox(rpEngine);
 

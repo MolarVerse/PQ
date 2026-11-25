@@ -76,7 +76,7 @@ TEST_F(TestMShakeReader, testProcessCommentLine)
     );
 
     auto molType = molsys::MoleculeType(MolType{1});
-    _engine->getSimulationBox().addMoleculeType(molType);
+    _engine->get_simulationBox().addMoleculeType(molType);
 
     reader.processCommentLine(commentLine, mShakeReference);
     EXPECT_EQ(mShakeReference.getMoleculeType().getMoltype(), MolType{1});
@@ -196,24 +196,22 @@ TEST_F(TestMShakeReader, testProcessAtomLines)
 
 TEST_F(TestMShakeReader, testReadMemberFunction)
 {
-    _settings.fileSettings.setMShakeFileNameByUser(
-        "data/mshakeReader/mshake.dat"
-    );
+    _settings.fileSettings.set_mShakeFileByUser("data/mshakeReader/mshake.dat");
 
     auto molType = molsys::MoleculeType(MolType{1});
     molType.addAtomName("H");
     molType.addAtomName("O");
     molType.addAtomName("C");
-    _engine->getSimulationBox().addMoleculeType(molType);
+    _engine->get_simulationBox().addMoleculeType(molType);
 
     auto molType2 = molsys::MoleculeType(MolType{2});
     molType2.addAtomName("H");
     molType2.addAtomName("O");
-    _engine->getSimulationBox().addMoleculeType(molType2);
+    _engine->get_simulationBox().addMoleculeType(molType2);
 
     input::mShake::readMShake(*_engine);
 
-    auto mShakeReferences = _engine->getConstraints()->getMShakeReferences();
+    auto mShakeReferences = _engine->get_constraints().getMShakeReferences();
 
     EXPECT_EQ(mShakeReferences.size(), 2);
     EXPECT_EQ(mShakeReferences[0].getMoleculeType().getMoltype(), MolType{1});
@@ -296,16 +294,16 @@ TEST_F(TestMShakeReader, testRead)
     molType.addAtomName("H");
     molType.addAtomName("O");
     molType.addAtomName("C");
-    _engine->getSimulationBox().addMoleculeType(molType);
+    _engine->get_simulationBox().addMoleculeType(molType);
 
     auto molType2 = molsys::MoleculeType(MolType{2});
     molType2.addAtomName("H");
     molType2.addAtomName("O");
-    _engine->getSimulationBox().addMoleculeType(molType2);
+    _engine->get_simulationBox().addMoleculeType(molType2);
 
     reader.read();
 
-    auto mShakeReferences = _engine->getConstraints()->getMShakeReferences();
+    auto mShakeReferences = _engine->get_constraints().getMShakeReferences();
 
     EXPECT_EQ(mShakeReferences.size(), 2);
     EXPECT_EQ(mShakeReferences[0].getMoleculeType().getMoltype(), MolType{1});

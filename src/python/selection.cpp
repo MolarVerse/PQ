@@ -26,10 +26,21 @@
 
 #include <Python.h>
 
+#include <format>
 #include <fstream>
-#include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
+
+#include "exceptions.hpp"
+#include "pythonError.hpp"
+
+namespace
+{
+    constexpr const char *SELECTION_MODULE = "PQAnalysis.topology.api";
+    constexpr const char *SELECTION_FUNCTION =
+        "selection_from_restart_file_as_list";
+}   // namespace
 
 /**
  * @brief call selection tool of PQAnalysis.topology
@@ -38,6 +49,9 @@
  * @param restartFileName
  * @param moldescriptorFileName
  * @return std::vector<int>
+ *
+ * @throw exc::InputFileException with the failed step and the Python
+ * exception if the selection cannot be run
  */
 std::vector<int> pq_python::select(
     const std::string &selection,
@@ -45,93 +59,131 @@ std::vector<int> pq_python::select(
     const std::string &moldescriptorFileName
 )
 {
-    PyObject *pName;
-    PyObject *pModule;
-    PyObject *pDict;
-    PyObject *pFunc;
-    PyObject *pArgs;
-    PyObject *pValue;
-
     // keep the interpreter alive: numpy cannot be imported again after
     // Py_Finalize, and PQ may already own it (pybind11 in apps/PQ.cpp)
     if (::Py_IsInitialized() == 0)
+    {
         ::Py_Initialize();
-
-    const std::string moduleString = "PQAnalysis.topology.api";
-
-    pName = ::PyUnicode_FromString(moduleString.c_str());
-
-    pModule = ::PyImport_Import(pName);
-    if (pModule == nullptr)
-    {
-        PyErr_Print();
-        fprintf(stderr, "Failed to load \"%s\"\n", moduleString.c_str());
     }
-    pDict = ::PyModule_GetDict(pModule);
 
-    pFunc =
-        ::PyDict_GetItemString(pDict, "selection_from_restart_file_as_list");
+    const auto module = error::own(::PyImport_ImportModule(SELECTION_MODULE));
+    if (module == nullptr)
+    {
+        throw exc::InputFileException(
+            error::importErrorMessage(
+                selection,
+                SELECTION_MODULE,
+                error::takePythonError()
+            )
+        );
+    }
 
-    if (moldescriptorFileName.empty() ||
-        ::fopen(moldescriptorFileName.c_str(), "r") == nullptr)
-        pArgs = ::PyTuple_New(2);
-    else
-        pArgs = ::PyTuple_New(3);
+    const auto function =
+        error::own(::PyObject_GetAttrString(module.get(), SELECTION_FUNCTION));
+    if (function == nullptr)
+    {
+        throw exc::InputFileException(
+            std::format(
+                R"(Selection "{}" could not load "{}" from "{}" ({}))",
+                selection,
+                SELECTION_FUNCTION,
+                SELECTION_MODULE,
+                error::takePythonError().description
+            )
+        );
+    }
+    if (::PyCallable_Check(function.get()) == 0)
+    {
+        throw exc::InputFileException(
+            std::format(
+                "Selection \"{}\" could not call \"{}.{}\": it is a \"{}\", "
+                "not a function",
+                selection,
+                SELECTION_MODULE,
+                SELECTION_FUNCTION,
+                Py_TYPE(function.get())->tp_name
+            )
+        );
+    }
 
-    pValue = ::PyUnicode_FromString(selection.c_str());
-    ::PyTuple_SetItem(pArgs, 0, pValue);
-    pValue = ::PyUnicode_FromString(restartFileName.c_str());
-    ::PyTuple_SetItem(pArgs, 1, pValue);
-
+    std::vector<std::string> argStrings{selection, restartFileName};
     if (!moldescriptorFileName.empty() &&
-        ::fopen(moldescriptorFileName.c_str(), "r") != nullptr)
+        std::ifstream{moldescriptorFileName}.good())
     {
-        pValue = ::PyUnicode_FromString(moldescriptorFileName.c_str());
-        ::PyTuple_SetItem(pArgs, 2, pValue);
+        argStrings.push_back(moldescriptorFileName);
     }
 
-    if (pFunc == NULL)
-        ::fprintf(stderr, "pFunc is NULL\n");
-
-    if (pArgs == NULL)
-        ::fprintf(stderr, "pArgs is NULL\n");
-
-    if (!PyCallable_Check(pFunc))
-        ::fprintf(stderr, "pFunc is not a callable object\n");
-
-    if (!PyTuple_Check(pArgs))
-        ::fprintf(stderr, "pArgs is not a tuple object\n");
-
-    pValue = ::PyObject_CallObject(pFunc, pArgs);
-
-    if (pValue == NULL)
+    const auto args =
+        error::own(::PyTuple_New(static_cast<Py_ssize_t>(argStrings.size())));
+    bool argsSet = args != nullptr;
+    for (size_t index = 0; argsSet && index < argStrings.size(); ++index)
     {
-        ::PyErr_Print();
-        ::fprintf(stderr, "Call failed\n");
+        PyObject *item = ::PyUnicode_FromString(argStrings[index].c_str());
+        argsSet        = item != nullptr && ::PyTuple_SetItem(
+                                         args.get(),
+                                         static_cast<Py_ssize_t>(index),
+                                         item
+                                     ) == 0;
+    }
+    if (!argsSet)
+    {
+        throw exc::InputFileException(
+            std::format(
+                "Could not pass selection \"{}\" to Python ({})",
+                selection,
+                error::takePythonError().description
+            )
+        );
     }
 
-    // convert pValue from python list to C++ vector of int result
+    const auto value =
+        error::own(::PyObject_CallObject(function.get(), args.get()));
+    if (value == nullptr)
+    {
+        throw exc::InputFileException(
+            std::format(
+                R"(Selection "{}" failed in "{}.{}" ({}))",
+                selection,
+                SELECTION_MODULE,
+                SELECTION_FUNCTION,
+                error::takePythonError().description
+            )
+        );
+    }
+
+    const auto iter = error::own(::PyObject_GetIter(value.get()));
+    if (iter == nullptr)
+    {
+        throw exc::InputFileException(
+            std::format(
+                "Selection \"{}\" returned no list of atom indices ({})",
+                selection,
+                error::takePythonError().description
+            )
+        );
+    }
+
     std::vector<int> result;
-    if (pValue != nullptr)
+    while (const auto item = error::own(::PyIter_Next(iter.get())))
     {
-        PyObject *pIter = ::PyObject_GetIter(pValue);
-        PyObject *pItem;
-
-        while ((pItem = ::PyIter_Next(pIter)))
+        const auto index = ::PyLong_AsLong(item.get());
+        if (index == -1 && ::PyErr_Occurred() != nullptr)
         {
-            result.push_back(static_cast<int>(::PyLong_AsLong(pItem)));
-            ::Py_DECREF(pItem);
+            break;
         }
-
-        ::Py_DECREF(pIter);
+        result.push_back(static_cast<int>(index));
     }
-    else
-        ::PyErr_Print();
 
-    Py_DECREF(pValue);
-    Py_DECREF(pArgs);
-    Py_DECREF(pModule);
-    Py_DECREF(pName);
+    if (::PyErr_Occurred() != nullptr)
+    {
+        throw exc::InputFileException(
+            std::format(
+                "Selection \"{}\" returned an invalid atom index list ({})",
+                selection,
+                error::takePythonError().description
+            )
+        );
+    }
 
     return result;
 }

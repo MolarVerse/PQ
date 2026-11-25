@@ -31,7 +31,6 @@
 #include "outputFileSettings.hpp"
 #include "terminalProgressBar.hpp"
 #include "timingsSettings.hpp"
-#include "units.hpp"
 #include "velocityVerlet.hpp"
 
 #ifdef WITH_MPI
@@ -67,7 +66,7 @@ namespace engine
      */
     void MDEngine::run()
     {
-        get_physicalData().calculateKinetics(getSimulationBox());
+        get_physicalData().calculateKinetics(get_simulationBox());
 
         getEngineOutput().getLogOutput().writeInitialMomentum(
             norm(get_physicalData().get_momentum())
@@ -117,18 +116,18 @@ namespace engine
     {
         const auto &timeStep = getSettings().timings.getTimeStep();
         _thermostat->applyThermostatHalfStep(
-            getSimulationBox(),
+            get_simulationBox(),
             get_physicalData(),
             _kinetics.getCurrentTargetTemperature(),
             timeStep
         );
 
         if (getSettings().constraintSettings.isMShakeActivated())
-            getSimulationBox().updateOldPositions();
+            get_simulationBox().updateOldPositions();
 
-        getIntegrator().firstStep(getSimulationBox(), timeStep);
+        getIntegrator().firstStep(get_simulationBox(), timeStep);
 
-        getConstraints()->applyShake(getSimulationBox(), timeStep);
+        get_constraints().applyShake(get_simulationBox(), timeStep);
     }
 
     /**
@@ -137,13 +136,13 @@ namespace engine
      */
     void MDEngine::takeStepAfterForces()
     {
-        _resetKinetics.resetForces(getStep(), getSimulationBox());
+        _resetKinetics.resetForces(getStep(), get_simulationBox());
 
         const auto &timingsSettings = getSettings().timings;
         const auto &timeStep        = timingsSettings.getTimeStep();
 
-        getConstraints()->applyDistanceConstraints(
-            getSimulationBox(),
+        get_constraints().applyDistanceConstraints(
+            get_simulationBox(),
             get_physicalData(),
             calculateTotalSimulationTime(
                 timeStep,
@@ -151,39 +150,39 @@ namespace engine
             )
         );
 
-        getConstraints()->calculateConstraintBondRefs(getSimulationBox());
+        get_constraints().calculateConstraintBondRefs(get_simulationBox());
 
         const auto jobType = getSettings().generalSettings.getJobtype();
         if (!isHybridJobtype(jobType))
         {
             const auto virial =
-                virial::intraMolecularVirialCorrection(getSimulationBox());
+                virial::intraMolecularVirialCorrection(get_simulationBox());
             get_physicalData().addVirial(virial);
         }
 
         _thermostat->applyThermostatOnForces(
-            getSimulationBox(),
+            get_simulationBox(),
             _kinetics.getCurrentTargetTemperature()
         );
 
-        _integrator->secondStep(getSimulationBox(), timeStep);
+        _integrator->secondStep(get_simulationBox(), timeStep);
 
-        getConstraints()->applyRattle(getSimulationBox());
+        get_constraints().applyRattle(get_simulationBox());
 
         _thermostat->applyThermostat(
-            getSimulationBox(),
+            get_simulationBox(),
             get_physicalData(),
             _kinetics.getCurrentTargetTemperature(),
             timeStep
         );
 
-        get_physicalData().calculateKinetics(getSimulationBox());
+        get_physicalData().calculateKinetics(get_simulationBox());
 
         const auto &currentTargetTemperature =
             _kinetics.getCurrentTargetTemperature();
 
         _manostat->applyManostat(
-            getSimulationBox(),
+            get_simulationBox(),
             get_physicalData(),
             currentTargetTemperature,
             timeStep,
@@ -193,7 +192,7 @@ namespace engine
         const auto driftWarning = _resetKinetics.checkMomentumDrift(
             getStep(),
             get_physicalData(),
-            getSimulationBox()
+            get_simulationBox()
         );
 
         if (driftWarning)
@@ -205,7 +204,7 @@ namespace engine
         _resetKinetics.reset(
             getStep(),
             get_physicalData(),
-            getSimulationBox(),
+            get_simulationBox(),
             currentTargetTemperature
         );
 
@@ -213,14 +212,14 @@ namespace engine
 
         if (isQMOnlyJobtype(jobType))
         {
-            const auto nQMAtoms = getSimulationBox().getNumberOfActiveAtoms();
+            const auto nQMAtoms = get_simulationBox().getNumberOfActiveAtoms();
             get_physicalData().set_nQMAtoms(static_cast<double>(nQMAtoms));
         }
     }
 
     void MDEngine::calculateForcesWrapper()
     {
-        getSimulationBox().resetAllForces();
+        get_simulationBox().resetAllForces();
         calculateForces();
     }
 
@@ -274,12 +273,10 @@ namespace engine
         if (0 == getStep() % outputFreq)
         {
             getEngineOutput().writeFrame(
-                getSimulationBox(),
+                get_simulationBox(),
                 *_thermostat,
                 effStep,
-                get_physicalData().getPotentialEnergy().numerical_value_in(
-                    kcal_per_mol
-                ),
+                get_physicalData().getPotentialEnergy(),
                 calculateTotalSimulationTime(
                     timeStep,
                     getSettings().timings.getStartingTime()
@@ -298,7 +295,7 @@ namespace engine
 
             getEngineOutput().writeBoxFile(
                 effStep,
-                getSimulationBox().getBox()
+                get_simulationBox().getBox()
             );
 
             if (isHybridJobtype(jobType))

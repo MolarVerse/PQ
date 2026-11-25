@@ -52,10 +52,9 @@ int main()
     auto       physicalData = physicalData::PhysicalData{};
 
     opt::SteepestDescent optimizer;
-    optimizer.setSimulationBox(box);
 
     // two entries are needed before the convergence check
-    optimizer.updateHistory(physicalData.getTotalEnergy());
+    optimizer.updateHistory(physicalData.getTotalEnergy(), box);
 
     perfAllocBegin();
     CALLGRIND_ZERO_STATS;
@@ -66,7 +65,7 @@ int main()
         physicalData.set_kineticEnergy(
             1.0 / static_cast<double>(i + 1) * kcal_per_mol
         );
-        optimizer.updateHistory(physicalData.getTotalEnergy());
+        optimizer.updateHistory(physicalData.getTotalEnergy(), box);
         converged += optimizer.hasConverged() ? 1U : 0U;
     }
 

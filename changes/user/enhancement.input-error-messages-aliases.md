@@ -1,0 +1,1 @@
+- Error messages for an invalid input value list the aliases of a value in parentheses behind its name (`thermostat`: `nose_hoover (nh_chain)`), including the original name of a value with another name (`3ob (threeob)`); invalid numbers now say `Value must be a number` or `an integer` instead of ending in a stray `<value>`.

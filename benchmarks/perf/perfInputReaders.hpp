@@ -133,13 +133,13 @@ namespace benchInputReaders
         Settings settings;
         settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
         settings.timings.setTimeStepByUser(0.5 * fs);
-        settings.fileSettings.setMolDescriptorFileNameByUser(
+        settings.fileSettings.set_molDescriptorFileByUser(
             (directory / "moldescriptor.dat").string()
         );
-        settings.fileSettings.setStartFileNameByUser(
+        settings.fileSettings.set_startFileByUser(
             (directory / "input.rst").string()
         );
-        settings.fileSettings.setTopologyFileNameByUser(
+        settings.fileSettings.set_topologyFileByUser(
             (directory / "topology.top").string()
         );
 
@@ -164,7 +164,7 @@ namespace benchInputReaders
             );
             input::topology::readTopologyFile(engine);
 
-            atoms = engine.getSimulationBox().getNumberOfAtoms();
+            atoms = engine.get_simulationBox().getNumberOfAtoms();
         }
 
         std::filesystem::remove_all(directory);

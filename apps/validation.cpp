@@ -296,12 +296,12 @@ namespace cli::detail
 
     void validateEffectiveFiles(const Settings &settings)
     {
-        requireFile(settings.fileSettings.getStartFileName(), "Start file");
+        requireFile(settings.fileSettings.get_startFile(), "Start file");
 
         if (settings.fileSettings.isRingPolymerStartFileNameSetByUser())
         {
             requireFile(
-                settings.fileSettings.getRingPolymerStartFileName(),
+                settings.fileSettings.get_rpmdStartFile(),
                 "Ring-polymer start file"
             );
         }
@@ -309,7 +309,7 @@ namespace cli::detail
         if (settings.fileSettings.isIntraNonBondedFileNameSetByUser())
         {
             requireFile(
-                settings.fileSettings.getIntraNonBondedFileName(),
+                settings.fileSettings.get_intraNonBondedFile(),
                 "Intra non-bonded file"
             );
         }
@@ -318,7 +318,7 @@ namespace cli::detail
             settings.manostatSettings.getManostatType() != ManostatType::NONE)
         {
             requireFile(
-                settings.fileSettings.getMolDescriptorFileName(),
+                settings.fileSettings.get_molDescriptorFile(),
                 "Moldescriptor file"
             );
         }
@@ -326,17 +326,14 @@ namespace cli::detail
         if (isMMActivated(settings.generalSettings.getJobtype()) &&
             !settings.forceFieldSettings.isNonCoulombicActive())
         {
-            requireFile(
-                settings.fileSettings.getGuffDatFileName(),
-                "Guff file"
-            );
+            requireFile(settings.fileSettings.get_guffDatFile(), "Guff file");
         }
 
         if (settings.constraintSettings.isActive() ||
             settings.forceFieldSettings.isActive())
         {
             requireFile(
-                settings.fileSettings.getTopologyFileName(),
+                settings.fileSettings.get_topologyFile(),
                 "Topology file"
             );
         }
@@ -344,17 +341,14 @@ namespace cli::detail
         if (settings.forceFieldSettings.isActive())
         {
             requireFile(
-                settings.fileSettings.getParameterFileName(),
+                settings.fileSettings.get_parameterFile(),
                 "Parameter file"
             );
         }
 
         if (settings.fileSettings.isMShakeFileNameSetByUser())
         {
-            requireFile(
-                settings.fileSettings.getMShakeFileName(),
-                "M-SHAKE file"
-            );
+            requireFile(settings.fileSettings.get_mShakeFile(), "M-SHAKE file");
         }
 
         if (!isQMActivated(settings.generalSettings.getJobtype()))
@@ -365,7 +359,7 @@ namespace cli::detail
         if (method == QMMethod::DFTBPLUS)
         {
             requireFile(
-                settings.fileSettings.getDFTBFileName(),
+                settings.fileSettings.get_dftbFile(),
                 "DFTB setup file"
             );
         }
@@ -409,10 +403,7 @@ namespace cli::detail
         if (isQMActivated(settings.generalSettings.getJobtype()) &&
             settings.qmSettings.getQMMethod() == QMMethod::ORCA)
         {
-            requireFile(
-                settings.fileSettings.getOrcaFileName(),
-                "ORCA template"
-            );
+            requireFile(settings.fileSettings.get_orcaFile(), "ORCA template");
         }
 
         validateInstalledExternalQMScript(

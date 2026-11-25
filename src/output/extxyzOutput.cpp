@@ -82,7 +82,11 @@ namespace out
         _buffer.append("\" Properties=").append(detail::PROPERTIES);
         _buffer.append(" pbc=\"T T T\" step=").left(step, 0);
         _buffer.append(" energy=")
-            .fixed(frame.potentialEnergy, 0, detail::ENERGY_PRECISION);
+            .fixed(
+                frame.potentialEnergy.numerical_value_in(kcal_per_mol),
+                0,
+                detail::ENERGY_PRECISION
+            );
         _buffer.append(" units=pq\n");
 
         for (const auto &atom : frame.atoms)

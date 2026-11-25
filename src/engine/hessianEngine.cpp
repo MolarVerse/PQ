@@ -163,16 +163,16 @@ namespace engine
             const ConvSettings              &settings
         )
         {
-            const auto energyStrategy = settings.getEnConvStrategy();
+            const auto energyStrategy = settings.get_energyConvStrategy();
 
             const auto useEnergyOptional   = settings.getUseEnergyConv();
             const auto useMaxForceOptional = settings.getUseMaxForceConv();
             const auto useRMSForceOptional = settings.getUseRMSForceConv();
 
-            const auto absEnergy = settings.getAbsEnergyConv();
-            const auto relEnergy = settings.getRelEnergyConv();
-            const auto maxForce  = settings.getMaxForceConv();
-            const auto rmsForce  = settings.getRMSForceConv();
+            const auto absEnergy = settings.get_absEnergyConv();
+            const auto relEnergy = settings.get_relEnergyConv();
+            const auto maxForce  = settings.get_maxForceConv();
+            const auto rmsForce  = settings.get_rmsForceConv();
 
             const opt::Convergence convergence(
                 useEnergyOptional,
@@ -276,8 +276,12 @@ namespace engine
 
         auto builder = detail::setupHessianBuilder(hessianSettings);
 
-        const auto hessian =
-            builder->build(*evaluator, getSimulationBox(), get_physicalData());
+        const auto hessian = builder->build(
+            *evaluator,
+            get_simulationBox(),
+            get_physicalData(),
+            get_intraNonBonded()
+        );
 
         detail::writeHessian(hessian, hessianSettings);
         detail::writeHessianInfo(hessian, hessianSettings);
@@ -327,11 +331,11 @@ namespace engine
 
         if (0 == getStep() % outputFreq)
         {
-            const out::Frame frame{getSimulationBox()};
+            const out::Frame frame{get_simulationBox()};
 
             getEngineOutput().writeXyzFile(frame, effStep);
             getEngineOutput().writeForceFile(frame, effStep);
-            getEngineOutput().writeOptRstFile(getSimulationBox(), effStep);
+            getEngineOutput().writeOptRstFile(get_simulationBox(), effStep);
             getEngineOutput().writeOptFile(getStep(), *_optimizer);
         }
 
@@ -378,11 +382,8 @@ namespace engine
             );
 
         evaluator->setCellList(getCellList());
-        evaluator->setSimulationBox(getSharedSimulationBox());
         evaluator->setPotential(getPotential());
         evaluator->setForceField(getForceField());
-        evaluator->setConstraints(getConstraints());
-        evaluator->setIntraNonBonded(getIntraNonBonded());
 
         return evaluator;
     }
@@ -414,8 +415,15 @@ namespace engine
         _converged  = false;
         _optStopped = false;
 
-        _evaluator->evaluate(get_physicalData());
-        _optimizer->updateHistory(get_physicalData().getTotalEnergy());
+        _evaluator->evaluate(
+            get_physicalData(),
+            get_simulationBox(),
+            get_intraNonBonded()
+        );
+        _optimizer->updateHistory(
+            get_physicalData().getTotalEnergy(),
+            get_simulationBox()
+        );
 
         const auto &outputFileSettings = getSettings().outputFiles;
         const auto &jobType = getSettings().generalSettings.getJobtype();
@@ -433,11 +441,18 @@ namespace engine
 
             _takeOptimizationStep();
 
-            if (_converged || _optStopped)
+            if (_optStopped)
+            {
                 break;
+            }
 
             writeOutput(jobType, outputFileSettings);
             deleteTmpFiles();
+
+            if (_converged)
+            {
+                break;
+            }
         }
 
         OptEngine::throwOnFailure(
@@ -457,11 +472,22 @@ namespace engine
 
     void HessianEngine::_takeOptimizationStep()
     {
-        _optimizer->update(_learningRateStrategy->getLearningRate(), getStep());
+        _optimizer->update(
+            _learningRateStrategy->getLearningRate(),
+            getStep(),
+            get_simulationBox()
+        );
 
-        _evaluator->evaluate(get_physicalData());
+        _evaluator->evaluate(
+            get_physicalData(),
+            get_simulationBox(),
+            get_intraNonBonded()
+        );
 
-        _optimizer->updateHistory(get_physicalData().getTotalEnergy());
+        _optimizer->updateHistory(
+            get_physicalData().getTotalEnergy(),
+            get_simulationBox()
+        );
 
         _converged = _optimizer->hasConverged();
 
@@ -516,7 +542,7 @@ namespace engine
 
             case ADAM:
             {
-                const auto nAtoms = getSimulationBox().getNumberOfAtoms();
+                const auto nAtoms = get_simulationBox().getNumberOfAtoms();
                 optimizer         = std::make_shared<opt::Adam>(nAtoms);
                 break;
             }
@@ -531,8 +557,6 @@ namespace engine
                 )
             );
         }
-
-        optimizer->setSimulationBox(getSharedSimulationBox());
 
         return optimizer;
     }

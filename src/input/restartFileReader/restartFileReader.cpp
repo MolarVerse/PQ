@@ -121,7 +121,7 @@ namespace input::restartFile
             ++lineNumber;
         }
 
-        if (_engine.getSimulationBox().getNumberOfAtoms() == 0)
+        if (_engine.get_simulationBox().getNumberOfAtoms() == 0)
         {
             throw exc::RstFileException(
                 std::format(
@@ -198,7 +198,7 @@ namespace input::restartFile
                 "\"start_file\" not set in input file"
             );
 
-        const auto filename = fileSettings.getStartFileName();
+        const auto filename = fileSettings.get_startFile();
 
         out::StdoutOutput::writeRead("Start File", filename);
         auto &logOutput = engine.getLogOutput();

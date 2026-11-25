@@ -65,6 +65,24 @@ Stores every frame in the `H5MD <https://www.nongnu.org/h5md/>`_ format (HDF5, v
 
 Every ``value`` dataset has a ``unit`` attribute. The values are in PQ units (Å, kcal/(mol Å), *e* and kcal/mol), except velocities, which are in Å/fs as H5MD readers like MDAnalysis expect; times are in fs.
 
+.. _aseTrajFile:
+
+*******************
+ASE Trajectory File
+*******************
+
+**File Type:** ``.ase.traj`` (written instead of the xyz, velocity, force and charge files if :ref:`trajformatkey` is ``ase``)
+
+Stores every frame as an `ASE <https://wiki.fysik.dtu.dk/ase/>`_ trajectory (ULM format of ASE 3.29), which ``ase.io.read("default.ase.traj", index=":")`` reads without PQ:
+
+    - positions (wrapped into the box), cell (box vectors as rows), pbc and momenta
+    - atomic numbers (0 for atoms without element) and masses, written once in the first frame
+    - charges as initial charges
+    - potential energy and forces as single point calculator results
+    - the MD step in ``atoms.info["step"]``
+
+All values are in ASE units: Å, eV, eV/Å, amu, *e* and momenta in amu Å per ASE time unit, so ``atoms.get_velocities()`` gives velocities in Å per ASE time unit (multiply by ``ase.units.fs`` for Å/fs).
+
 .. _chargeFile:
 
 ************
@@ -98,7 +116,7 @@ comment. Example:
 .. code-block:: text
 
     # PQ energy file v1.1.0
-    #SIMULATION-TIME[step] TEMPERATURE[K] PRESSURE[bar] E(TOT)[kcal/mol] ...
+    #STEP[-] TEMPERATURE[K] PRESSURE[bar] E(TOT)[kcal/mol] ...
              2    259.990188447136   51890.577284595995   -5865.403297836899 ...
              4    436.120780915806   10090.942289750119   -6539.564395075573 ...
 

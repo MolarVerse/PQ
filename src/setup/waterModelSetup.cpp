@@ -91,7 +91,7 @@ namespace setup
      */
     void WaterModelSetup::setup()
     {
-        const auto waterType = _engine.getSimulationBox().getWaterType();
+        const auto waterType = _engine.get_simulationBox().getWaterType();
 
         if (!waterType.has_value())
         {
@@ -102,7 +102,7 @@ namespace setup
         }
 
         const auto water =
-            _engine.getSimulationBox().findMoleculeType(waterType.value());
+            _engine.get_simulationBox().findMoleculeType(waterType.value());
 
         // water atoms have to be in this order for calculation
         if (water.getAtomNames() != std::vector<std::string>{"O", "H", "H"})
@@ -170,7 +170,7 @@ namespace setup
     {
         std::unordered_set<const molsys::Molecule *> waterMolecules;
         for (const auto &waterMol :
-             _engine.getSimulationBox().getWaterTypeMolecules())
+             _engine.get_simulationBox().getWaterTypeMolecules())
             waterMolecules.insert(&waterMol);
 
         size_t bondIndex = 1;
@@ -196,8 +196,7 @@ namespace setup
                         "Requesting the use of the \"{}\" intramolecular water "
                         "type model expects the molecules of this moltype not "
                         "to appear in the topology file.",
-                        _engine.getSettings().fileSettings.getTopologyFileName(
-                        ),
+                        _engine.getSettings().fileSettings.get_topologyFile(),
                         bondIndex,
                         WaterIntraModelMeta::toString(
                             waterModelSettings.getWaterIntraModel()
@@ -235,8 +234,7 @@ namespace setup
                         "expects the molecules of this moltype not to appear "
                         "in "
                         "the topology file.",
-                        _engine.getSettings().fileSettings.getTopologyFileName(
-                        ),
+                        _engine.getSettings().fileSettings.get_topologyFile(),
                         angleIndex,
                         WaterIntraModelMeta::toString(
                             waterModelSettings.getWaterIntraModel()
@@ -293,7 +291,7 @@ namespace setup
         };
 
         const auto &waterMolecules =
-            _engine.getSimulationBoxPtr()->getWaterTypeMolecules();
+            _engine.get_simulationBox().getWaterTypeMolecules();
 
         for (const auto &water : waterMolecules)
         {
@@ -322,10 +320,10 @@ namespace setup
         const AtomIndex H1Index{1};
         const AtomIndex H2Index{2};
 
-        const auto &constraints = _engine.getConstraints();
+        auto &constraints = _engine.get_constraints();
 
         for (auto &waterMol :
-             _engine.getSimulationBox().getWaterTypeMolecules())
+             _engine.get_simulationBox().getWaterTypeMolecules())
         {
             auto bondConstraintOH1 = constraints::BondConstraint(
                 &waterMol,
@@ -349,9 +347,9 @@ namespace setup
                 dHH
             );
 
-            constraints->addBondConstraint(bondConstraintOH1);
-            constraints->addBondConstraint(bondConstraintOH2);
-            constraints->addBondConstraint(bondConstraintHH);
+            constraints.addBondConstraint(bondConstraintOH1);
+            constraints.addBondConstraint(bondConstraintOH2);
+            constraints.addBondConstraint(bondConstraintHH);
         }
     }
 

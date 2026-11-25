@@ -57,7 +57,7 @@ namespace
         const Pos3D    &position2
     )
     {
-        auto &simBox = engine.getSimulationBox();
+        auto &simBox = engine.get_simulationBox();
 
         molsys::Molecule molecule;
 
@@ -90,7 +90,7 @@ namespace
         Distance        bondLength
     )
     {
-        auto &simBox   = engine.getSimulationBox();
+        auto &simBox   = engine.get_simulationBox();
         auto &molecule = simBox.getMolecules().back();
 
         const constraints::BondConstraint bondConstraint(
@@ -101,7 +101,7 @@ namespace
             bondLength
         );
 
-        engine.getConstraints()->addBondConstraint(bondConstraint);
+        engine.get_constraints().addBondConstraint(bondConstraint);
     }
 
     /**
@@ -111,7 +111,7 @@ namespace
      */
     void setupMShakeMoleculeType(engine::Engine &engine)
     {
-        auto &simBox = engine.getSimulationBox();
+        auto &simBox = engine.get_simulationBox();
 
         molsys::MoleculeType moleculeType{kMShakeMolType};
         moleculeType.setNumberOfAtoms(2);
@@ -156,19 +156,19 @@ TEST_F(TestSetup, constraintsSetupComputesRefBondLengthsForShake)
     );
     addBondConstraintToLastMolecule(*_engine, 1.0 * angstrom);
 
-    auto &simBox = _engine->getSimulationBox();
+    auto &simBox = _engine->get_simulationBox();
     simBox.setDegreesOfFreedom(10);
 
     setup::ConstraintsSetup constraintsSetup(*_engine);
     EXPECT_NO_THROW(constraintsSetup.setup());
 
-    const auto &constraints = _engine->getConstraints();
+    const auto &constraints = _engine->get_constraints();
 
     EXPECT_EQ(
-        constraints->getBondConstraints()[0].getShakeDistanceRef(),
+        constraints.getBondConstraints()[0].getShakeDistanceRef(),
         linalg::Vec3D(-1.0, 0.0, 0.0) * angstrom
     );
-    EXPECT_EQ(constraints->getNumberOfBondConstraints(), 1);
+    EXPECT_EQ(constraints.getNumberOfBondConstraints(), 1);
     EXPECT_EQ(simBox.getDegreesOfFreedom(), 9);
 }
 
@@ -179,22 +179,22 @@ TEST_F(TestSetup, constraintsSetupComputesRefBondLengthsForShake)
 TEST_F(TestSetup, constraintsSetupRunsMShakeAndReducesDegreesOfFreedom)
 {
     _settings->constraintSettings.activateMShakeByUser();
-    _settings->fileSettings.setMShakeFileNameByUser(
+    _settings->fileSettings.set_mShakeFileByUser(
         "data/constraintsSetup/mshake.dat"
     );
 
     setupMShakeMoleculeType(*_engine);
 
-    auto &simBox = _engine->getSimulationBox();
+    auto &simBox = _engine->get_simulationBox();
     simBox.setDegreesOfFreedom(10);
 
     setup::ConstraintsSetup constraintsSetup(*_engine);
     EXPECT_NO_THROW(constraintsSetup.setup());
 
-    const auto &constraints = _engine->getConstraints();
+    const auto &constraints = _engine->get_constraints();
 
-    EXPECT_EQ(constraints->getMShakeReferences().size(), 1);
-    EXPECT_EQ(constraints->getNumberOfMShakeConstraints(simBox), 1);
+    EXPECT_EQ(constraints.getMShakeReferences().size(), 1);
+    EXPECT_EQ(constraints.getNumberOfMShakeConstraints(simBox), 1);
     EXPECT_EQ(simBox.getDegreesOfFreedom(), 9);
 }
 
@@ -205,16 +205,16 @@ TEST_F(TestSetup, constraintsSetupRunsMShakeAndReducesDegreesOfFreedom)
  */
 TEST_F(TestSetup, constraintsSetupNoOpWhenNoConstraintsActive)
 {
-    auto &simBox = _engine->getSimulationBox();
+    auto &simBox = _engine->get_simulationBox();
     simBox.setDegreesOfFreedom(10);
 
     setup::ConstraintsSetup constraintsSetup(*_engine);
     EXPECT_NO_THROW(constraintsSetup.setup());
 
-    const auto &constraints = _engine->getConstraints();
+    const auto &constraints = _engine->get_constraints();
 
-    EXPECT_EQ(constraints->getNumberOfBondConstraints(), 0);
-    EXPECT_TRUE(constraints->getMShakeReferences().empty());
+    EXPECT_EQ(constraints.getNumberOfBondConstraints(), 0);
+    EXPECT_TRUE(constraints.getMShakeReferences().empty());
     EXPECT_EQ(simBox.getDegreesOfFreedom(), 10);
 }
 
@@ -224,7 +224,7 @@ TEST_F(TestSetup, constraintsSetupNoOpWhenNoConstraintsActive)
  */
 TEST_F(TestSetup, setupConstraintsWrapperSkipsWhenInactive)
 {
-    auto &simBox = _engine->getSimulationBox();
+    auto &simBox = _engine->get_simulationBox();
     simBox.setDegreesOfFreedom(5);
 
     EXPECT_NO_THROW(setup::setupConstraints(*_engine));
@@ -247,15 +247,15 @@ TEST_F(TestSetup, setupConstraintsWrapperRunsWhenShakeActive)
     );
     addBondConstraintToLastMolecule(*_engine, 1.0 * angstrom);
 
-    auto &simBox = _engine->getSimulationBox();
+    auto &simBox = _engine->get_simulationBox();
     simBox.setDegreesOfFreedom(10);
 
     EXPECT_NO_THROW(setup::setupConstraints(*_engine));
 
-    const auto &constraints = _engine->getConstraints();
+    const auto &constraints = _engine->get_constraints();
 
     EXPECT_EQ(
-        constraints->getBondConstraints()[0].getShakeDistanceRef(),
+        constraints.getBondConstraints()[0].getShakeDistanceRef(),
         linalg::Vec3D(-1.0, 0.0, 0.0) * angstrom
     );
     EXPECT_EQ(simBox.getDegreesOfFreedom(), 9);

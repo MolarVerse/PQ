@@ -475,14 +475,14 @@ namespace QM
             auto _ = scopedTimer(TimerId::QMEngine, "Write Pointcharges");
             _writePointChargeFile(
                 simulationBox,
-                fileSettings.getPointChargeFileName()
+                fileSettings.get_pointChargeFile()
             );
         }
 
         const auto resultFiles = std::array{
-            fileSettings.getQMForcesTempFileName(),
-            fileSettings.getQMChargesTempFileName(),
-            fileSettings.getStressTensorTempFileName()
+            fileSettings.get_qmForcesTempFile(),
+            fileSettings.get_qmChargesTempFile(),
+            fileSettings.get_stressTensorTempFile()
         };
         for (const auto &file : resultFiles) std::filesystem::remove(file);
 
@@ -498,7 +498,7 @@ namespace QM
                 simulationBox,
                 physicalData,
                 _getQMSettings(),
-                fileSettings.getQMForcesTempFileName()
+                fileSettings.get_qmForcesTempFile()
             );
         }
 
@@ -507,7 +507,7 @@ namespace QM
             _readChargeFile(
                 simulationBox,
                 _getQMSettings(),
-                fileSettings.getQMChargesTempFileName()
+                fileSettings.get_qmChargesTempFile()
             );
         }
 
@@ -517,7 +517,7 @@ namespace QM
             _readStressTensor(
                 simulationBox.getBox(),
                 physicalData,
-                fileSettings.getStressTensorTempFileName()
+                fileSettings.get_stressTensorTempFile()
             );
         }
     }

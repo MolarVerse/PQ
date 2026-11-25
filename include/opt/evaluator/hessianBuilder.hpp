@@ -29,6 +29,11 @@
 #include "enums/hessian.hpp"
 #include "unit_types.hpp"
 
+namespace intraNonBonded
+{
+    class IntraNonBonded;   // forward declaration
+}   // namespace intraNonBonded
+
 namespace molsys
 {
     class SimulationBox;   // forward declaration
@@ -51,9 +56,10 @@ namespace opt
 
         [[nodiscard]]
         virtual Hessian build(
-            Evaluator                  &evaluator,
-            molsys::SimulationBox      &simulationBox,
-            physicalData::PhysicalData &physicalData
+            Evaluator                      &evaluator,
+            molsys::SimulationBox          &simulationBox,
+            physicalData::PhysicalData     &physicalData,
+            intraNonBonded::IntraNonBonded &intraNonBonded
         ) const = 0;
     };
 
@@ -85,9 +91,10 @@ namespace opt
 
         [[nodiscard]]
         Hessian build(
-            Evaluator                  &evaluator,
-            molsys::SimulationBox      &simulationBox,
-            physicalData::PhysicalData &physicalData
+            Evaluator                      &evaluator,
+            molsys::SimulationBox          &simulationBox,
+            physicalData::PhysicalData     &physicalData,
+            intraNonBonded::IntraNonBonded &intraNonBonded
         ) const override;
     };
 
@@ -99,9 +106,10 @@ namespace opt
 
         [[nodiscard]]
         Hessian build(
-            Evaluator                  &evaluator,
-            molsys::SimulationBox      &simulationBox,
-            physicalData::PhysicalData &physicalData
+            Evaluator                      &evaluator,
+            molsys::SimulationBox          &simulationBox,
+            physicalData::PhysicalData     &physicalData,
+            intraNonBonded::IntraNonBonded &intraNonBonded
         ) const override;
     };
 
@@ -113,9 +121,10 @@ namespace opt
 
         [[nodiscard]]
         Hessian build(
-            Evaluator                  &evaluator,
-            molsys::SimulationBox      &simulationBox,
-            physicalData::PhysicalData &physicalData
+            Evaluator                      &evaluator,
+            molsys::SimulationBox          &simulationBox,
+            physicalData::PhysicalData     &physicalData,
+            intraNonBonded::IntraNonBonded &intraNonBonded
         ) const override;
     };
 
@@ -124,9 +133,10 @@ namespace opt
        public:
         [[nodiscard]]
         Hessian build(
-            Evaluator                  &evaluator,
-            molsys::SimulationBox      &simulationBox,
-            physicalData::PhysicalData &physicalData
+            Evaluator                      &evaluator,
+            molsys::SimulationBox          &simulationBox,
+            physicalData::PhysicalData     &physicalData,
+            intraNonBonded::IntraNonBonded &intraNonBonded
         ) const override;
     };
 

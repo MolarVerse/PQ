@@ -134,7 +134,7 @@ TEST_F(TestSetup, setupNonCoulombicPairs)
     molecule.addExternalGlobalVDWType(ExtVdwType{0});
     molecule.addExternalGlobalVDWType(ExtVdwType{1});
 
-    _engine->getSimulationBox().addMoleculeType(molecule);
+    _engine->get_simulationBox().addMoleculeType(molecule);
 
     EXPECT_THROW_MSG(
         potentialSetup.setupNonCoulombicPairs(),

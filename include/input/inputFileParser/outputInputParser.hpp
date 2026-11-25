@@ -64,6 +64,7 @@ namespace input
         void addChargeFilenameKeyword();
         void addExtxyzFilenameKeyword();
         void addH5mdFilenameKeyword();
+        void addAseTrajFilenameKeyword();
         void addMomentumFilenameKeyword();
         void addVirialFilenameKeyword();
         void addStressFilenameKeyword();

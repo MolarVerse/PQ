@@ -131,13 +131,13 @@ TEST_F(TestIntraNonBondedReader, moltypeDefinedMultipleTimes)
 
 TEST_F(TestIntraNonBondedReader, readIntraNonBondedFile)
 {
-    _settings.fileSettings.setIntraNonBondedFileNameByUser(
+    _settings.fileSettings.set_intraNonBondedFileByUser(
         "data/intraNonBondedReader/intraNonBonded.dat"
     );
     input::intraNonBondedReader::readIntraNonBondedFile(*_engine);
 
     const auto container =
-        _engine->getIntraNonBonded()->getIntraNonBondedContainers()[0];
+        _engine->get_intraNonBonded().getIntraNonBondedContainers()[0];
     EXPECT_EQ(container.getMolType(), MolType{0});
     const auto &partners = container.getPartners();
 
@@ -160,13 +160,13 @@ TEST_F(TestIntraNonBondedReader, readIntraNonBondedFile)
 
 TEST_F(TestIntraNonBondedReader, scaledPartnerAtomOne)
 {
-    _settings.fileSettings.setIntraNonBondedFileNameByUser(
+    _settings.fileSettings.set_intraNonBondedFileByUser(
         "data/intraNonBondedReader/scaledPartnerAtomOne.dat"
     );
     input::intraNonBondedReader::readIntraNonBondedFile(*_engine);
 
     const auto container =
-        _engine->getIntraNonBonded()->getIntraNonBondedContainers()[0];
+        _engine->get_intraNonBonded().getIntraNonBondedContainers()[0];
     const auto &partners = container.getPartners();
 
     using intraNonBonded::IntraNonBondedPartners;

@@ -116,7 +116,7 @@ namespace input::topology
 
         // the molecules do not change while the topology is read: every atom
         // index of the file is found by a binary search instead of a walk
-        const detail::AtomIndexLookupGuard lookup(_engine.getSimulationBox());
+        const detail::AtomIndexLookupGuard lookup(_engine.get_simulationBox());
 
         while (getline(_fp, line))
         {
@@ -180,7 +180,7 @@ namespace input::topology
                 "Topology file needed for requested simulation setup"
             );
 
-        const auto filename = fileSettings.getTopologyFileName();
+        const auto filename = fileSettings.get_topologyFile();
 
         out::StdoutOutput::writeRead("Topology File", filename);
         engine.getLogOutput().writeRead("Topology File", filename);

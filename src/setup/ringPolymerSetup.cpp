@@ -117,7 +117,7 @@ namespace setup
         for (size_t i = 0; i < nBeads; ++i)
         {
             molsys::SimulationBox bead;
-            bead.copy(_engine.getSimulationBox());
+            bead.copy(_engine.get_simulationBox());
 
             _engine.addRingPolymerBead(bead);
         }
@@ -138,7 +138,7 @@ namespace setup
         {
             auto             &log  = _engine.getLogOutput();
             const auto *const msg  = "Reading ring polymer restart file: ";
-            const auto       &file = fileSettings.getRingPolymerStartFileName();
+            const auto       &file = fileSettings.get_rpmdStartFile();
 
             log.writeRead(msg, file);
             out::StdoutOutput::writeRead(msg, file);
