@@ -28,6 +28,7 @@
 #include "extxyzOutput.hpp"
 #include "frame.hpp"
 #include "testTrajectoryOutput.hpp"
+#include "units.hpp"
 
 /**
  * @brief one frame in PQ units with cell, step and energy in the comment
@@ -39,7 +40,7 @@ TEST_F(TestTrajectoryOutput, writeExtxyz)
     output.setFilename("default.xyz", false);
 
     auto frame            = out::Frame{*_simulationBox};
-    frame.potentialEnergy = -1.5;
+    frame.potentialEnergy = -1.5 * kcal_per_mol;
 
     output.write(frame, 7);
     output.close();
