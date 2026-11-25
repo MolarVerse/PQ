@@ -384,6 +384,58 @@ TEST_F(TestConstraints, applyStaticDistanceConstraintsWhenInactiveDoesNothing)
     EXPECT_EQ(simulationBox->getAtoms()[0]->getForce(), Force3D::zero());
 }
 
+TEST_F(TestConstraints, applyDistanceConstraintsUsesTheTimeSinceStart)
+{
+    const auto settings =
+        testSettings::make<ConstraintSettings>()
+            .apply([](auto &config)
+                   { config.activateDistanceConstraintsByUser(); })
+            .build();
+    constraints::Constraints constraints(settings);
+    constraints.setStartTime(1.0 * fs);
+
+    auto  simulationBox = _makeDimerBox();
+    auto *molecule      = simulationBox->getMolecules().data();
+    constraints.addDistanceConstraint(
+        constraints::DistanceConstraint(
+            molecule,
+            molecule,
+            AtomIndex{0},
+            AtomIndex{1},
+            1.0 * angstrom,
+            1.0 * angstrom,
+            10.0 * kcal_per_mol / angstrom2,
+            5.0 * kcal_per_mol / angstrom2 / fs
+        )
+    );
+
+    for (const auto &atom : simulationBox->getAtoms())
+    {
+        atom->setForce(Force3D::zero());
+    }
+
+    physicalData::PhysicalData physicalData;
+    constraints.applyDistanceConstraints(
+        *simulationBox,
+        physicalData,
+        3.0 * fs
+    );
+
+    EXPECT_NEAR(
+        physicalData.get_upperDistanceConstraints().numerical_value_in(
+            kcal_per_mol
+        ),
+        0.1,
+        1e-12
+    );
+    EXPECT_THAT(
+        simulationBox->getAtoms()[0]->getForce().numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
+        testing::ElementsAre(testing::DoubleNear(2.0, 1e-12), 0.0, 0.0)
+    );
+}
+
 TEST_F(TestConstraints, projectForcesWithoutShakeKeepsTheForces)
 {
     const auto settings = testSettings::make<ConstraintSettings>().build();

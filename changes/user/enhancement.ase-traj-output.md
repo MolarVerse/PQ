@@ -1,0 +1,1 @@
+- New `traj_format = ase`: MD runs write one ASE trajectory file (`default.ase.traj`, key `ase_traj_file`) in ASE units, which `ase.io.read` opens directly; no Python or ASE needed in PQ (#1309).

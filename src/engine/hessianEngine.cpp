@@ -162,16 +162,16 @@ namespace engine
             const ConvSettings              &settings
         )
         {
-            const auto energyStrategy = settings.getEnConvStrategy();
+            const auto energyStrategy = settings.get_energyConvStrategy();
 
             const auto useEnergyOptional   = settings.getUseEnergyConv();
             const auto useMaxForceOptional = settings.getUseMaxForceConv();
             const auto useRMSForceOptional = settings.getUseRMSForceConv();
 
-            const auto absEnergy = settings.getAbsEnergyConv();
-            const auto relEnergy = settings.getRelEnergyConv();
-            const auto maxForce  = settings.getMaxForceConv();
-            const auto rmsForce  = settings.getRMSForceConv();
+            const auto absEnergy = settings.get_absEnergyConv();
+            const auto relEnergy = settings.get_relEnergyConv();
+            const auto maxForce  = settings.get_maxForceConv();
+            const auto rmsForce  = settings.get_rmsForceConv();
 
             const opt::Convergence convergence(
                 useEnergyOptional,

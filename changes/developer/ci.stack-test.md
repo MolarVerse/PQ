@@ -1,0 +1,1 @@
+- Add the Stack Test workflow: release and hotfix pull requests run short MD and Hessian jobs, check the output format against `scripts/stack_test_formats.json` and read the output with PQSetup, PQAnalysis, PQEnalyzer and PQViewer (PyPI release and `main`) (#1353).

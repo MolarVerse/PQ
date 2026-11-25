@@ -1,0 +1,137 @@
+name: Stack Test
+
+# Short PQ runs whose output PQSetup, PQAnalysis, PQEnalyzer and PQViewer
+# must still write or read (#1353). Runs on release and hotfix pull requests,
+# on changes to the test itself, weekly and by hand.
+
+on:
+  pull_request:
+    branches: [main, dev]
+  schedule:
+    - cron: '0 3 * * 1'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  CCACHE_SLOPPINESS: pch_defines,time_macros
+
+jobs:
+  changes:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    outputs:
+      relevant: ${{ steps.filter.outputs.relevant }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            relevant:
+              - '.github/workflows/stack_test.yml'
+              - 'scripts/stack_test.py'
+              - 'scripts/stack_test_formats.json'
+              - 'examples/h2o_mm-mshake/**'
+              - 'examples/oh_mm_hessian/**'
+
+  stack-test:
+    needs: changes
+    if: >-
+      always() &&
+      (github.event_name != 'pull_request' ||
+      needs.changes.outputs.relevant == 'true' ||
+      (github.base_ref == 'main' &&
+      (startsWith(github.head_ref, 'release/') || startsWith(github.head_ref, 'hotfix/'))))
+    strategy:
+      fail-fast: false
+      matrix:
+        tools: [release, main]
+    name: stack-test (${{ matrix.tools }} tools)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
+        with:
+          packages: mold ninja-build cmake
+
+      - name: setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: stack-test-${{ matrix.tools }}
+          max-size: 500MB
+
+      - name: Cache Eigen source
+        id: cache-eigen
+        uses: actions/cache@v4
+        with:
+          path: ~/eigen-src
+          key: eigen-${{ hashFiles('.cmake/eigen.cmake') }}
+
+      - name: Clone Eigen (cache miss)
+        if: steps.cache-eigen.outputs.cache-hit != 'true'
+        run: |
+          eigen_tag=$(grep -oP 'set\(EIGEN_TAG \K[0-9.]+' .cmake/eigen.cmake)
+          git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
+        shell: bash
+
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build PQ
+        run: |
+          python -m pip install numpy
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_NATIVE=Off \
+            -DBUILD_WITH_TESTS=Off -DBUILD_WITH_DOCS=Off -DBUILD_WITH_ASE=Off \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
+          cmake --build build --parallel "$(nproc)" --target PQ
+        shell: bash
+
+      - name: Install the tools (latest PyPI release)
+        if: matrix.tools == 'release'
+        run: |
+          python -m venv ~/stack-venv
+          ~/stack-venv/bin/pip install PQAnalysis MolarVerse-PQSetup MolarVerse-PQViewer PQEnalyzer
+        shell: bash
+
+      - name: Install the tools (main branches)
+        if: matrix.tools == 'main'
+        run: |
+          python -m venv ~/stack-venv
+          ~/stack-venv/bin/pip install \
+            "PQAnalysis @ git+https://github.com/MolarVerse/PQAnalysis@main" \
+            "MolarVerse-PQSetup @ git+https://github.com/MolarVerse/PQSetup@main" \
+            "MolarVerse-PQViewer @ git+https://github.com/MolarVerse/PQViewer@main" \
+            "PQEnalyzer @ git+https://github.com/MolarVerse/PQEnalyzer@main"
+        shell: bash
+
+      - name: Run the stack test
+        run: |
+          ~/stack-venv/bin/pip list 2>/dev/null | grep -iE '^(PQAnalysis|MolarVerse-PQSetup|MolarVerse-PQViewer|PQEnalyzer) '
+          PATH="$HOME/stack-venv/bin:$PATH" python scripts/stack_test.py \
+            --pq build/apps/PQ --work "$RUNNER_TEMP/stack-test" --title "Stack test (${{ matrix.tools }} tools)"
+        shell: bash
+
+      - name: Upload run files
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stack-test-${{ matrix.tools }}
+          path: |
+            ${{ runner.temp }}/stack-test/**/*.in
+            ${{ runner.temp }}/stack-test/**/*.out
+            ${{ runner.temp }}/stack-test/**/*.en
+            ${{ runner.temp }}/stack-test/**/*.info
+            ${{ runner.temp }}/stack-test/**/*.log
+          retention-days: 7

@@ -233,8 +233,8 @@ namespace QM
             charge,
             readChargesBin,
             usePointCharges,
-            utilities::shellQuote(fileSettings.getDFTBFileName()),
-            utilities::shellQuote(fileSettings.getPointChargeFileName())
+            utilities::shellQuote(fileSettings.get_dftbFile()),
+            utilities::shellQuote(fileSettings.get_pointChargeFile())
         );
         _executeCommand(command, "DFTB+");
 

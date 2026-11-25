@@ -66,7 +66,7 @@ namespace input::intraNonBondedReader
                 "Intra non bonded file not provided by the user"
             );
 
-        const auto filename = fileSettings.getIntraNonBondedFileName();
+        const auto filename = fileSettings.get_intraNonBondedFile();
 
         out::StdoutOutput::writeRead("Intra Non-Bonded File", filename);
         log.writeRead("Intra Non-Bonded File", filename);
