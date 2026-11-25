@@ -186,7 +186,7 @@ namespace input::restartFile
                 "\"start_file\" not set in input file"
             );
 
-        const auto filename = settings.fileSettings.getStartFileName();
+        const auto filename = settings.fileSettings.get_startFile();
 
         out::StdoutOutput::writeRead("Start File", filename);
         logOutput.writeRead("Start File", filename);

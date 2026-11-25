@@ -51,148 +51,9 @@ bool ConvSettings::_anyConvergenceSetByUser() const
 
 /***************************
  *                         *
- * standard setter methods *
- *                         *
- ***************************/
-
-/**
- * @brief set relative energy convergence
- *
- * @param relEnergyConv
- */
-void ConvSettings::setRelEnergyConvByUser(double relEnergyConv)
-{
-    _relEnergyConv.setByUser(relEnergyConv);
-}
-
-/**
- * @brief set absolute energy convergence
- *
- * @param absEnergyConv
- */
-void ConvSettings::setAbsEnergyConvByUser(const EnergyPerMol& absEnergyConv)
-{
-    _absEnergyConv.setByUser(absEnergyConv);
-}
-
-/**
- * @brief set max force convergence
- *
- * @details this method is used to set the max force convergence
- * for the absolute and relative convergence
- *
- * @param maxForceConv
- */
-void ConvSettings::setMaxForceConvByUser(const Force& maxForceConv)
-{
-    _maxForceConv.setByUser(maxForceConv);
-}
-
-/**
- * @brief set relative max force convergence
- *
- * @details this method is used to set the rms force convergence
- * for the absolute and relative convergence
- *
- * @param rmsForceConv
- */
-void ConvSettings::setRMSForceConvByUser(const Force& rmsForceConv)
-{
-    _rmsForceConv.setByUser(rmsForceConv);
-}
-
-/**
- * @brief set use energy convergence
- *
- * @param useEnergyConvergence
- */
-void ConvSettings::setUseEnergyConvByUser(bool useEnergyConvergence)
-{
-    _useEnergyConv.setByUser(useEnergyConvergence);
-}
-
-/**
- * @brief set use force convergence
- *
- * @param useForceConvergence
- */
-void ConvSettings::setUseForceConvByUser(bool useForceConvergence)
-{
-    _useForceConv.setByUser(useForceConvergence);
-}
-
-/**
- * @brief set use max force convergence
- *
- * @param useMaxForceConvergence
- */
-void ConvSettings::setUseMaxForceConvByUser(bool useMaxForceConvergence)
-{
-    _useMaxForceConv.setByUser(useMaxForceConvergence);
-}
-
-/**
- * @brief set use rms force convergence
- *
- * @param useRMSForceConvergence
- */
-void ConvSettings::setUseRMSForceConvByUser(bool useRMSForceConvergence)
-{
-    _useRMSForceConv.setByUser(useRMSForceConvergence);
-}
-
-/**
- * @brief set energy convergence strategy
- *
- * @param strategy
- */
-void ConvSettings::setEnergyConvStrategyByUser(ConvStrategy strategy)
-{
-    _energyConvStrategy.setByUser(strategy);
-}
-
-/***************************
- *                         *
  * standard getter methods *
  *                         *
  ***************************/
-
-/**
- * @brief get relative energy convergence
- *
- * @return double
- */
-double ConvSettings::getRelEnergyConv() const { return _relEnergyConv.get(); }
-
-/**
- * @brief get absolute energy convergence
- *
- * @return const EnergyPerMol&
- */
-const EnergyPerMol& ConvSettings::getAbsEnergyConv() const
-{
-    return _absEnergyConv.get();
-}
-
-/**
- * @brief get max force convergence
- *
- * @return const Force&
- */
-const Force& ConvSettings::getMaxForceConv() const
-{
-    return _maxForceConv.get();
-}
-
-/**
- * @brief get rms force convergence
- *
- * @return const Force&
- */
-const Force& ConvSettings::getRMSForceConv() const
-{
-    return _rmsForceConv.get();
-}
 
 /**
  * @brief get use energy convergence
@@ -234,8 +95,6 @@ bool ConvSettings::getUseForceConv() const
     return _useForceConv.get();   // nothing specified -> default
 }
 
-// TODO: document input change properly
-
 /**
  * @brief get use max force convergence
  *
@@ -274,14 +133,4 @@ bool ConvSettings::getUseRMSForceConv() const
         return false;
 
     return _useRMSForceConv.get();   // nothing specified -> default
-}
-
-/**
- * @brief get energy convergence strategy
- *
- * @return ConvStrategy
- */
-ConvStrategy ConvSettings::getEnConvStrategy() const
-{
-    return _energyConvStrategy.get();
 }

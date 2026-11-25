@@ -119,9 +119,7 @@ inline void TestGuffDatReader::SetUp()
         pot::CoulombShiftedPotential(_settings.potentialSettings)
     );
 
-    _settings.fileSettings.setGuffDatFileNameByUser(
-        "data/guffDatReader/guff.dat"
-    );
+    _settings.fileSettings.set_guffDatFileByUser("data/guffDatReader/guff.dat");
     _settings.potentialSettings.setNonCoulombTypeByUser(NonCoulombType::GUFF);
 
     _guffDatReader = std::make_unique<input::guffdat::GuffDatReader>(*_engine);

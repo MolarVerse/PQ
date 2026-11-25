@@ -133,13 +133,13 @@ namespace benchInputReaders
         Settings settings;
         settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
         settings.timings.setTimeStepByUser(0.5 * fs);
-        settings.fileSettings.setMolDescriptorFileNameByUser(
+        settings.fileSettings.set_molDescriptorFileByUser(
             (directory / "moldescriptor.dat").string()
         );
-        settings.fileSettings.setStartFileNameByUser(
+        settings.fileSettings.set_startFileByUser(
             (directory / "input.rst").string()
         );
-        settings.fileSettings.setTopologyFileNameByUser(
+        settings.fileSettings.set_topologyFileByUser(
             (directory / "topology.top").string()
         );
 

@@ -286,7 +286,7 @@ TEST_F(TestSetup, ringPolymerSetupReadsBeadsFromRestartFile)
 
     Settings settings;
     settings.ringPolymerSettings.setNumberOfBeadsByUser(2);
-    settings.fileSettings.setRingPolymerStartFileNameByUser(fileName);
+    settings.fileSettings.set_rpmdStartFileByUser(fileName);
     engine::RingPolymerQMMDEngine rpEngine{settings};
     fillEngineBox(rpEngine);
 
