@@ -1232,7 +1232,7 @@ TEST_F(ExternalQMRunnerTest, orcaQuotesArgumentsAndResetsOnlyWhenRequired)
     settings.fileSettings.set_orcaFileByUser(
         "template's name; touch qm-injected"
     );
-    settings.hybridSettings.setSmoothingMethodByUser(SmoothingMethod::HOTSPOT);
+    settings.hybridSettings.set_smoothingByUser(SmoothingMethod::HOTSPOT);
     _setMoleculeChangedZone(false);
     const auto expected = [&](int reset)
     {
@@ -1264,7 +1264,7 @@ TEST_F(ExternalQMRunnerTest, orcaQuotesArgumentsAndResetsOnlyWhenRequired)
     );
     EXPECT_EQ(expected(1), runner.getCommand());
     _setMoleculeChangedZone(false);
-    settings.hybridSettings.setSmoothingMethodByUser(SmoothingMethod::EXACT);
+    settings.hybridSettings.set_smoothingByUser(SmoothingMethod::EXACT);
     runner.execute(
         _simulationBox,
         settings.fileSettings,

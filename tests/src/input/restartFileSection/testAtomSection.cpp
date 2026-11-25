@@ -68,7 +68,12 @@ TEST_F(TestAtomSection, numberOfArguments)
         {
             auto line = std::vector<std::string>(i);
             ASSERT_THROW_MSG(
-                _section->process(line, *_engine, lineNumber),
+                _section->process(
+                    line,
+                    lineNumber,
+                    _settings,
+                    _engine->get_simulationBox()
+                ),
                 exc::RstFileException,
                 "Error in line 7: Atom section must have 6, 9, 12, 15, 18 or "
                 "21 elements"
@@ -87,7 +92,12 @@ TEST_F(TestAtomSection, moltypeNotFound)
     line[2]           = "1";
     size_t lineNumber = 7;
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine, lineNumber),
+        _section->process(
+            line,
+            lineNumber,
+            _settings,
+            _engine->get_simulationBox()
+        ),
         exc::RstFileException,
         "Molecule type MolType(1) not found"
     );
@@ -110,7 +120,12 @@ TEST_F(TestAtomSection, notEnoughElementsInLine)
     _section->setFilePointer(&file);
 
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine, lineNumber),
+        _section->process(
+            line,
+            lineNumber,
+            _settings,
+            _engine->get_simulationBox()
+        ),
         exc::RstFileException,
         "Error in line 10: Molecule must have 1 atoms"
     );
@@ -123,7 +138,12 @@ TEST_F(TestAtomSection, notEnoughElementsInLine)
     _section->setFilePointer(&fp2);
 
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine, lineNumber),
+        _section->process(
+            line,
+            lineNumber,
+            _settings,
+            _engine->get_simulationBox()
+        ),
         exc::RstFileException,
         "Error in line 14: Molecule must have 2 atoms"
     );
@@ -147,7 +167,12 @@ TEST_F(TestAtomSection, numberOfArgumentsWithinMolecule)
 
     size_t lineNumber = 0;
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine, lineNumber),
+        _section->process(
+            line,
+            lineNumber,
+            _settings,
+            _engine->get_simulationBox()
+        ),
         exc::RstFileException,
         "Error in line 2: Atom section must have 6, 9, 12, 15, 18 or 21 "
         "elements"
@@ -174,19 +199,22 @@ TEST_F(TestAtomSection, testProcess)
     _section->setFilePointer(&file);
 
     size_t lineNumber = 0;
-    _section->process(line, *_engine, lineNumber);
+    _section
+        ->process(line, lineNumber, _settings, _engine->get_simulationBox());
 
     line    = std::vector<std::string>(21);
     line[2] = "2";
     for (size_t i = 3; i < 21; ++i) line[i] = "1.0";
 
-    _section->process(line, *_engine, lineNumber);
+    _section
+        ->process(line, lineNumber, _settings, _engine->get_simulationBox());
 
     line    = std::vector<std::string>(21);
     line[2] = "1";
     for (size_t i = 3; i < 21; ++i) line[i] = "1.0";
 
-    _section->process(line, *_engine, lineNumber);
+    _section
+        ->process(line, lineNumber, _settings, _engine->get_simulationBox());
 
     _settings.generalSettings.setJobtypeByUser(JobType::QM_MD);
 

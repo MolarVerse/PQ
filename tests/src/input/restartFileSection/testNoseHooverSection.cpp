@@ -53,7 +53,12 @@ TEST_F(TestNoseHooverSection, testNumberOfArguments)
         {
             auto line = std::vector<std::string>(i);
             EXPECT_THROW_MSG(
-                _section->process(line, *_engine, lineNumber),
+                _section->process(
+                    line,
+                    lineNumber,
+                    _settings,
+                    _engine->get_simulationBox()
+                ),
                 exc::RstFileException,
                 "Error not enough arguments in line 0 for a chi entry of the "
                 "nose hoover thermostat"
@@ -75,9 +80,12 @@ TEST_F(TestNoseHooverSection, testProcessConvertsToZeroBasedIndices)
     std::vector<std::string> line1 = {"chi", "1", "0.1", "0.4"};
     std::vector<std::string> line2 = {"chi", "2", "0.2", "0.5"};
     std::vector<std::string> line3 = {"chi", "3", "0.3", "0.6"};
-    _section->process(line1, *_engine, lineNumber);
-    _section->process(line2, *_engine, lineNumber);
-    _section->process(line3, *_engine, lineNumber);
+    _section
+        ->process(line1, lineNumber, _settings, _engine->get_simulationBox());
+    _section
+        ->process(line2, lineNumber, _settings, _engine->get_simulationBox());
+    _section
+        ->process(line3, lineNumber, _settings, _engine->get_simulationBox());
 
     const auto expectedChi = std::map<size_t, Action>{
         {0, 0.1 * kcal_per_mol * s},
@@ -99,7 +107,12 @@ TEST_F(TestNoseHooverSection, testProcessRejectsZeroIndex)
     std::vector<std::string> line       = {"chi", "0", "0.1", "0.4"};
 
     EXPECT_THROW_MSG(
-        _section->process(line, *_engine, lineNumber),
+        _section->process(
+            line,
+            lineNumber,
+            _settings,
+            _engine->get_simulationBox()
+        ),
         exc::RstFileException,
         "Error in line 0 in restart file; chi index cannot be zero"
     );
@@ -113,7 +126,12 @@ TEST_F(TestNoseHooverSection, testProcessRejectsIndexLargerThanChainLength)
     std::vector<std::string> line       = {"chi", "4", "0.1", "0.4"};
 
     EXPECT_THROW_MSG(
-        _section->process(line, *_engine, lineNumber),
+        _section->process(
+            line,
+            lineNumber,
+            _settings,
+            _engine->get_simulationBox()
+        ),
         exc::RstFileException,
         "Chi index 4 is larger than the number of nose hoover chains 3"
     );
@@ -126,10 +144,16 @@ TEST_F(TestNoseHooverSection, testProcessRejectsDuplicateIndex)
     size_t                   lineNumber = 0;
     std::vector<std::string> line       = {"chi", "1", "0.1", "0.4"};
 
-    _section->process(line, *_engine, lineNumber);
+    _section
+        ->process(line, lineNumber, _settings, _engine->get_simulationBox());
 
     EXPECT_THROW_MSG(
-        _section->process(line, *_engine, lineNumber),
+        _section->process(
+            line,
+            lineNumber,
+            _settings,
+            _engine->get_simulationBox()
+        ),
         exc::RstFileException,
         "Error in line 0 in restart file; chi or zeta entry already exists"
     );

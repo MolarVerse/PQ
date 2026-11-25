@@ -27,6 +27,7 @@
 #include <string>
 
 #include "exceptions.hpp"
+#include "settings.hpp"
 #include "thermostatSettings.hpp"
 #include "units.hpp"
 
@@ -34,28 +35,22 @@ namespace input::restartFile
 {
 
     /**
-     * @brief Constructor for NoseHooverSection
-     *
-     * @param noseHooverSettings Reference to the NoseHooverSettings object
-     */
-    NoseHooverSection::NoseHooverSection(NoseHooverSettings &noseHooverSettings)
-        : _noseHooverSettings(noseHooverSettings)
-    {
-    }
-
-    /**
      * @brief checks the number of arguments in the line
      *
      * @param lineElements all elements of the line
      * @param lineNumber the line number in the rst file being processed
+     * @param settings the simulation settings
+     * @param simulationBox the simulation box (currently unused in this
+     * function)
      *
      * @throws exc::RstFileException if the number of arguments is not
      * correct
      */
     void NoseHooverSection::process(
         std::vector<std::string> &lineElements,
-        engine::Engine & /*engine*/,
-        size_t &lineNumber
+        size_t                   &lineNumber,
+        Settings                 &settings,
+        molsys::SimulationBox & /*simulationBox*/
     )
     {
         if (4 != lineElements.size())
@@ -75,14 +70,16 @@ namespace input::restartFile
         const auto chi  = stod(lineElements[2]) * kcal_per_mol * s;
         const auto zeta = stod(lineElements[3]);
 
-        if (idx > _noseHooverSettings->getNoseHooverChainLength())
+        auto &nhSettings = settings.noseHooverSettings;
+
+        if (idx > nhSettings.getNoseHooverChainLength())
         {
             throw exc::RstFileException(
                 std::format(
                     "Chi index {} is larger than the number of nose hoover "
                     "chains {}",
                     idx,
-                    _noseHooverSettings->getNoseHooverChainLength()
+                    nhSettings.getNoseHooverChainLength()
                 )
             );
         }
@@ -102,10 +99,10 @@ namespace input::restartFile
         auto chis  = std::map<size_t, Action>();
         auto zetas = std::map<size_t, Quantity>();
 
-        if (_noseHooverSettings->isChiAndZetaSet())
+        if (nhSettings.isChiAndZetaSet())
         {
-            chis  = _noseHooverSettings->getChi();
-            zetas = _noseHooverSettings->getZeta();
+            chis  = nhSettings.getChi();
+            zetas = nhSettings.getZeta();
         }
 
         auto [iterChi, chiIsInserted]   = chis.try_emplace(idx - 1, chi);
@@ -122,8 +119,8 @@ namespace input::restartFile
             );
         }
 
-        _noseHooverSettings->setChiByUser(chis);
-        _noseHooverSettings->setZetaByUser(zetas);
+        nhSettings.setChiByUser(chis);
+        nhSettings.setZetaByUser(zetas);
     }
 
     /**

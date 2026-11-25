@@ -179,7 +179,7 @@ namespace engine
         using enum SmoothingMethod;
 
         const auto &smoothingMethod =
-            getSettings().hybridSettings.getSmoothingMethod();
+            getSettings().hybridSettings.get_smoothing();
 
         switch (smoothingMethod)
         {
@@ -706,7 +706,7 @@ namespace engine
      */
     void QMMMMDEngine::_distributeSmoothingMolQMForces()
     {
-        const auto type = getSettings().hybridSettings.getQMForceDist();
+        const auto type = getSettings().hybridSettings.get_qmForceDist();
         std::vector<std::reference_wrapper<molsys::Molecule>>
             recipientMolecules;
 
@@ -758,7 +758,7 @@ namespace engine
                     weights = getDistanceWeights(
                         smoothingMol,
                         recipientMolecules,
-                        getSettings().hybridSettings.getLayerRadius()
+                        getSettings().hybridSettings.get_layerRadius()
                     );
                     break;
             }

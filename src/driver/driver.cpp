@@ -49,12 +49,7 @@ namespace driver
                 settings
             );
 
-        setup::setupRequestedJob(
-            *engine,
-            settings.noseHooverSettings,
-            settings.timings,
-            settings.potentialSettings
-        );
+        setup::setupRequestedJob(*engine, settings);
 
         engine->run();
     }
