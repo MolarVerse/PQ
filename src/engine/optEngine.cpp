@@ -342,7 +342,7 @@ namespace engine
      * @brief get the optimizer
      *
      */
-    opt::Optimizer &OptEngine::getOptimizer() { return *_optimizer; }
+    opt::Optimizer &OptEngine::get_optimizer() { return *_optimizer; }
 
     /**
      * @brief get the learning rate strategy

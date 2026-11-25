@@ -47,7 +47,7 @@ namespace manostat
         const GeneralSettings&  generalSettings
     )
     {
-        switch (settings.getManostatType())
+        switch (settings.get_manostatType())
         {
             case ManostatType::BERENDSEN:
                 return _setupBerendsenManostat(settings);
@@ -77,7 +77,7 @@ namespace manostat
         const ManostatSettings& settings
     )
     {
-        switch (settings.getIsotropy())
+        switch (settings.get_isotropy())
         {
             using enum Isotropy;
 
@@ -123,7 +123,7 @@ namespace manostat
             const GeneralSettings&  generalSettings
         )
     {
-        switch (settings.getIsotropy())
+        switch (settings.get_isotropy())
         {
             using enum Isotropy;
 

@@ -67,14 +67,12 @@ void TestInputValidation::SetUp()
 
     _settings.hessianSettings.set_optimizeBeforeHessianByUser(false);
 
-    _settings.optimizerSettings.setLearningRateStrategyByUser(
-        LearningRate::CONSTANT
-    );
-    _settings.optimizerSettings.setMinLearningRateByUser(1.0e-15);
-    _settings.optimizerSettings.setMaxLearningRateByUser(1.0);
+    _settings.optimizerSettings.set_lRStrategyByUser(LearningRate::CONSTANT);
+    _settings.optimizerSettings.set_minLearningRateByUser(1.0e-15);
+    _settings.optimizerSettings.set_maxLearningRateByUser(1.0);
 
-    _settings.manostatSettings.setManostatTypeByUser(ManostatType::NONE);
-    _settings.manostatSettings.setTauByUser(
+    _settings.manostatSettings.set_manostatTypeByUser(ManostatType::NONE);
+    _settings.manostatSettings.set_tauByUser(
         defaults::BERENDSEN_MANOSTAT_RELAX_TIME
     );
 
@@ -209,7 +207,7 @@ TEST_F(TestInputValidation, manostatDoesNotNeedTimeStepOutsideMD)
 {
     _settings.generalSettings.setJobtypeByUser(JobType::MM_HESSIAN);
     _settings.timings = TimingsSettings();
-    _settings.manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
+    _settings.manostatSettings.set_manostatTypeByUser(ManostatType::BERENDSEN);
     _setKeyword("pressure");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
@@ -230,7 +228,7 @@ TEST_F(TestInputValidation, requiresTimeStepForMD)
 
 TEST_F(TestInputValidation, requiresPressureForManostat)
 {
-    _settings.manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
+    _settings.manostatSettings.set_manostatTypeByUser(ManostatType::BERENDSEN);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),
@@ -242,8 +240,8 @@ TEST_F(TestInputValidation, requiresPressureForManostat)
 TEST_F(TestInputValidation, rejectsUnstableManostatRelaxationTime)
 {
     _configureMDJob(JobType::MM_MD);
-    _settings.manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
-    _settings.manostatSettings.setTauByUser(0.0001 * ps);
+    _settings.manostatSettings.set_manostatTypeByUser(ManostatType::BERENDSEN);
+    _settings.manostatSettings.set_tauByUser(0.0001 * ps);
     _setKeyword("pressure");
 
     ASSERT_THROW_MSG(
@@ -697,7 +695,7 @@ TEST_F(TestInputValidation, acceptsValidConditionalKeywords)
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethodByUser(QMMethod::MACE);
     _settings.maceSettings.setMaceModelByUser(MaceModel::CUSTOM);
-    _settings.manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
+    _settings.manostatSettings.set_manostatTypeByUser(ManostatType::BERENDSEN);
     _settings.thermostatSettings.setThermostatTypeByUser(
         ThermostatType::BERENDSEN
     );
@@ -713,7 +711,7 @@ TEST_F(TestInputValidation, requiresDecayForConstantDecayOptimization)
 {
     _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings.timings.setNumberOfStepsByUser(100U);
-    _settings.optimizerSettings.setLearningRateStrategyByUser(
+    _settings.optimizerSettings.set_lRStrategyByUser(
         LearningRate::CONSTANT_DECAY
     );
     _setKeyword("nstep");
@@ -730,7 +728,7 @@ TEST_F(TestInputValidation, requiresDecayForExponentialDecayOptimization)
 {
     _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings.timings.setNumberOfStepsByUser(100U);
-    _settings.optimizerSettings.setLearningRateStrategyByUser(
+    _settings.optimizerSettings.set_lRStrategyByUser(
         LearningRate::EXPONENTIAL_DECAY
     );
     _setKeyword("nstep");
@@ -747,9 +745,7 @@ TEST_F(TestInputValidation, acceptsConstantOptimizationWithoutDecay)
 {
     _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings.timings.setNumberOfStepsByUser(100U);
-    _settings.optimizerSettings.setLearningRateStrategyByUser(
-        LearningRate::CONSTANT
-    );
+    _settings.optimizerSettings.set_lRStrategyByUser(LearningRate::CONSTANT);
 
     _setKeyword("nstep");
 
@@ -760,7 +756,7 @@ TEST_F(TestInputValidation, rejectsUnimplementedLineSearchOptimization)
 {
     _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings.timings.setNumberOfStepsByUser(100U);
-    _settings.optimizerSettings.setLearningRateStrategyByUser(
+    _settings.optimizerSettings.set_lRStrategyByUser(
         LearningRate::LINESEARCH_WOLFE
     );
     _setKeyword("nstep");
@@ -776,11 +772,9 @@ TEST_F(TestInputValidation, rejectsOverlappingLearningRateBounds)
 {
     _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings.timings.setNumberOfStepsByUser(100U);
-    _settings.optimizerSettings.setLearningRateStrategyByUser(
-        LearningRate::CONSTANT
-    );
-    _settings.optimizerSettings.setMinLearningRateByUser(0.5);
-    _settings.optimizerSettings.setMaxLearningRateByUser(0.5);
+    _settings.optimizerSettings.set_lRStrategyByUser(LearningRate::CONSTANT);
+    _settings.optimizerSettings.set_minLearningRateByUser(0.5);
+    _settings.optimizerSettings.set_maxLearningRateByUser(0.5);
     _setKeyword("nstep");
 
     ASSERT_THROW_MSG(

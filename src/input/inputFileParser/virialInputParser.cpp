@@ -56,7 +56,7 @@ namespace input
         };
 
         const auto onSet = [this](VirialType virial)
-        { _manostatSettings->setVirialTypeByUser(virial); };
+        { _manostatSettings->set_virialByUser(virial); };
 
         auto& key = _getRegistry().registerKey(
             KeyRegistry<VirialType>{

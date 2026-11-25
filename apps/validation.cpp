@@ -315,7 +315,7 @@ namespace cli::detail
         }
 
         if (isMMActivated(settings.generalSettings.getJobtype()) ||
-            settings.manostatSettings.getManostatType() != ManostatType::NONE)
+            settings.manostatSettings.get_manostatType() != ManostatType::NONE)
         {
             requireFile(
                 settings.fileSettings.get_molDescriptorFile(),

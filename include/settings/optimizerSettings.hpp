@@ -53,43 +53,18 @@ class OptimizerSettings
    public:
     OptimizerSettings();
 
-    /***************************
-     * standard setter methods *
-     ***************************/
-
-    void setOptimizerByUser(OptimizerType optimizer);
-    void setLearningRateStrategyByUser(LearningRate);
-
-    void setNumberOfEpochsByUser(size_t);
-    void setLRUpdateFrequencyByUser(size_t);
-
-    void setInitialLearningRateByUser(double);
-    void setLearningRateDecayByUser(double);
-
-    void setMaxLearningRateByUser(double);
-    void setMinLearningRateByUser(double);
-
-    /******************************
-     * validation helper methods *
-     ******************************/
+    SETTING_GETTER_AND_SETTER_BY_USER(_optimizer);
+    SETTING_GETTER_AND_SETTER_BY_USER(_lRStrategy);
+    SETTING_GETTER_AND_SETTER_BY_USER(_nEpochs);
+    SETTING_GETTER_AND_SETTER_BY_USER(_lRupdateFrequency);
+    SETTING_GETTER_AND_SETTER_BY_USER(_initialLearningRate);
+    SETTING_GETTER_AND_SETTER_BY_USER(_minLearningRate);
+    SETTING_GETTER_AND_SETTER_BY_USER(_learningRateDecay);
+    SETTING_SETTER_BY_USER(_maxLearningRate);
 
     void validateLearningRateStrategy() const;
     void validateLearningRateBounds() const;
 
-    /***************************
-     * standard getter methods *
-     ***************************/
-
-    [[nodiscard]] OptimizerType getOptimizer() const;
-    [[nodiscard]] LearningRate  getLearningRateStrategy() const;
-
-    [[nodiscard]] size_t getNumberOfEpochs() const;
-    [[nodiscard]] size_t getLRUpdateFrequency() const;
-
-    [[nodiscard]] double getInitialLearningRate() const;
-    [[nodiscard]] double getMinLearningRate() const;
-
-    [[nodiscard]] double                getLearningRateDecay() const;
     [[nodiscard]] std::optional<double> getMaxLearningRate() const;
 
     [[nodiscard]] bool isLearningRateDecaySetByUser() const;
