@@ -39,20 +39,21 @@
  */
 TEST_F(TestInputFileReader, parseCellListActivated)
 {
-    input::CellListInputParser parser;
+    GeneralSettings            generalSettings;
+    input::CellListInputParser parser(generalSettings);
     const auto                 funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("cell_list"));
     const auto& parseFunc = funcMap.at("cell_list");
 
     std::vector<std::string> lineElements = {"cell-list", "=", "off"};
     parseFunc(lineElements, 0);
-    EXPECT_FALSE(GeneralSettings::isCellListActivated());
+    EXPECT_FALSE(generalSettings.isCellListActivated());
 
     _clearParser(parser);
 
     lineElements = {"cell-list", "=", "on"};
     parseFunc(lineElements, 0);
-    EXPECT_TRUE(GeneralSettings::isCellListActivated());
+    EXPECT_TRUE(generalSettings.isCellListActivated());
 
     _clearParser(parser);
 
@@ -73,14 +74,15 @@ TEST_F(TestInputFileReader, parseCellListActivated)
  */
 TEST_F(TestInputFileReader, numberOfCells)
 {
-    input::CellListInputParser parser;
+    GeneralSettings            generalSettings;
+    input::CellListInputParser parser(generalSettings);
     const auto                 funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("cell_number"));
     const auto& parseFunc = funcMap.at("cell_number");
 
     std::vector<std::string> lineElements = {"cell-number", "=", "3"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(GeneralSettings::getNumberOfCells(), 3);
+    EXPECT_EQ(generalSettings.getNumberOfCells(), 3);
 
     _clearParser(parser);
 

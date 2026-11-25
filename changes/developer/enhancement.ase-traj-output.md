@@ -1,0 +1,2 @@
+- `out::AseTrajOutput` derives from `out::Output` and writes ASE's ULM format (version 3) through the typed `out::ulm::Writer` and `out::ulm::JsonObject`, with mp-units for the ASE units. `Frame::Atom` now carries the mass; the atomic number helper moved from `H5mdOutput::species` to `out::atomicNumber` (#1309).
+- `Frame::potentialEnergy` is an `EnergyPerMol`, and the atom names without an element are listed next to `atomNumberMap` (#1309).

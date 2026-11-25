@@ -28,6 +28,7 @@
 #include "aseQMRunner.hpp"
 
 class MaceSettings;
+class GeneralSettings;
 
 namespace QM
 {
@@ -42,8 +43,9 @@ namespace QM
         ~AseMaceRunner() override = default;
 
         explicit AseMaceRunner(
-            const QMSettings&   qmSettings,
-            const MaceSettings& maceSettings
+            const QMSettings&      qmSettings,
+            const MaceSettings&    maceSettings,
+            const GeneralSettings& generalSettings
         );
     };
 }   // namespace QM

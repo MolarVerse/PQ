@@ -98,8 +98,8 @@ namespace setup
         );
         _engine.getInfoOutput().setFilename(infoFileName, overwriteOutputFiles);
 
-        // extxyz or h5md replace the xyz, velocity, force and charge files of
-        // MD runs
+        // extxyz, h5md or ase replace the xyz, velocity, force and charge files
+        // of MD runs
         const auto format = outputFileSettings.getTrajectoryFormat();
         const auto textTrajectory =
             !isMDJobType(_engine.getSettings().generalSettings.getJobtype()) ||
@@ -150,6 +150,13 @@ namespace setup
                     outputFileSettings.getH5mdFileName(),
                     overwriteOutputFiles,
                     timeStep.numerical_value_in(fs)
+                );
+            }
+            else if (format == TrajectoryFormat::ASE)
+            {
+                mdEngine.getEngineOutput().openAseTrajOutput(
+                    outputFileSettings.getAseTrajFileName(),
+                    overwriteOutputFiles
                 );
             }
             else

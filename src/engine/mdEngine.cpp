@@ -31,7 +31,6 @@
 #include "outputFileSettings.hpp"
 #include "terminalProgressBar.hpp"
 #include "timingsSettings.hpp"
-#include "units.hpp"
 #include "velocityVerlet.hpp"
 
 #ifdef WITH_MPI
@@ -55,7 +54,8 @@ namespace engine
           _thermostat(std::make_unique<thermostat::Thermostat>()),
           _manostat(
               manostat::ManostatFactory::createManostat(
-                  settings.manostatSettings
+                  settings.manostatSettings,
+                  settings.generalSettings
               )
           )
     {
@@ -156,8 +156,10 @@ namespace engine
         const auto jobType = getSettings().generalSettings.getJobtype();
         if (!isHybridJobtype(jobType))
         {
-            const auto virial =
-                virial::intraMolecularVirialCorrection(get_simulationBox());
+            const auto virial = virial::intraMolecularVirialCorrection(
+                get_simulationBox(),
+                getSettings().manostatSettings
+            );
             get_physicalData().addVirial(virial);
         }
 
@@ -277,9 +279,7 @@ namespace engine
                 get_simulationBox(),
                 *_thermostat,
                 effStep,
-                get_physicalData().getPotentialEnergy().numerical_value_in(
-                    kcal_per_mol
-                ),
+                get_physicalData().getPotentialEnergy(),
                 calculateTotalSimulationTime(
                     timeStep,
                     getSettings().timings.getStartingTime()

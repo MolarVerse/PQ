@@ -59,8 +59,6 @@ class TestInputValidation : public ::testing::Test
     // the value checks moved out of the reader into Settings::validate(),
     // which runs after Settings::finalize()
     void _finalizeAndValidate();
-
-    void TearDown() override;
 };
 
 void TestInputValidation::SetUp()
@@ -133,8 +131,6 @@ void TestInputValidation::_finalizeAndValidate()
     _settings.finalize();
     _settings.validate();
 }
-
-void TestInputValidation::TearDown() { GeneralSettings::deactivateCellList(); }
 
 TEST_F(TestInputValidation, requiresNumberOfStepsForMD)
 {
@@ -388,7 +384,7 @@ TEST_F(TestInputValidation, rejectsNonFiniteLangevinRampScale)
 TEST_F(TestInputValidation, rejectsCellListWithoutCoulombCutoff)
 {
     _configureMDJob(JobType::MM_MD);
-    GeneralSettings::activateCellList();
+    _settings.generalSettings.activateCellListByUser();
     _settings.potentialSettings.setCoulombRadiusCutoffByUser(0.0 * angstrom);
 
     ASSERT_THROW_MSG(
@@ -402,7 +398,7 @@ TEST_F(TestInputValidation, rejectsCellListForPureQM)
 {
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
-    GeneralSettings::activateCellList();
+    _settings.generalSettings.activateCellListByUser();
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),

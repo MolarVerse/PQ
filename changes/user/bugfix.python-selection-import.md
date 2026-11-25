@@ -1,0 +1,1 @@
+- PQ now stops with a clear error instead of crashing when a Python selection fails: it names the step and shows Python's error, and asks to install PQAnalysis only when PQAnalysis itself is missing (#1334).

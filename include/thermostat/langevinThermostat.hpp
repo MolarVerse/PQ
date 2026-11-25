@@ -40,25 +40,22 @@ namespace thermostat
     class LangevinThermostat : public Thermostat
     {
        private:
-        rng::RandomNumberGenerator _randomNumberGenerator;
+        rng::RandomNumberGenerator _rng;
 
         Frequency _friction = Frequency::zero();
 
        public:
-        explicit LangevinThermostat(const Frequency &friction);
+        explicit LangevinThermostat(
+            const Frequency       &friction,
+            const GeneralSettings &generalSettings
+        );
         ~LangevinThermostat() override = default;
-
-        // copy constructor and copy assignment needed for random number
-        // generator
-        LangevinThermostat(const LangevinThermostat &);
-        LangevinThermostat &operator=(const LangevinThermostat &);
-        MSTD_NO_MOVE(LangevinThermostat);
 
         [[nodiscard]]
         static auto calculateSigma(
-            const Frequency &friction,
-            const Temperature &,
-            const Time &targetTemperature
+            const Frequency   &friction,
+            const Temperature &targetTemperature,
+            const Time        &timeStep
         ) -> decltype(mstd::sqrt(EnergyPerMol{} / TimeSquared{}));
 
         void applyLangevin(

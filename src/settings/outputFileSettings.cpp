@@ -100,6 +100,11 @@ void OutputFileSettings::_replaceDefaultValues(const std::string& prefix)
     if (!_h5mdFile.isSetByUser())
         _h5mdFile.setBySystem(prefix + ".h5md");
 
+    if (!_aseTrajFile.isSetByUser())
+    {
+        _aseTrajFile.setBySystem(prefix + ".ase.traj");
+    }
+
     if (!_hybridCenterFile.isSetByUser())
         _hybridCenterFile.setBySystem(prefix + ".center.xyz");
 
@@ -193,6 +198,11 @@ std::string OutputFileSettings::_determineMostCommonPrefix() const
 
     if (_h5mdFile.isSetByUser())
         fileNames.push_back(_h5mdFile.get());
+
+    if (_aseTrajFile.isSetByUser())
+    {
+        fileNames.push_back(_aseTrajFile.get());
+    }
 
     auto removeEnding = [](std::string& fileName)
     {
@@ -355,6 +365,16 @@ void OutputFileSettings::setExtxyzFileNameByUser(const std::string& name)
 void OutputFileSettings::setH5mdFileNameByUser(const std::string& name)
 {
     _h5mdFile.setByUser(name);
+}
+
+/**
+ * @brief sets the ASE trajectory file name
+ *
+ * @param name
+ */
+void OutputFileSettings::setAseTrajFileNameByUser(const std::string& name)
+{
+    _aseTrajFile.setByUser(name);
 }
 
 /**
@@ -684,6 +704,16 @@ const std::string& OutputFileSettings::getExtxyzFileName() const
 const std::string& OutputFileSettings::getH5mdFileName() const
 {
     return _h5mdFile.get();
+}
+
+/**
+ * @brief get the ASE trajectory file name
+ *
+ * @return std::string
+ */
+const std::string& OutputFileSettings::getAseTrajFileName() const
+{
+    return _aseTrajFile.get();
 }
 
 /**

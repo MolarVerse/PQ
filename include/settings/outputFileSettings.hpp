@@ -60,6 +60,7 @@ class OutputFileSettings
     Setting<std::string> _chargeFile{DefaultFiles::chargeFile};
     Setting<std::string> _extxyzFile;
     Setting<std::string> _h5mdFile;
+    Setting<std::string> _aseTrajFile;
     Setting<std::string> _logFile{DefaultFiles::logFile};
     Setting<std::string> _refFile{DefaultFiles::refFile};
     Setting<std::string> _infoFile{DefaultFiles::infoFile};
@@ -100,6 +101,7 @@ class OutputFileSettings
     void setChargeFileNameByUser(const std::string &);
     void setExtxyzFileNameByUser(const std::string &);
     void setH5mdFileNameByUser(const std::string &);
+    void setAseTrajFileNameByUser(const std::string &);
     void setLogFileNameByUser(const std::string &);
     void setRefFileNameByUser(const std::string &);
     void setInfoFileNameByUser(const std::string &);
@@ -142,6 +144,7 @@ class OutputFileSettings
     [[nodiscard]] const std::string &getChargeFileName() const;
     [[nodiscard]] const std::string &getExtxyzFileName() const;
     [[nodiscard]] const std::string &getH5mdFileName() const;
+    [[nodiscard]] const std::string &getAseTrajFileName() const;
     [[nodiscard]] const std::string &getLogFileName() const;
     [[nodiscard]] const std::string &getRefFileName() const;
     [[nodiscard]] const std::string &getInfoFileName() const;

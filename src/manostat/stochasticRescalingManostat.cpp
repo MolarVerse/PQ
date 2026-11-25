@@ -36,6 +36,20 @@
 
 namespace manostat
 {
+    /**
+     * @brief Construct a new Stochastic Rescaling Manostat object
+     *
+     * @param settings The settings for the manostat
+     * @param generalSettings The general settings for the simulation
+     */
+    StochasticRescalingManostat::StochasticRescalingManostat(
+        const ManostatSettings &settings,
+        const GeneralSettings  &generalSettings
+    )
+        : Manostat(settings),
+          _rng(rng::RandomNumberGenerator::create(generalSettings))
+    {
+    }
 
     /**
      * @brief apply Stochastic Rescaling manostat for NPT ensemble
@@ -132,8 +146,7 @@ namespace manostat
 
         const auto thermalEnergy = targetTemperature.quantity_from_zero() * kb;
 
-        const auto random =
-            _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
+        const auto random = _rng.getNormalDistribution(0.0, 1.0);
 
         auto stochasticFactor = mstd::sqrt(
                                     2.0 * thermalEnergy * compressibility *
@@ -207,7 +220,7 @@ namespace manostat
      */
     rng::RandomNumberGenerator &StochasticRescalingManostat::_getRNG()
     {
-        return _randomNumberGenerator;
+        return _rng;
     }
 
     /**
