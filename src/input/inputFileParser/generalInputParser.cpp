@@ -57,16 +57,22 @@ namespace input
 
     /**
      * @brief Adds the jobtype key to the input parser and validates its value
-     *
-     *
      */
     void GeneralInputParser::addJobTypeKey()
     {
         const auto metaData = KeyMetadata{
-            .name         = "jobtype",
-            .title        = "Job Type",
-            .description  = "Specifies the type of job to be performed",
-            .errorMessage = "Invalid job type specified"
+            .name        = "jobtype",
+            .title       = "Job Type",
+            .description = "Specifies the type of job to be performed",
+            .errorMessage =
+                "Invalid job type specified - possible values "
+                "are:\n"
+                "- mm-opt\n"
+                "- mm-hessian\n"
+                "- mm-md\n"
+                "- qm-md\n"
+                "- qm-rpmd\n"
+                "- qmmm-md\n"
         };
 
         const auto setValue = [this](JobType jobType)

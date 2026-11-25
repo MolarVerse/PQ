@@ -87,7 +87,8 @@ TEST_F(TestInputFileReader, JobType)
     EXPECT_THROW_MSG(
         parseFunc(lineElements, 0),
         exc::InputFileException,
-        "Invalid jobtype \"notValid\" in input file - possible values are:\n"
+        "Invalid value \"notValid\" for key \"jobtype\" at line 0 in input "
+        "file: Invalid job type specified - possible values are:\n"
         "- mm-opt\n"
         "- mm-hessian\n"
         "- mm-md\n"

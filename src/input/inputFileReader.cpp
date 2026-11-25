@@ -57,6 +57,25 @@
 
 namespace input
 {
+    namespace
+    {
+        /**
+         * @brief throws if the input file cannot be opened
+         *
+         * @param fileName
+         *
+         * @throw exc::InputFileException if file not found
+         */
+        void checkInputFileExists(const std::string &fileName)
+        {
+            if (std::ifstream(fileName).fail())
+            {
+                throw exc::InputFileException(
+                    "\"" + fileName + "\"" + " File not found"
+                );
+            }
+        }
+    }   // namespace
 
     /**
      * @brief Construct a new Input File Reader:: Input File Reader object
@@ -310,12 +329,9 @@ namespace input
      */
     void InputFileReader::read()
     {
-        std::ifstream inputFile(_fileName);
+        checkInputFileExists(_fileName);
 
-        if (inputFile.fail())
-            throw exc::InputFileException(
-                "\"" + _fileName + "\"" + " File not found"
-            );
+        std::ifstream inputFile(_fileName);
 
         std::string line;
 
@@ -365,6 +381,9 @@ namespace input
      */
     void readInputFile(const std::string_view &fileName, Settings &settings)
     {
+        // check first so that nothing is written to stdout for a missing file
+        checkInputFileExists(std::string(fileName));
+
         out::StdoutOutput::writeRead("Input File", std::string(fileName));
 
         InputFileReader inputFileReader(fileName, settings);
