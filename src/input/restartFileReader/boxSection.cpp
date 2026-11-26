@@ -171,11 +171,4 @@ namespace input::restartFile
      */
     std::string BoxSection::keyword() { return "box"; }
 
-    /**
-     * @brief returns if the box section is a header
-     *
-     * @return true
-     */
-    bool BoxSection::isHeader() { return true; }
-
 }   // namespace input::restartFile

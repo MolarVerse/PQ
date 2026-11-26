@@ -39,11 +39,6 @@ TEST_F(TestNoseHooverSection, testKeyword)
     EXPECT_EQ(_section->keyword(), "chi");
 }
 
-TEST_F(TestNoseHooverSection, testIsHeader)
-{
-    EXPECT_TRUE(_section->isHeader());
-}
-
 TEST_F(TestNoseHooverSection, testNumberOfArguments)
 {
     size_t lineNumber = 0;

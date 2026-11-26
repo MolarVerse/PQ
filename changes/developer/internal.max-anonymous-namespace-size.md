@@ -1,0 +1,1 @@
+- Turn on the `maxAnonymousNamespaceSize` devops check and move large anonymous namespaces into named `detail` namespaces.

@@ -27,7 +27,6 @@
 #include <format>
 #include <iostream>
 #include <memory>
-#include <mstd/utils.hpp>
 #include <ostream>
 #include <sstream>
 #include <streambuf>
@@ -49,24 +48,10 @@
 #include "mathUtilities.hpp"
 #include "qmSettings.hpp"
 #include "thermostatSettings.hpp"
+#include "validationDetail.hpp"
 
-namespace
+namespace cli::detail
 {
-    class ScopedStreamRedirect
-    {
-       private:
-        std::ostream   &_stream;
-        std::streambuf *_original;
-
-       public:
-        ScopedStreamRedirect(std::ostream &stream, std::streambuf *replacement);
-
-        MSTD_NO_COPY(ScopedStreamRedirect);
-        MSTD_NO_MOVE(ScopedStreamRedirect);
-
-        ~ScopedStreamRedirect();
-    };
-
     ScopedStreamRedirect::ScopedStreamRedirect(
         std::ostream   &stream,
         std::streambuf *replacement
@@ -134,12 +119,6 @@ namespace
     {
         return value.starts_with("https://") || value.starts_with("http://");
     }
-
-    struct Files
-    {
-        std::filesystem::path installedRelativePath;
-        std::filesystem::path buildPath;
-    };
 
     std::filesystem::path runtimeAssetPath(const Files &files)
     {
@@ -509,7 +488,7 @@ namespace
     {
         return scope == ValidationScope::PORTABLE ? "portable" : "installed";
     }
-}   // namespace
+}   // namespace cli::detail
 
 cli::ValidationResult cli::validateInputFile(std::string_view inputFile)
 {
@@ -523,14 +502,12 @@ cli::ValidationResult cli::validateInputFile(
 {
     auto engine = std::unique_ptr<engine::Engine>();
 
-    std::ostringstream   parserOutput;
-    ScopedStreamRedirect redirect(std::cout, parserOutput.rdbuf());
+    std::ostringstream           parserOutput;
+    detail::ScopedStreamRedirect redirect(std::cout, parserOutput.rdbuf());
 
     try
     {
-        Settings settings;
-        input::readJobType(settings.generalSettings, std::string(inputFile));
-
+        Settings               settings;
         input::InputFileReader reader(
             inputFile,
             settings,
@@ -544,14 +521,14 @@ cli::ValidationResult cli::validateInputFile(
         // would also rewrite e.g. the qm_script into its full path
         settings.kinetics.finalize(settings.timings.getNumberOfSteps());
         settings.validate();
-        validateInputDependencies(settings);
+        detail::validateInputDependencies(settings);
         if (scope == ValidationScope::INSTALLED)
         {
-            validateCompiledCapabilities(
+            detail::validateCompiledCapabilities(
                 settings.qmSettings,
                 settings.generalSettings.getJobtype()
             );
-            validateEffectiveFiles(settings);
+            detail::validateEffectiveFiles(settings);
         }
 
         auto result = ValidationResult{
@@ -560,12 +537,12 @@ cli::ValidationResult cli::validateInputFile(
             .scope       = scope,
             .diagnostics = {}
         };
-        appendWarnings(reader, result, settings);
+        detail::appendWarnings(reader, result, settings);
         return result;
     }
     catch (const exc::PQException &exception)
     {
-        return invalidResult(
+        return detail::invalidResult(
             inputFile,
             exception.getMessage(),
             exception.getLineNumber(),
@@ -585,13 +562,13 @@ void cli::writeValidationJson(
     json.value("schema_version", 1);
     json.value("valid", result.valid);
     json.value("input", result.inputFile);
-    json.value("scope", string(result.scope));
+    json.value("scope", detail::string(result.scope));
     json.beginArray("diagnostics");
 
     for (const auto &diagnostic : result.diagnostics)
     {
         json.beginObject();
-        json.value("severity", string(diagnostic.severity));
+        json.value("severity", detail::string(diagnostic.severity));
         json.value("message", diagnostic.message);
         json.value("file", result.inputFile);
         if (diagnostic.lineNumber.has_value())

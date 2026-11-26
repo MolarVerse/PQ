@@ -60,7 +60,6 @@ namespace input::restartFile
         ) override;
 
         [[nodiscard]] std::string keyword() override;
-        [[nodiscard]] bool        isHeader() override;
 
        private:
         static void _checkNumberOfLineArguments(

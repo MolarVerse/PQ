@@ -23,10 +23,7 @@
 #ifndef INPUT__INPUT_FILE_PARSER__GENERAL_INPUT_PARSER_HPP
 #define INPUT__INPUT_FILE_PARSER__GENERAL_INPUT_PARSER_HPP
 
-#include <cstddef>
 #include <mstd/types.hpp>
-#include <string>
-#include <vector>
 
 #include "inputFileParser.hpp"
 
@@ -55,14 +52,7 @@ namespace input
         void addFloatingPointTypeKey();
         void addDimensionalityKey();
         void addRandomSeedKey();
-
-        void parseJobType(const std::vector<std::string> &, size_t);
-
-        static void parseJobTypeForEngine(
-            GeneralSettings &generalSettings,
-            const std::vector<std::string> &,
-            size_t
-        );
+        void addJobTypeKey();
     };
 
 }   // namespace input

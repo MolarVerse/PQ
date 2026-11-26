@@ -130,11 +130,4 @@ namespace input::restartFile
      */
     std::string NoseHooverSection::keyword() { return "chi"; }
 
-    /**
-     * @brief returns if the section is a header
-     *
-     * @return bool true
-     */
-    bool NoseHooverSection::isHeader() { return true; }
-
 }   // namespace input::restartFile

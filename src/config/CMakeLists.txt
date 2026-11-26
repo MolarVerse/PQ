@@ -1,6 +1,7 @@
 add_library(config_headers 
     enums/manostat.cpp
     enums/jobtype.cpp
+    version.cpp
 )
 
 target_link_libraries(config_headers

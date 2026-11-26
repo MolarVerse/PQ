@@ -25,14 +25,18 @@
 
 #include <gtest/gtest.h>
 
+#include <fstream>
 #include <memory>
+#include <string>
 
 #include "atom.hpp"
+#include "enums/rstMetaData.hpp"
 #include "molecule.hpp"
 #include "orthorhombicBox.hpp"
 #include "rstFileOutput.hpp"
 #include "simulationBox.hpp"
 #include "units.hpp"
+#include "version.hpp"
 
 /**
  * @class TestRstFileOutput
@@ -49,6 +53,9 @@ class TestRstFileOutput : public ::testing::Test
     void SetUp() override;
 
     void TearDown() override;
+
+    [[nodiscard]] static std::string _expectedMetaDataLine();
+    static void                      _skipMetaData(std::ifstream &file);
 };
 
 inline void TestRstFileOutput::SetUp()
@@ -94,6 +101,22 @@ inline void TestRstFileOutput::SetUp()
 
     _simulationBox->addMolecule(molecule1);
     _simulationBox->addMolecule(molecule2);
+}
+
+inline std::string TestRstFileOutput::_expectedMetaDataLine()
+{
+    const auto key =
+        RestartFileMetaDataMeta::toString(RestartFileMetaData::Version);
+
+    return std::string(RestartFileMetaDataKeyWord) + " " + std::string(key) +
+           " " + CURRENT_VERSION.to_string();
+}
+
+inline void TestRstFileOutput::_skipMetaData(std::ifstream &file)
+{
+    std::string line;
+    getline(file, line);
+    EXPECT_EQ(line, _expectedMetaDataLine());
 }
 
 inline void TestRstFileOutput::TearDown()

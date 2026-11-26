@@ -69,6 +69,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # PQ takes its version from git describe: it needs the tags and
+          # the history down to the last one. blob:none keeps that to the
+          # commits and trees (about 8 MB, not the 2.4 GB of the full clone)
+          fetch-depth: 0
+          filter: blob:none
 
       - name: Setup GCC
         id: setup-gcc
@@ -253,6 +259,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # PQ takes its version from git describe: it needs the tags and
+          # the history down to the last one. blob:none keeps that to the
+          # commits and trees (about 8 MB, not the 2.4 GB of the full clone)
+          fetch-depth: 0
+          filter: blob:none
 
       - name: Setup GCC
         uses: ./.github/actions/setup-gcc
@@ -312,6 +324,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # PQ takes its version from git describe: it needs the tags and
+          # the history down to the last one. blob:none keeps that to the
+          # commits and trees (about 8 MB, not the 2.4 GB of the full clone)
+          fetch-depth: 0
+          filter: blob:none
 
       - name: Setup GCC
         uses: ./.github/actions/setup-gcc
@@ -359,6 +377,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # PQ takes its version from git describe: it needs the tags and
+          # the history down to the last one. blob:none keeps that to the
+          # commits and trees (about 8 MB, not the 2.4 GB of the full clone)
+          fetch-depth: 0
+          filter: blob:none
 
       - name: Setup GCC
         uses: ./.github/actions/setup-gcc
@@ -407,6 +431,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # PQ takes its version from git describe: it needs the tags and
+          # the history down to the last one. blob:none keeps that to the
+          # commits and trees (about 8 MB, not the 2.4 GB of the full clone)
+          fetch-depth: 0
+          filter: blob:none
 
       - name: Setup GCC
         uses: ./.github/actions/setup-gcc
@@ -461,6 +491,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # PQ takes its version from git describe: it needs the tags and
+          # the history down to the last one. blob:none keeps that to the
+          # commits and trees (about 8 MB, not the 2.4 GB of the full clone)
+          fetch-depth: 0
+          filter: blob:none
 
       - name: Setup GCC
         uses: ./.github/actions/setup-gcc

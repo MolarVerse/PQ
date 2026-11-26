@@ -156,11 +156,4 @@ namespace input::restartFile
      */
     std::string StepCountSection::keyword() { return "step"; }
 
-    /**
-     * @brief returns if the section is a header
-     *
-     * @return true
-     */
-    bool StepCountSection::isHeader() { return true; }
-
 }   // namespace input::restartFile
