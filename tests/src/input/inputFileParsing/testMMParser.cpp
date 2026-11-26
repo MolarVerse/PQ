@@ -56,7 +56,7 @@ TEST_F(TestInputFileReader, testParseForceField)
     EXPECT_TRUE(settings.forceFieldSettings.isActive());
     EXPECT_TRUE(settings.forceFieldSettings.isNonCoulombicActive());
 
-    settings.forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    settings.forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     _clearParser(parser);
 
     lineElements = {"force-field", "=", "off"};
@@ -64,7 +64,7 @@ TEST_F(TestInputFileReader, testParseForceField)
     EXPECT_FALSE(settings.forceFieldSettings.isActive());
     EXPECT_FALSE(settings.forceFieldSettings.isNonCoulombicActive());
 
-    settings.forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    settings.forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     _clearParser(parser);
 
     lineElements = {"force-field", "=", "bonded"};
@@ -72,7 +72,7 @@ TEST_F(TestInputFileReader, testParseForceField)
     EXPECT_TRUE(settings.forceFieldSettings.isActive());
     EXPECT_FALSE(settings.forceFieldSettings.isNonCoulombicActive());
 
-    settings.forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    settings.forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     _clearParser(parser);
 
     lineElements = {"forceField", "=", "notValid"};

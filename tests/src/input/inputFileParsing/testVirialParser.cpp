@@ -26,7 +26,6 @@
 #include <vector>
 
 #include "exceptions.hpp"
-#include "generalSettings.hpp"
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
 #include "virialInputParser.hpp"
@@ -40,20 +39,21 @@
  */
 TEST_F(TestInputFileReader, testParseVirial)
 {
-    input::VirialInputParser parser;
+    ManostatSettings         manostatSettings;
+    input::VirialInputParser parser{manostatSettings};
     const auto               funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("virial"));
     const auto& parseFunc = funcMap.at("virial");
 
     std::vector<std::string> lineElements = {"virial", "=", "atomic"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(GeneralSettings::getVirialType(), VirialType::ATOMIC);
+    EXPECT_EQ(manostatSettings.get_virial(), VirialType::ATOMIC);
 
     _clearParser(parser);
 
     lineElements = {"virial", "=", "molecular"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(GeneralSettings::getVirialType(), VirialType::MOLECULAR);
+    EXPECT_EQ(manostatSettings.get_virial(), VirialType::MOLECULAR);
 
     _clearParser(parser);
 

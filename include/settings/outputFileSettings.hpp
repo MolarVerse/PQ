@@ -41,44 +41,62 @@ struct TestOutputFileSettings;
 class OutputFileSettings
 {
    private:
-    Setting<size_t> _outputFrequency{1};
+    Setting<size_t, "Output Frequency"> _outputFrequency{1};
 
-    Setting<bool>             _overwriteOutputFiles{false};
-    Setting<bool>             _includeOutputMetadata{false};
-    Setting<bool>             _asyncOutput{true};
-    Setting<TrajectoryFormat> _trajFormat{TrajectoryFormat::XYZ};
-    Setting<std::string>      _filePrefix;
+    Setting<bool, "Overwrite Output Files">  _overwriteOutputFiles{false};
+    Setting<bool, "Include Output Metadata"> _includeOutputMetadata{false};
+    Setting<bool, "Async Output">            _asyncOutput{true};
+    Setting<TrajectoryFormat, "Trajectory Format"> _trajFormat{
+        TrajectoryFormat::XYZ
+    };
+    Setting<std::string, "File Prefix"> _filePrefix;
 
-    Setting<std::string> _energyFile{DefaultFiles::energyFile};
-    Setting<std::string> _instEnFile{DefaultFiles::instEnFile};
-    Setting<std::string> _rstFile{DefaultFiles::restartFile};
-    Setting<std::string> _momFile{DefaultFiles::momentumFile};
-    Setting<std::string> _trajFile{DefaultFiles::trajFile};
-    Setting<std::string> _hybridCenterFile{DefaultFiles::hybridCenterFile};
-    Setting<std::string> _velFile{DefaultFiles::velFile};
-    Setting<std::string> _forceFile{DefaultFiles::forceFile};
-    Setting<std::string> _chargeFile{DefaultFiles::chargeFile};
-    Setting<std::string> _extxyzFile;
-    Setting<std::string> _h5mdFile;
-    Setting<std::string> _aseTrajFile;
-    Setting<std::string> _logFile{DefaultFiles::logFile};
-    Setting<std::string> _refFile{DefaultFiles::refFile};
-    Setting<std::string> _infoFile{DefaultFiles::infoFile};
+    Setting<std::string, "Energy File"> _energyFile{DefaultFiles::energyFile};
+    Setting<std::string, "Instant Energy File"> _instEnFile{
+        DefaultFiles::instEnFile
+    };
+    Setting<std::string, "Restart File">  _rstFile{DefaultFiles::restartFile};
+    Setting<std::string, "Momentum File"> _momFile{DefaultFiles::momentumFile};
+    Setting<std::string, "Trajectory File"> _trajFile{DefaultFiles::trajFile};
+    Setting<std::string, "Hybrid Center File"> _hybridCenterFile{
+        DefaultFiles::hybridCenterFile
+    };
+    Setting<std::string, "Velocity File"> _velFile{DefaultFiles::velFile};
+    Setting<std::string, "Force File">    _forceFile{DefaultFiles::forceFile};
+    Setting<std::string, "Charge File">   _chargeFile{DefaultFiles::chargeFile};
+    Setting<std::string, "Extended XYZ File">   _extxyzFile;
+    Setting<std::string, "H5MD File">           _h5mdFile;
+    Setting<std::string, "ASE Trajectory File"> _aseTrajFile;
+    Setting<std::string, "Log File">            _logFile{DefaultFiles::logFile};
+    Setting<std::string, "Reference File">      _refFile{DefaultFiles::refFile};
+    Setting<std::string, "Info File"> _infoFile{DefaultFiles::infoFile};
 
-    Setting<std::string> _virialFile{DefaultFiles::virialFile};
-    Setting<std::string> _stressFile{DefaultFiles::stressFile};
-    Setting<std::string> _boxFile{DefaultFiles::boxFile};
+    Setting<std::string, "Virial File"> _virialFile{DefaultFiles::virialFile};
+    Setting<std::string, "Stress File"> _stressFile{DefaultFiles::stressFile};
+    Setting<std::string, "Box File">    _boxFile{DefaultFiles::boxFile};
 
-    Setting<std::string> _optFile{DefaultFiles::optFile};
+    Setting<std::string, "Optimization File"> _optFile{DefaultFiles::optFile};
 
-    Setting<std::string> _rpmdRstFile{DefaultFiles::rpmdRstFile};
-    Setting<std::string> _rpmdTrajFile{DefaultFiles::rpmdTrajFile};
-    Setting<std::string> _rpmdVelFile{DefaultFiles::rpmdVelFile};
-    Setting<std::string> _rpmdForceFile{DefaultFiles::rpmdForceFile};
-    Setting<std::string> _rpmdChargeFile{DefaultFiles::rpmdChargeFile};
-    Setting<std::string> _rpmdEnergyFile{DefaultFiles::rpmdEnergyFile};
+    Setting<std::string, "RPMD Restart File"> _rpmdRstFile{
+        DefaultFiles::rpmdRstFile
+    };
+    Setting<std::string, "RPMD Trajectory File"> _rpmdTrajFile{
+        DefaultFiles::rpmdTrajFile
+    };
+    Setting<std::string, "RPMD Velocity File"> _rpmdVelFile{
+        DefaultFiles::rpmdVelFile
+    };
+    Setting<std::string, "RPMD Force File"> _rpmdForceFile{
+        DefaultFiles::rpmdForceFile
+    };
+    Setting<std::string, "RPMD Charge File"> _rpmdChargeFile{
+        DefaultFiles::rpmdChargeFile
+    };
+    Setting<std::string, "RPMD Energy File"> _rpmdEnergyFile{
+        DefaultFiles::rpmdEnergyFile
+    };
 
-    Setting<std::string> _timeFile{DefaultFiles::timingsFile};
+    Setting<std::string, "Timings File"> _timeFile{DefaultFiles::timingsFile};
 
    public:
     void finalize();

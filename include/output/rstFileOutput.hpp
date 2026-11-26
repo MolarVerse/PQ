@@ -30,6 +30,8 @@
 #include "textBuffer.hpp"
 #include "unit_types.hpp"
 
+class GeneralSettings;
+
 namespace out
 {
     struct Frame;   // forward declaration
@@ -53,6 +55,9 @@ namespace out
             size_t              step,
             std::optional<Time> finalTime
         );
+
+       private:
+        static void _writeMetaData(std::ostringstream &buffer);
     };
 
 }   // namespace out

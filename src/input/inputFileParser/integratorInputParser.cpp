@@ -43,8 +43,8 @@ namespace input
      * _keywordRequiredMap and _keywordCountMap: 1) integrator "<string>"
      */
     IntegratorInputParser::IntegratorInputParser(
-        ReferenceSettings&     referenceSettings,
-        const GeneralSettings& generalSettings
+        ReferenceSettings& referenceSettings,
+        GeneralSettings&   generalSettings
     )
         : _referenceSettings(referenceSettings),
           _generalSettings(generalSettings)
@@ -79,7 +79,7 @@ namespace input
                 );
             }
 
-            GeneralSettings::setIntegratorType(integratorType);
+            _generalSettings->setIntegratorTypeByUser(integratorType);
             _referenceSettings->addReferenceFile(
                 ReferenceFiles::VELOCITY_VERLET_FILE
             );

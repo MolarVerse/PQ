@@ -44,7 +44,8 @@ namespace input
      * 2) cell-number "<size_t>"
      *
      */
-    CellListInputParser::CellListInputParser()
+    CellListInputParser::CellListInputParser(GeneralSettings &generalSettings)
+        : _generalSettings(generalSettings)
     {
         addCellListActivated();
         addNumberOfCells();
@@ -69,12 +70,12 @@ namespace input
             )
         };
 
-        const auto setValue = [](bool isActivated)
+        const auto setValue = [this](bool isActivated)
         {
             if (isActivated)
-                GeneralSettings::activateCellList();
+                _generalSettings->activateCellListByUser();
             else
-                GeneralSettings::deactivateCellList();
+                _generalSettings->deactivateCellListByUser();
         };
 
         auto &key = _getRegistry().registerKey<bool>(KeyRegistry<bool>{
@@ -106,8 +107,8 @@ namespace input
             )
         };
 
-        const auto setValue = [](size_t numberOfCells)
-        { GeneralSettings::setNumberOfCells(numberOfCells); };
+        const auto setValue = [this](size_t numberOfCells)
+        { _generalSettings->setNumberOfCellsByUser(numberOfCells); };
 
         const auto validator = RangeValidator<size_t>(1, std::nullopt);
 

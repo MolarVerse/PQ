@@ -36,7 +36,6 @@
 #define CALLGRIND_ZERO_STATS
 #endif
 
-#include "generalSettings.hpp"
 #include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
@@ -49,7 +48,6 @@ int main()
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
 
     auto physicalData = physicalData::PhysicalData();
-    GeneralSettings::setVirialType(VirialType::MOLECULAR);
 
     perfAllocBegin();
 

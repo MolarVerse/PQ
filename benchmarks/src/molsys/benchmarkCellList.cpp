@@ -28,6 +28,7 @@
 #include "benchmarkSetup.hpp"
 #include "celllist.hpp"
 #include "generalSettings.hpp"
+#include "settings.hpp"
 
 namespace
 {
@@ -40,11 +41,16 @@ namespace
         cellList.setNumberOfCells(cellsPerSide);
         cellList.resizeCells();
         cellList.setup(simBox, benchmarkSetup::cutoff);
-        GeneralSettings::activateCellList();
+        Settings settings;
+        settings.generalSettings.activateCellListByUser();
 
         for (auto _ : state)
         {
-            cellList.updateCellList(simBox, benchmarkSetup::cutoff);
+            cellList.updateCellList(
+                simBox,
+                benchmarkSetup::cutoff,
+                settings.generalSettings
+            );
             benchmark::DoNotOptimize(cellList.getCells().data());
         }
 

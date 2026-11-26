@@ -25,6 +25,7 @@
 #include <utility>
 
 #include "berendsenManostat.hpp"
+#include "generalSettings.hpp"
 #include "manostat.hpp"
 #include "manostatSettings.hpp"
 #include "stochasticRescalingManostat.hpp"
@@ -35,20 +36,27 @@ namespace manostat
      * @brief Creates a Manostat instance based on the provided settings
      *
      * @param settings The settings used to configure the Manostat
+     * @param generalSettings The general settings to configure the Manostat
+     * with, such as computational resources and execution preferences.
+     *
      * @return std::unique_ptr<Manostat> A unique pointer to the created
      * Manostat instance
      */
     std::unique_ptr<Manostat> ManostatFactory::createManostat(
-        const ManostatSettings& settings
+        const ManostatSettings& settings,
+        const GeneralSettings&  generalSettings
     )
     {
-        switch (settings.getManostatType())
+        switch (settings.get_manostatType())
         {
             case ManostatType::BERENDSEN:
                 return _setupBerendsenManostat(settings);
                 break;
             case ManostatType::STOCHASTIC_RESCALING:
-                return _setupStochasticRescalingManostat(settings);
+                return _setupStochasticRescalingManostat(
+                    settings,
+                    generalSettings
+                );
                 break;
             case ManostatType::NONE:
                 return std::make_unique<manostat::Manostat>(settings);
@@ -69,7 +77,7 @@ namespace manostat
         const ManostatSettings& settings
     )
     {
-        switch (settings.getIsotropy())
+        switch (settings.get_isotropy())
         {
             using enum Isotropy;
 
@@ -102,13 +110,20 @@ namespace manostat
      * @brief setup stochastic rescaling manostat
      *
      * @param settings The settings used to configure the Manostat
+     * @param generalSettings The general settings to configure the stochastic
+     * rescaling Manostat with, such as computational resources and execution
+     * preferences.
+     *
      * @return std::unique_ptr<Manostat> A unique pointer to the created
      * Manostat instance
      */
     std::unique_ptr<Manostat> ManostatFactory::
-        _setupStochasticRescalingManostat(const ManostatSettings& settings)
+        _setupStochasticRescalingManostat(
+            const ManostatSettings& settings,
+            const GeneralSettings&  generalSettings
+        )
     {
-        switch (settings.getIsotropy())
+        switch (settings.get_isotropy())
         {
             using enum Isotropy;
 
@@ -116,25 +131,32 @@ namespace manostat
             case SEMI_ISOTROPIC_XZ:
             case SEMI_ISOTROPIC_YZ:
                 return std::make_unique<
-                    manostat::SemiIsotropicStochasticRescalingManostat>(settings
+                    manostat::SemiIsotropicStochasticRescalingManostat>(
+                    settings,
+                    generalSettings
                 );
                 break;
 
             case ANISOTROPIC:
                 return std::make_unique<
-                    manostat::AnisotropicStochasticRescalingManostat>(settings);
+                    manostat::AnisotropicStochasticRescalingManostat>(
+                    settings,
+                    generalSettings
+                );
                 break;
 
             case FULL_ANISOTROPIC:
                 return std::make_unique<
                     manostat::FullAnisotropicStochasticRescalingManostat>(
-                    settings
+                    settings,
+                    generalSettings
                 );
                 break;
 
             case ISOTROPIC:
                 return std::make_unique<manostat::StochasticRescalingManostat>(
-                    settings
+                    settings,
+                    generalSettings
                 );
         }
 

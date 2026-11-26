@@ -35,7 +35,9 @@
 #include "generalSettings.hpp"
 #include "hybridSettings.hpp"
 #include "intraNonBondedMap.hpp"
+#include "mdEngine.hpp"
 #include "molecule.hpp"
+#include "randomNumberGenerator.hpp"
 #include "units.hpp"
 #include "vector3d.hpp"
 #include "virial.hpp"
@@ -107,6 +109,22 @@ namespace engine
     }   // namespace
 
     /**
+     * @brief Construct a new QMMMMDEngine object
+     *
+     * @param settings The simulation settings used to configure the engine
+     *
+     * @details This constructor initializes the QMMMMDEngine with the
+     * provided settings and sets up the random number generator based on
+     * the general settings.
+     */
+    QMMMMDEngine::QMMMMDEngine(const Settings &settings)
+        : MDEngine(settings),
+          HybridMDEngine(settings),
+          _rng(rng::RandomNumberGenerator::create(settings.generalSettings))
+    {
+    }
+
+    /**
      * @brief calculate QM/MM forces
      *
      */
@@ -123,7 +141,8 @@ namespace engine
         _getHybridConfigurator().calculateSmoothingFactors(get_simulationBox());
         getCellList().updateCellList(
             get_simulationBox(),
-            getSettings().potentialSettings.getCoulombRadiusCutoff()
+            getSettings().potentialSettings.getCoulombRadiusCutoff(),
+            getSettings().generalSettings
         );
         get_physicalData().set_numberOfSmoothingMol(
             static_cast<double>(std::ranges::distance(
@@ -160,7 +179,7 @@ namespace engine
         using enum SmoothingMethod;
 
         const auto &smoothingMethod =
-            getSettings().hybridSettings.getSmoothingMethod();
+            getSettings().hybridSettings.get_smoothing();
 
         switch (smoothingMethod)
         {
@@ -239,9 +258,11 @@ namespace engine
 
             virial +=
                 virial::calculateQMVirial(get_simulationBox()) * globalSmF;
-            virial +=
-                virial::intraMolecularVirialCorrection(get_simulationBox()) *
-                globalSmF;
+            virial += virial::intraMolecularVirialCorrection(
+                          get_simulationBox(),
+                          getSettings().manostatSettings
+                      ) *
+                      globalSmF;
             _addScaledCurrentForcesToInnerAndReset(atoms, globalSmF);
 
             // STEP 3: Setup and run MM calculation, accumulate MM forces
@@ -250,7 +271,7 @@ namespace engine
                 get_simulationBox()
             );
 
-            if (GeneralSettings::isCellListActivated())
+            if (getSettings().generalSettings.isCellListActivated())
             {
                 getCellList().assignMoleculeHybridZoneIndices();
                 getCellList().assignWaterMoleculeIndices(
@@ -282,9 +303,11 @@ namespace engine
             );
 
             virial += virial::calculateVirial(get_simulationBox()) * globalSmF;
-            virial +=
-                virial::intraMolecularVirialCorrection(get_simulationBox()) *
-                globalSmF;
+            virial += virial::intraMolecularVirialCorrection(
+                          get_simulationBox(),
+                          getSettings().manostatSettings
+                      ) *
+                      globalSmF;
             _addScaledCurrentForcesToOuterAndReset(atoms, globalSmF);
 
             // bonded interactions directly add to physical data virial
@@ -302,9 +325,11 @@ namespace engine
             );
 
             virial += get_physicalData().get_virial() * globalSmF;
-            virial +=
-                virial::intraMolecularVirialCorrection(get_simulationBox()) *
-                globalSmF;
+            virial += virial::intraMolecularVirialCorrection(
+                          get_simulationBox(),
+                          getSettings().manostatSettings
+                      ) *
+                      globalSmF;
             _addScaledCurrentForcesToOuterAndReset(atoms, globalSmF);
 
             // STEP 4: Scale and accumulate hybrid energies and delete temp
@@ -366,7 +391,10 @@ namespace engine
 
         _scaleSmoothingMoleculeForcesInner();
         virial += virial::calculateQMVirial(get_simulationBox());
-        virial += virial::intraMolecularVirialCorrection(get_simulationBox());
+        virial += virial::intraMolecularVirialCorrection(
+            get_simulationBox(),
+            getSettings().manostatSettings
+        );
         _addCurrentForcesToInnerAndReset(atoms);
 
         // STEP 2: Setup and run inter-nonbonded calculation between
@@ -376,7 +404,7 @@ namespace engine
             get_simulationBox()
         );
 
-        if (GeneralSettings::isCellListActivated())
+        if (getSettings().generalSettings.isCellListActivated())
         {
             getCellList().assignMoleculeHybridZoneIndices();
             getCellList().assignWaterMoleculeIndices(
@@ -403,7 +431,10 @@ namespace engine
 
         _scaleSmoothingMoleculeForcesInner();
         virial += virial::calculateVirial(get_simulationBox());
-        virial += virial::intraMolecularVirialCorrection(get_simulationBox());
+        virial += virial::intraMolecularVirialCorrection(
+            get_simulationBox(),
+            getSettings().manostatSettings
+        );
         _addCurrentForcesToOuterAndReset(atoms);
 
         // STEP 3: Calculate inter-nonbonded forces between SMOOTHING
@@ -427,7 +458,10 @@ namespace engine
 
         _scaleSmoothingMoleculeForcesOuter();
         virial += virial::calculateVirial(get_simulationBox());
-        virial += virial::intraMolecularVirialCorrection(get_simulationBox());
+        virial += virial::intraMolecularVirialCorrection(
+            get_simulationBox(),
+            getSettings().manostatSettings
+        );
         _addCurrentForcesToOuterAndReset(atoms);
 
         // STEP 4: Setup and run intra-nonbonded calculation and scale
@@ -445,7 +479,10 @@ namespace engine
 
         _scaleSmoothingMoleculeForcesOuter();
         virial += virial::calculateVirial(get_simulationBox());
-        virial += virial::intraMolecularVirialCorrection(get_simulationBox());
+        virial += virial::intraMolecularVirialCorrection(
+            get_simulationBox(),
+            getSettings().manostatSettings
+        );
         _addCurrentForcesToOuterAndReset(atoms);
 
         // STEP 5: Run intra-bonded calculation and scale forces of
@@ -464,7 +501,10 @@ namespace engine
 
         _scaleSmoothingMoleculeForcesOuter();
         virial += get_physicalData().get_virial();
-        virial += virial::intraMolecularVirialCorrection(get_simulationBox());
+        virial += virial::intraMolecularVirialCorrection(
+            get_simulationBox(),
+            getSettings().manostatSettings
+        );
         _addCurrentForcesToOuterAndReset(atoms);
 
         get_physicalData().set_virial(virial);
@@ -666,7 +706,7 @@ namespace engine
      */
     void QMMMMDEngine::_distributeSmoothingMolQMForces()
     {
-        const auto type = getSettings().hybridSettings.getQMForceDist();
+        const auto type = getSettings().hybridSettings.get_qmForceDist();
         std::vector<std::reference_wrapper<molsys::Molecule>>
             recipientMolecules;
 
@@ -718,7 +758,7 @@ namespace engine
                     weights = getDistanceWeights(
                         smoothingMol,
                         recipientMolecules,
-                        getSettings().hybridSettings.getLayerRadius()
+                        getSettings().hybridSettings.get_layerRadius()
                     );
                     break;
             }

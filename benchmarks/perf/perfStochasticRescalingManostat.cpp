@@ -52,22 +52,23 @@ static constexpr std::uint64_t ITERATIONS = 1000;
 int main()
 {
     const auto timeStep = 0.001 * fs;
-    GeneralSettings::setRandomSeed(42);
-    GeneralSettings::setIsRandomSeedSet(true);
+    Settings   settings;
+    settings.generalSettings.setRandomSeedByUser(42);
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
     auto physicalData = physicalData::PhysicalData();
 
-    Settings settings;
     settings.potentialSettings.setCoulombRadiusCutoffByUser(4.0 * angstrom);
-    settings.manostatSettings.setTargetPressureByUser(1.0 * bar);
-    settings.manostatSettings.setTauByUser(100.0 * ps);
-    settings.manostatSettings.setCompressibilityByUser(4.6e-5 * per_bar);
+    settings.manostatSettings.set_targetPressureByUser(1.0 * bar);
+    settings.manostatSettings.set_tauByUser(100.0 * ps);
+    settings.manostatSettings.set_compressibilityByUser(4.6e-5 * per_bar);
     ReferenceSettings referenceSettings;
     settings.manostatSettings.finalize(referenceSettings);
-    auto manostat =
-        manostat::StochasticRescalingManostat(settings.manostatSettings);
+    auto manostat = manostat::StochasticRescalingManostat(
+        settings.manostatSettings,
+        settings.generalSettings
+    );
 
     perfAllocBegin();
 

@@ -800,9 +800,12 @@ namespace molsys
      * @brief initialize positions of all atoms
      *
      */
-    void SimulationBox::initPositions(double displacement)
+    void SimulationBox::initPositions(
+        double                 displacement,
+        const GeneralSettings& generalSettings
+    )
     {
-        rng::RandomNumberGenerator rng{};
+        auto rng = rng::RandomNumberGenerator::create(generalSettings);
 
         auto displacePositions = [&rng, displacement, this](auto& atom)
         {

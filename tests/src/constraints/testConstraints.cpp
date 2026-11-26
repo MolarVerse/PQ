@@ -66,8 +66,8 @@ TEST_F(TestConstraints, applyShakeConverged)
 {
     const auto settings =
         testSettings::make<ConstraintSettings>()
-            .with(&ConstraintSettings::setShakeMaxIterByUser, 1000)
-            .with(&ConstraintSettings::setShakeToleranceByUser, 1.0e-8)
+            .with(&ConstraintSettings::set_shakeMaxIterByUser, 1000)
+            .with(&ConstraintSettings::set_shakeToleranceByUser, 1.0e-8)
             .apply([](auto &config) { config.activateShakeByUser(); })
             .build();
     constraints::Constraints constraints(settings);
@@ -539,8 +539,8 @@ TEST_F(TestConstraints, applyShakeNotConverged)
 {
     const auto settings =
         testSettings::make<ConstraintSettings>()
-            .with(&ConstraintSettings::setShakeMaxIterByUser, 10)
-            .with(&ConstraintSettings::setShakeToleranceByUser, 0.0)
+            .with(&ConstraintSettings::set_shakeMaxIterByUser, 10)
+            .with(&ConstraintSettings::set_shakeToleranceByUser, 0.0)
             .apply([](auto &config) { config.activateShakeByUser(); })
             .build();
     constraints::Constraints constraints(settings);
@@ -563,8 +563,8 @@ TEST_F(TestConstraints, applyShakeNotConvergedDeactivated)
 {
     const auto settings =
         testSettings::make<ConstraintSettings>()
-            .with(&ConstraintSettings::setShakeMaxIterByUser, 10)
-            .with(&ConstraintSettings::setShakeToleranceByUser, 0.0)
+            .with(&ConstraintSettings::set_shakeMaxIterByUser, 10)
+            .with(&ConstraintSettings::set_shakeToleranceByUser, 0.0)
             .build();
     _constraints = std::make_unique<constraints::Constraints>(settings);
     _addDefaultBondConstraints(*_constraints);
@@ -581,9 +581,9 @@ TEST_F(TestConstraints, applyRattleConverged)
 {
     const auto settings =
         testSettings::make<ConstraintSettings>()
-            .with(&ConstraintSettings::setRattleMaxIterByUser, 1000)
+            .with(&ConstraintSettings::set_rattleMaxIterByUser, 1000)
             .with(
-                &ConstraintSettings::setRattleToleranceByUser,
+                &ConstraintSettings::set_rattleToleranceByUser,
                 1.0e-4 * g_per_mol / s
             )
             .apply([](auto &config) { config.activateShakeByUser(); })
@@ -622,9 +622,9 @@ TEST_F(TestConstraints, applyRattleNotConverged)
 {
     const auto settings =
         testSettings::make<ConstraintSettings>()
-            .with(&ConstraintSettings::setRattleMaxIterByUser, 10)
+            .with(&ConstraintSettings::set_rattleMaxIterByUser, 10)
             .with(
-                &ConstraintSettings::setRattleToleranceByUser,
+                &ConstraintSettings::set_rattleToleranceByUser,
                 MassPerTime::zero()
             )
             .apply([](auto &config) { config.activateShakeByUser(); })
@@ -649,9 +649,9 @@ TEST_F(TestConstraints, applyRattleNotConvergedDeactivated)
 {
     const auto settings =
         testSettings::make<ConstraintSettings>()
-            .with(&ConstraintSettings::setRattleMaxIterByUser, 10)
+            .with(&ConstraintSettings::set_rattleMaxIterByUser, 10)
             .with(
-                &ConstraintSettings::setRattleToleranceByUser,
+                &ConstraintSettings::set_rattleToleranceByUser,
                 MassPerTime::zero()
             )
             .build();

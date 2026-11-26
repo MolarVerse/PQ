@@ -42,9 +42,9 @@
  */
 TEST_F(TestEnergyOutput, energyColumnsAllActive)
 {
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::ON);
-    _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
-    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::Z);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::ON);
+    _settings->manostatSettings.set_manostatTypeByUser(ManostatType::BERENDSEN);
+    _settings->manostatSettings.set_fixedAxisByUser(FixedAxis::Z);
     _settings->thermostatSettings.setThermostatTypeByUser(
         ThermostatType::NOSE_HOOVER
     );
@@ -101,8 +101,8 @@ TEST_F(TestEnergyOutput, energyColumnsQM)
     _physicalData->set_qmEnergy(7.0 * kcal_per_mol);
     _physicalData->set_qmReferenceEnergy(2.0 * kcal_per_mol);
 
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
-    _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
+    _settings->manostatSettings.set_manostatTypeByUser(ManostatType::NONE);
     _settings->generalSettings.setJobtypeByUser(JobType::QM_MD);
 
     const out::EnergyColumns columns(*_physicalData, *_settings);
@@ -133,8 +133,8 @@ TEST_F(TestEnergyOutput, energyColumnLabelAndHeader)
         "N(QM-ATOMS)[-]"
     );
 
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
-    _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
+    _settings->manostatSettings.set_manostatTypeByUser(ManostatType::NONE);
     _settings->generalSettings.setJobtypeByUser(JobType::QM_MD);
 
     const out::EnergyColumns columns(*_physicalData, *_settings);
