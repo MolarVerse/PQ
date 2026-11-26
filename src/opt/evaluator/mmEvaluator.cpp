@@ -52,7 +52,7 @@ namespace opt
 
         _getCellList().updateCellList(
             simulationBox,
-            _getSettings().potentialSettings.getCoulombRadiusCutoff(),
+            _getSettings().potentialSettings.get_coulombRadiusCutoff(),
             _getSettings().generalSettings
         );
 

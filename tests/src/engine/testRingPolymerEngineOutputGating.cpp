@@ -96,56 +96,58 @@ class TestRingPolymerEngineOutputGating : public ::testing::Test
     std::unique_ptr<Settings>                      _settings;
     std::unique_ptr<engine::RingPolymerQMMDEngine> _engine;
 
-    void SetUp() override
-    {
-        cleanupPrefix();
+    void SetUp() override;
 
-        _settings = std::make_unique<Settings>();
-        _settings->generalSettings.setJobtypeByUser(
-            JobType::RING_POLYMER_QM_MD
-        );
-        _settings->outputFiles.set_filePrefixByUser(PREFIX);
-        _settings->outputFiles.setOutputFrequencyByUser(1);
-        _settings->timings.setTimeStepByUser(0.5 * fs);
-        _settings->timings.setNumberOfStepsByUser(100U);
-        _settings->timings.setStartingTimeByUser(Time::zero());
-        _settings->finalize();
-
-        _engine = std::make_unique<engine::RingPolymerQMMDEngine>(*_settings);
-
-        _engine->addRingPolymerBead(molsys::SimulationBox());
-        _engine->addRingPolymerBead(molsys::SimulationBox());
-        _engine->resizeRingPolymerBeadPhysicalData(2);
-
-        setup::setupOutputFiles(*_engine);
-    }
-
-    void TearDown() override
-    {
-#ifdef WITH_MPI
-        mpi::MPI::setRank(0);
-#endif
-        _engine->getXyzOutput().close();
-        _engine->getVelOutput().close();
-        _engine->getForceOutput().close();
-        _engine->getChargeOutput().close();
-        _engine->getRstFileOutput().close();
-        _engine->getRingPolymerRstFileOutput().close();
-        _engine->getRingPolymerXyzOutput().close();
-        _engine->getRingPolymerVelOutput().close();
-        _engine->getRingPolymerForceOutput().close();
-        _engine->getRingPolymerChargeOutput().close();
-        _engine->getEnergyOutput().close();
-        _engine->getInstantEnergyOutput().close();
-        _engine->getMomentumOutput().close();
-        _engine->getRingPolymerEnergyOutput().close();
-        _engine->getTimingsOutput().close();
-        _engine->getLogOutput().close();
-        _engine->getInfoOutput().close();
-
-        cleanupPrefix();
-    }
+    void TearDown() override;
 };
+
+void TestRingPolymerEngineOutputGating::SetUp()
+{
+    cleanupPrefix();
+
+    _settings = std::make_unique<Settings>();
+    _settings->generalSettings.setJobtypeByUser(JobType::RING_POLYMER_QM_MD);
+    _settings->outputFiles.set_filePrefixByUser(PREFIX);
+    _settings->outputFiles.setOutputFrequencyByUser(1);
+    _settings->timings.setTimeStepByUser(0.5 * fs);
+    _settings->timings.setNumberOfStepsByUser(100U);
+    _settings->timings.setStartingTimeByUser(Time::zero());
+    _settings->finalize();
+
+    _engine = std::make_unique<engine::RingPolymerQMMDEngine>(*_settings);
+
+    _engine->addRingPolymerBead(molsys::SimulationBox());
+    _engine->addRingPolymerBead(molsys::SimulationBox());
+    _engine->resizeRingPolymerBeadPhysicalData(2);
+
+    setup::setupOutputFiles(*_engine);
+}
+
+void TestRingPolymerEngineOutputGating::TearDown()
+{
+#ifdef WITH_MPI
+    mpi::MPI::setRank(0);
+#endif
+    _engine->getXyzOutput().close();
+    _engine->getVelOutput().close();
+    _engine->getForceOutput().close();
+    _engine->getChargeOutput().close();
+    _engine->getRstFileOutput().close();
+    _engine->getRingPolymerRstFileOutput().close();
+    _engine->getRingPolymerXyzOutput().close();
+    _engine->getRingPolymerVelOutput().close();
+    _engine->getRingPolymerForceOutput().close();
+    _engine->getRingPolymerChargeOutput().close();
+    _engine->getEnergyOutput().close();
+    _engine->getInstantEnergyOutput().close();
+    _engine->getMomentumOutput().close();
+    _engine->getRingPolymerEnergyOutput().close();
+    _engine->getTimingsOutput().close();
+    _engine->getLogOutput().close();
+    _engine->getInfoOutput().close();
+
+    cleanupPrefix();
+}
 
 /**
  * @brief On the root rank (the default/only rank outside an mpiexec launch),

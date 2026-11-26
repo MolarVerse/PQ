@@ -92,12 +92,12 @@ namespace input
         );
         _validateManostat(settings.manostatSettings, settings.timings, jobType);
         _validateCellList(
-            settings.potentialSettings.getCoulombRadiusCutoff(),
+            settings.potentialSettings.get_coulombRadiusCutoff(),
             jobType,
             settings.generalSettings
         );
         _validateReactionFieldCoulomb(
-            settings.potentialSettings.getCoulombLongRangeType()
+            settings.potentialSettings.get_coulombLRType()
         );
         _validateRingPolymer(settings.generalSettings.getJobtype());
     }

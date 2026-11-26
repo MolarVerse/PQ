@@ -88,7 +88,7 @@ void TestInputValidation::SetUp()
         InitVelocities::FALSE
     );
 
-    _settings.potentialSettings.setCoulombLongRangeTypeByUser(
+    _settings.potentialSettings.set_coulombLRTypeByUser(
         CoulombLongRangeType::SHIFTED
     );
     _settings.potentialSettings.setCoulombRadiusCutoffByUser(

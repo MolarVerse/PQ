@@ -224,8 +224,8 @@ namespace waterModel
     {
         const auto radialCutoff =
             potentialSettings.isNonCoulombRadiusCutoffSetByUser()
-                ? potentialSettings.getNonCoulombRadiusCutoff()
-                : potentialSettings.getCoulombRadiusCutoff();
+                ? potentialSettings.get_nonCoulombRadiusCutoff()
+                : potentialSettings.get_coulombRadiusCutoff();
 
         const auto setCutoff = [radialCutoff](const auto &nonCoulombPair)
         {
