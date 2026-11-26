@@ -89,7 +89,10 @@ def _frames(path):
 
 def _read_restart(path):
     """Step, box lengths and the number of chain levels of a restart file."""
-    lines = pathlib.Path(path).read_text().splitlines()
+    lines = [
+        line for line in pathlib.Path(path).read_text().splitlines()
+        if not line.startswith("!META_DATA")
+    ]
     step = int(lines[0].split()[1])
     box = np.array([float(x) for x in lines[1].split()[1:4]])
     chain_levels = sum(line.startswith("chi") for line in lines)

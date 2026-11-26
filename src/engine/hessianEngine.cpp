@@ -41,6 +41,7 @@
 #include "generalSettings.hpp"
 #include "globalTimer.hpp"
 #include "hessianBuilder.hpp"
+#include "hessianEngineDetail.hpp"
 #include "hessianSettings.hpp"
 #include "interrupt.hpp"
 #include "logOutput.hpp"
@@ -59,36 +60,36 @@
 namespace engine
 {
 
-    namespace
+    namespace detail
     {
         /**
-         * @brief write the hessian matrix to a file
+         * @brief setup the hessian builder based on user input
          *
-         * @param hessian
+         * @param hessianSettings
+         * @return std::shared_ptr<opt::HessianBuilder>
          */
-        [[nodiscard]]
         std::shared_ptr<opt::HessianBuilder> setupHessianBuilder(
             const HessianSettings &hessianSettings
         )
         {
             return opt::makeHessianBuilder(
-                hessianSettings.getBuilder(),
-                hessianSettings.getDisplacement()
+                hessianSettings.get_builder(),
+                hessianSettings.get_displacement()
             );
         }
 
         /**
          * @brief setup the learning rate strategy based on user input
          *
+         * @param settings
          * @return std::shared_ptr<opt::LearningRateStrategy>
          */
-        [[nodiscard]]
         std::shared_ptr<opt::LearningRateStrategy> setupLearningRateStrategy(
             const OptimizerSettings &settings
         )
         {
-            const auto alpha0     = settings.getInitialLearningRate();
-            const auto lrStrategy = settings.getLearningRateStrategy();
+            const auto alpha0     = settings.get_initialLearningRate();
+            const auto lrStrategy = settings.get_lRStrategy();
 
             settings.validateLearningRateStrategy();
 
@@ -101,22 +102,22 @@ namespace engine
 
                 case CONSTANT_DECAY:
                 {
-                    const auto alphaFreq = settings.getLRUpdateFrequency();
+                    const auto alphaFreq = settings.get_lRupdateFrequency();
 
                     return std::make_shared<opt::ConstantDecayLRStrategy>(
                         alpha0,
-                        settings.getLearningRateDecay(),
+                        settings.get_learningRateDecay(),
                         alphaFreq
                     );
                 }
 
                 case EXPONENTIAL_DECAY:
                 {
-                    const auto alphaFreq = settings.getLRUpdateFrequency();
+                    const auto alphaFreq = settings.get_lRupdateFrequency();
 
                     return std::make_shared<opt::ExpDecayLR>(
                         alpha0,
-                        settings.getLearningRateDecay(),
+                        settings.get_learningRateDecay(),
                         alphaFreq
                     );
                 }
@@ -135,13 +136,14 @@ namespace engine
          * strategy
          *
          * @param learningRate
+         * @param settings
          */
         void setupMinMaxLearningRate(
             std::shared_ptr<opt::LearningRateStrategy> &learningRate,
             const OptimizerSettings                    &settings
         )
         {
-            const auto minLR = settings.getMinLearningRate();
+            const auto minLR = settings.get_minLearningRate();
             const auto maxLR = settings.getMaxLearningRate();
 
             settings.validateLearningRateBounds();
@@ -154,6 +156,7 @@ namespace engine
          * @brief setup the convergence criteria for the optimizer
          *
          * @param optimizer
+         * @param settings
          */
         void setupConvergence(
             std::shared_ptr<opt::Optimizer> &optimizer,
@@ -187,13 +190,16 @@ namespace engine
 
         /**
          * @brief write the hessian matrix to the file
+         *
+         * @param hessian
+         * @param hessianSettings
          */
         void writeHessian(
             const Hessian         &hessian,
             const HessianSettings &hessianSettings
         )
         {
-            std::ofstream file(hessianSettings.getHessianFile());
+            std::ofstream file(hessianSettings.get_hessianFile());
 
             if (file.fail())
                 throw exc::UserInputException(
@@ -223,13 +229,14 @@ namespace engine
          * @brief write the hessian info file
          *
          * @param hessian
+         * @param hessianSettings
          */
         void writeHessianInfo(
             const Hessian         &hessian,
             const HessianSettings &hessianSettings
         )
         {
-            std::ofstream file(hessianSettings.getHessianInfoFile());
+            std::ofstream file(hessianSettings.get_hessianInfoFile());
 
             if (file.fail())
                 throw exc::UserInputException(
@@ -237,37 +244,39 @@ namespace engine
                 );
 
             file << "format = pq-hessian-info-v1\n";
-            file << "hessian_file = " << hessianSettings.getHessianFile()
+            file << "hessian_file = " << hessianSettings.get_hessianFile()
                  << '\n';
             file << "hessian_builder = "
-                 << HessianBuilderTypeMeta::toString(hessianSettings.getBuilder(
-                    ))
+                 << HessianBuilderTypeMeta::toString(
+                        hessianSettings.get_builder()
+                    )
                  << '\n';
             file << "optimize_before_hessian = "
-                 << (hessianSettings.optimizeBeforeHessian() ? "true" : "false")
+                 << (hessianSettings.get_optimizeBeforeHessian() ? "true"
+                                                                 : "false")
                  << '\n';
             file << "hessian_displacement = "
-                 << hessianSettings.getDisplacement() << '\n';
+                 << hessianSettings.get_displacement() << '\n';
             file << "hessian_definition = -dF_i/dx_j\n";
             file << "hessian_unit = kcal_mol-1_angstrom-2\n";
             file << "rows = " << hessian.size() << '\n';
             file << "columns = " << (hessian.empty() ? 0 : hessian[0].size())
                  << '\n';
         }
-    }   // namespace
+    }   // namespace detail
 
     void HessianEngine::run()
     {
         auto        evaluator       = _setupEvaluator();
         const auto &hessianSettings = getSettings().hessianSettings;
 
-        if (hessianSettings.optimizeBeforeHessian())
+        if (hessianSettings.get_optimizeBeforeHessian())
         {
             _setupOptimization(evaluator);
             _runOptimization();
         }
 
-        auto builder = setupHessianBuilder(hessianSettings);
+        auto builder = detail::setupHessianBuilder(hessianSettings);
 
         const auto hessian = builder->build(
             *evaluator,
@@ -276,8 +285,8 @@ namespace engine
             get_intraNonBonded()
         );
 
-        writeHessian(hessian, hessianSettings);
-        writeHessianInfo(hessian, hessianSettings);
+        detail::writeHessian(hessian, hessianSettings);
+        detail::writeHessianInfo(hessian, hessianSettings);
 
         timings::GlobalTimer::get().stopSimulationTimer();
 
@@ -387,11 +396,15 @@ namespace engine
     {
         const auto optimizerSettings = getSettings().optimizerSettings;
         _evaluator                   = evaluator;
-        _learningRateStrategy = setupLearningRateStrategy(optimizerSettings);
-        _optimizer            = _setupEmptyOptimizer();
+        _learningRateStrategy =
+            detail::setupLearningRateStrategy(optimizerSettings);
+        _optimizer = _setupEmptyOptimizer();
 
-        setupConvergence(_optimizer, getSettings().convSettings);
-        setupMinMaxLearningRate(_learningRateStrategy, optimizerSettings);
+        detail::setupConvergence(_optimizer, getSettings().convSettings);
+        detail::setupMinMaxLearningRate(
+            _learningRateStrategy,
+            optimizerSettings
+        );
 
         _learningRateStrategy->setEvaluator(evaluator);
         _learningRateStrategy->setOptimizer(_optimizer);
@@ -515,7 +528,7 @@ namespace engine
     std::shared_ptr<opt::Optimizer> HessianEngine::_setupEmptyOptimizer()
     {
         const auto optimizerType =
-            getSettings().optimizerSettings.getOptimizer();
+            getSettings().optimizerSettings.get_optimizer();
 
         std::shared_ptr<opt::Optimizer> optimizer;
 
@@ -555,15 +568,16 @@ namespace engine
         getEngineOutput().getLogOutput().writeSetupInfo(
             std::format(
                 "Optimize before Hessian:    {}",
-                getSettings().hessianSettings.optimizeBeforeHessian() ? "true"
-                                                                      : "false"
+                getSettings().hessianSettings.get_optimizeBeforeHessian()
+                    ? "true"
+                    : "false"
             )
         );
         getEngineOutput().getLogOutput().writeSetupInfo(
             std::format(
                 "Optimizer:                  {}",
                 OptimizerTypeMeta::toString(
-                    getSettings().optimizerSettings.getOptimizer()
+                    getSettings().optimizerSettings.get_optimizer()
                 )
             )
         );
@@ -571,7 +585,7 @@ namespace engine
             std::format(
                 "Learning rate strategy:     {}",
                 LearningRateMeta::toString(
-                    getSettings().optimizerSettings.getLearningRateStrategy()
+                    getSettings().optimizerSettings.get_lRStrategy()
                 )
             )
         );

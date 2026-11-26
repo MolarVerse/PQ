@@ -44,104 +44,12 @@ OptimizerSettings::OptimizerSettings()
 {
 }
 
-/***************************
- *                         *
- * standard setter methods *
- *                         *
- ***************************/
-
-/**
- * @brief sets the optimizer to enum in settings
- *
- * @param optimizer
- */
-void OptimizerSettings::setOptimizerByUser(OptimizerType optimizer)
-{
-    _optimizer.setByUser(optimizer);
-}
-
-/**
- * @brief sets the optimizer to enum in settings
- *
- * @param method
- */
-void OptimizerSettings::setLearningRateStrategyByUser(LearningRate method)
-{
-    _lRStrategy.setByUser(method);
-}
-
-/**
- * @brief sets the number of epochs
- *
- * @param nEpochs
- */
-void OptimizerSettings::setNumberOfEpochsByUser(size_t nEpochs)
-{
-    _nEpochs.setByUser(nEpochs);
-}
-
-/**
- * @brief sets the learning rate update frequency
- *
- * @param frequency
- */
-void OptimizerSettings::setLRUpdateFrequencyByUser(size_t frequency)
-{
-    _lRupdateFrequency.setByUser(frequency);
-}
-
-/**
- * @brief sets the initial learning rate
- *
- * @param learningRate
- */
-void OptimizerSettings::setInitialLearningRateByUser(double learningRate)
-{
-    _initialLearningRate.setByUser(learningRate);
-}
-
-/**
- * @brief sets the learning rate decay
- *
- * @param decay
- */
-void OptimizerSettings::setLearningRateDecayByUser(double decay)
-{
-    _learningRateDecay.setByUser(decay);
-}
-
-/**
- * @brief sets the min learning rate
- *
- * @param minLearningRate
- */
-void OptimizerSettings::setMinLearningRateByUser(double minLearningRate)
-{
-    _minLearningRate.setByUser(minLearningRate);
-}
-
-/**
- * @brief sets the max learning rate
- *
- * @param maxLearningRate
- */
-void OptimizerSettings::setMaxLearningRateByUser(double maxLearningRate)
-{
-    _maxLearningRate.setByUser(maxLearningRate);
-}
-
-/*****************************
- *                           *
- * validation helper methods *
- *                           *
- *****************************/
-
 /**
  * @brief validates the selected learning-rate strategy
  */
 void OptimizerSettings::validateLearningRateStrategy() const
 {
-    const auto strategy = getLearningRateStrategy();
+    const auto strategy = _lRStrategy.get();
 
     if (strategy == LearningRate::LINESEARCH_WOLFE)
     {
@@ -167,7 +75,7 @@ void OptimizerSettings::validateLearningRateStrategy() const
  */
 void OptimizerSettings::validateLearningRateBounds() const
 {
-    const auto minLR = getMinLearningRate();
+    const auto minLR = _minLearningRate.get();
     const auto maxLR = getMaxLearningRate();
 
     if (maxLR.has_value() && minLR >= maxLR.value())
@@ -181,79 +89,6 @@ void OptimizerSettings::validateLearningRateBounds() const
             )
         );
     }
-}
-
-/***************************
- *                         *
- * standard getter methods *
- *                         *
- ***************************/
-
-/**
- * @brief returns the optimizer as string
- *
- * @return OptimizerType
- */
-OptimizerType OptimizerSettings::getOptimizer() const
-{
-    return _optimizer.get();
-}
-
-/**
- * @brief returns the learning rate strategy as string
- *
- * @return LearningRateStrategy
- */
-LearningRate OptimizerSettings::getLearningRateStrategy() const
-{
-    return _lRStrategy.get();
-}
-
-/**
- * @brief returns the number of epochs
- *
- * @return size_t
- */
-size_t OptimizerSettings::getNumberOfEpochs() const { return _nEpochs.get(); }
-
-/**
- * @brief returns the learning rate update frequency
- *
- * @return size_t
- */
-size_t OptimizerSettings::getLRUpdateFrequency() const
-{
-    return _lRupdateFrequency.get();
-}
-
-/**
- * @brief returns the initial learning rate
- *
- * @return double
- */
-double OptimizerSettings::getInitialLearningRate() const
-{
-    return _initialLearningRate.get();
-}
-
-/**
- * @brief returns the min learning rate
- *
- * @return double
- */
-double OptimizerSettings::getMinLearningRate() const
-{
-    return _minLearningRate.get();
-}
-
-/**
- * @brief returns the learning rate decay
- *
- * @return double
- */
-double OptimizerSettings::getLearningRateDecay() const
-{
-    return _learningRateDecay.get();
 }
 
 /**

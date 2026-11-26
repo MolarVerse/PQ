@@ -143,7 +143,7 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         false,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings.getSmoothingMethod(),
+        hybridSettings.get_smoothing(),
         potentialSettings
     );
 
@@ -274,7 +274,7 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         true,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings.getSmoothingMethod(),
+        hybridSettings.get_smoothing(),
         potentialSettings
     );
 
@@ -405,7 +405,7 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         false,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings.getSmoothingMethod(),
+        hybridSettings.get_smoothing(),
         potentialSettings
     );
 

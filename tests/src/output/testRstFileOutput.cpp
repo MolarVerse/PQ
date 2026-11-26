@@ -30,11 +30,13 @@
 #include <iosfwd>
 #include <limits>
 #include <memory>
+#include <optional>
 #include <sstream>
 #include <string>
 #include <utility>
 #include <vector>
 
+#include "enums/rstMetaData.hpp"
 #include "exceptions.hpp"
 #include "frame.hpp"
 #include "noseHooverThermostat.hpp"
@@ -59,6 +61,7 @@ TEST_F(TestRstFileOutput, write)
     _rstFileOutput->close();
     std::ifstream file("default.rst");
     std::string   line;
+    _skipMetaData(file);
     getline(file, line);
     EXPECT_EQ(line, "Step 10 Simulation_Time 0.1");
     getline(file, line);
@@ -117,6 +120,7 @@ TEST_F(TestRstFileOutput, writeWithNoseHoover)
     _rstFileOutput->close();
     std::ifstream file("default.rst");
     std::string   line;
+    _skipMetaData(file);
     getline(file, line);
     EXPECT_EQ(line, "Step 10 Simulation_Time 0.1");
     getline(file, line);
@@ -180,6 +184,7 @@ TEST_F(TestRstFileOutput, failedWriteKeepsPreviousFile)
 
     std::ifstream file("default.rst");
     std::string   line;
+    _skipMetaData(file);
     getline(file, line);
     EXPECT_EQ(line, "Step 10 Simulation_Time 0.1");
 }
@@ -211,6 +216,7 @@ TEST_F(TestRstFileOutput, boxIsWrittenWithoutLosingDigits)
 
     std::ifstream file("default.rst");
     std::string   line;
+    _skipMetaData(file);
     getline(file, line);
     getline(file, line);
 
@@ -324,6 +330,7 @@ TEST_F(TestRstFileOutput, atomValuesAreWrittenExactly)
 
     std::ifstream file("default.rst");
     std::string   line;
+    _skipMetaData(file);
     getline(file, line);
     getline(file, line);
 
@@ -378,6 +385,7 @@ TEST_F(TestRstFileOutput, noseHooverChainIsWrittenExactly)
 
     std::ifstream file("default.rst");
     std::string   line;
+    _skipMetaData(file);
     getline(file, line);
     getline(file, line);
 
@@ -444,6 +452,7 @@ TEST_F(TestRstFileOutput, subnormalValuesAreWrittenAsZero)
 
     std::ifstream file("default.rst");
     std::string   line;
+    _skipMetaData(file);
     getline(file, line);
     getline(file, line);
     getline(file, line);
@@ -462,4 +471,87 @@ TEST_F(TestRstFileOutput, subnormalValuesAreWrittenAsZero)
         EXPECT_TRUE(sameBits(expected.at(column), written))
             << "column " << column << ": " << fields.at(3 + column);
     }
+}
+
+/**
+ * @brief the restart file starts with a metadata line holding the current
+ * version of PQ
+ *
+ */
+TEST_F(TestRstFileOutput, metaDataIsWrittenFirst)
+{
+    _rstFileOutput->setFilename("default.rst", false);
+    _rstFileOutput->write(
+        out::Frame{*_simulationBox, thermostat::Thermostat()},
+        10,
+        100 * fs
+    );
+    _rstFileOutput->close();
+
+    std::ifstream file("default.rst");
+    std::string   line;
+    getline(file, line);
+    EXPECT_EQ(line, _expectedMetaDataLine());
+
+    getline(file, line);
+    EXPECT_EQ(line, "Step 10 Simulation_Time 0.1");
+}
+
+/**
+ * @brief the metadata line is also written if there is no simulation time
+ * (optimizer)
+ *
+ */
+TEST_F(TestRstFileOutput, metaDataIsWrittenWithoutFinalTime)
+{
+    _rstFileOutput->setFilename("default.rst", false);
+    _rstFileOutput->write(
+        out::Frame{*_simulationBox, thermostat::Thermostat()},
+        5,
+        std::nullopt
+    );
+    _rstFileOutput->close();
+
+    std::ifstream file("default.rst");
+    std::string   line;
+    getline(file, line);
+    EXPECT_EQ(line, _expectedMetaDataLine());
+
+    getline(file, line);
+    EXPECT_EQ(line, "Step 5");
+}
+
+/**
+ * @brief the metadata line appears exactly once per restart file, also after
+ * several writes to the same file
+ *
+ */
+TEST_F(TestRstFileOutput, metaDataIsWrittenOncePerFile)
+{
+    _rstFileOutput->setFilename("default.rst", false);
+
+    for (size_t step = 1; step <= 3; ++step)
+    {
+        _rstFileOutput->write(
+            out::Frame{*_simulationBox, thermostat::Thermostat()},
+            step,
+            100 * fs
+        );
+    }
+
+    _rstFileOutput->close();
+
+    std::ifstream file("default.rst");
+    std::string   line;
+    size_t        count = 0;
+
+    while (getline(file, line))
+    {
+        if (line.starts_with(RestartFileMetaDataKeyWord))
+        {
+            ++count;
+        }
+    }
+
+    EXPECT_EQ(count, 1);
 }

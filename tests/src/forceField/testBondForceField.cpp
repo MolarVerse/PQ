@@ -121,7 +121,7 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings.getSmoothingMethod(),
+        hybridSettings.get_smoothing(),
         potentialSettings
     );
 
@@ -207,7 +207,7 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings.getSmoothingMethod(),
+        hybridSettings.get_smoothing(),
         potentialSettings
     );
 

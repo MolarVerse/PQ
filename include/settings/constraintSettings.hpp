@@ -42,19 +42,19 @@ class WaterModelSettings;
 class ConstraintSettings
 {
    private:
-    Setting<bool> _shakeActive;
-    Setting<bool> _mShakeActive;
-    Setting<bool> _distanceConstsActive;
+    Setting<bool, "Shake Active">                _shakeActive;
+    Setting<bool, "MShake Active">               _mShakeActive;
+    Setting<bool, "Distance Constraints Active"> _distanceConstsActive;
 
-    Setting<size_t> _shakeMaxIter;
-    Setting<size_t> _rattleMaxIter;
-    Setting<size_t> _mshakeMaxIter;
+    Setting<size_t, "Shake Max Iter">  _shakeMaxIter;
+    Setting<size_t, "Rattle Max Iter"> _rattleMaxIter;
+    Setting<size_t, "MShake Max Iter"> _mshakeMaxIter;
 
-    Setting<double>      _shakeTolerance;
-    Setting<MassPerTime> _rattleTolerance;
-    Setting<double>      _mshakeTolerance;
+    Setting<double, "Shake Tolerance">       _shakeTolerance;
+    Setting<MassPerTime, "Rattle Tolerance"> _rattleTolerance;
+    Setting<double, "MShake Tolerance">      _mshakeTolerance;
 
-    Setting<Time> _optRattleTimeStep;
+    Setting<Time, "Opt Rattle Time Step"> _optRattleTimeStep;
 
    public:
     ConstraintSettings();
@@ -64,6 +64,14 @@ class ConstraintSettings
         const WaterModelSettings& waterModelSettings,
         JobType                   jobType
     );
+
+    SETTING_GETTER_AND_SETTER_BY_USER(_shakeMaxIter);
+    SETTING_GETTER_AND_SETTER_BY_USER(_rattleMaxIter);
+    SETTING_GETTER_AND_SETTER_BY_USER(_mshakeMaxIter);
+    SETTING_GETTER_AND_SETTER_BY_USER(_shakeTolerance);
+    SETTING_GETTER_AND_SETTER_BY_USER(_rattleTolerance);
+    SETTING_GETTER_AND_SETTER_BY_USER(_mshakeTolerance);
+    SETTING_GETTER_AND_SETTER_BY_USER(_optRattleTimeStep);
 
     void activateShakeForWaterModel();
 
@@ -94,26 +102,6 @@ class ConstraintSettings
     [[nodiscard]] bool isShakeActivated() const;
     [[nodiscard]] bool isMShakeActivated() const;
     [[nodiscard]] bool isDistanceConstraintsActivated() const;
-
-    [[nodiscard]] size_t             getShakeMaxIter() const;
-    [[nodiscard]] size_t             getRattleMaxIter() const;
-    [[nodiscard]] size_t             getMShakeMaxIter() const;
-    [[nodiscard]] double             getShakeTolerance() const;
-    [[nodiscard]] const MassPerTime& getRattleTolerance() const;
-    [[nodiscard]] double             getMShakeTolerance() const;
-    [[nodiscard]] const Time&        getOptRattleTimeStep() const;
-
-    /***************************
-     * standard setter methods *
-     ***************************/
-
-    void setShakeMaxIterByUser(size_t shakeMaxIter);
-    void setRattleMaxIterByUser(size_t rattleMaxIter);
-    void setMShakeMaxIterByUser(size_t mshakeMaxIter);
-    void setShakeToleranceByUser(double shakeTolerance);
-    void setRattleToleranceByUser(const MassPerTime& rattleTolerance);
-    void setMShakeToleranceByUser(double mshakeTolerance);
-    void setOptRattleTimeStepByUser(const Time& optRattleTimeStep);
 };
 
 #endif   // SETTINGS__CONSTRAINT_SETTINGS_HPP

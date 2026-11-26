@@ -259,13 +259,16 @@ namespace molsys
      * @param simulationBox
      * @param coulombRadiusCutoff The Coulomb radius cut-off distance used to
      * check for interactions beyond the specified cut-off
+     * @param generalSettings The general settings used to configure the cell
+     * list, such as computational resources and execution preferences.
      */
     void CellList::updateCellList(
-        SimulationBox  &simulationBox,
-        const Distance &coulombRadiusCutoff
+        SimulationBox         &simulationBox,
+        const Distance        &coulombRadiusCutoff,
+        const GeneralSettings &generalSettings
     )
     {
-        if (!GeneralSettings::isCellListActivated())
+        if (!generalSettings.isCellListActivated())
             return;
 
         auto _ = scopedTimer(TimerId::CellList, "Update");

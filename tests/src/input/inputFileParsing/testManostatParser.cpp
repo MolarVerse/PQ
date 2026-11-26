@@ -46,7 +46,7 @@ TEST_F(TestInputFileReader, ParsePressure)
 
     std::vector<std::string> lineElements = {"pressure", "=", "300.0"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getTargetPressure(), 300.0 * bar);
+    EXPECT_EQ(settings.get_targetPressure(), 300.0 * bar);
 
     _clearParser(parser);
 
@@ -76,7 +76,7 @@ TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
 
     std::vector<std::string> lineElements = {"p_relaxation", "=", "0.1"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getTau(), 0.1 * ps);
+    EXPECT_EQ(settings.get_tau(), 0.1 * ps);
 
     _clearParser(parser);
 
@@ -117,19 +117,19 @@ TEST_F(TestInputFileReader, ParseManostat)
 
     std::vector<std::string> lineElements = {"manostat", "=", "none"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getManostatType(), ManostatType::NONE);
+    EXPECT_EQ(settings.get_manostatType(), ManostatType::NONE);
 
     _clearParser(parser);
 
     lineElements = {"manostat", "=", "berendsen"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getManostatType(), ManostatType::BERENDSEN);
+    EXPECT_EQ(settings.get_manostatType(), ManostatType::BERENDSEN);
 
     _clearParser(parser);
 
     lineElements = {"manostat", "=", "stochastic_rescaling"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getManostatType(), ManostatType::STOCHASTIC_RESCALING);
+    EXPECT_EQ(settings.get_manostatType(), ManostatType::STOCHASTIC_RESCALING);
 
     _clearParser(parser);
 
@@ -159,7 +159,7 @@ TEST_F(TestInputFileReader, ParseCompressibility)
     std::vector<std::string> lineElements = {"compressibility", "=", "0.1"};
     parseFunc(lineElements, 0);
     EXPECT_NEAR(
-        settings.getCompressibility().numerical_value_in(per_bar),
+        settings.get_compressibility().numerical_value_in(per_bar),
         0.1,
         1e-12
     );
@@ -199,55 +199,55 @@ TEST_F(TestInputFileReader, ParseIsotropy)
 
     std::vector<std::string> lineElements = {"isotropy", "=", "isotropic"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getIsotropy(), Isotropy::ISOTROPIC);
+    EXPECT_EQ(settings.get_isotropy(), Isotropy::ISOTROPIC);
 
     _clearParser(parser);
 
     lineElements = {"isotropy", "=", "anisotropic"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getIsotropy(), Isotropy::ANISOTROPIC);
+    EXPECT_EQ(settings.get_isotropy(), Isotropy::ANISOTROPIC);
 
     _clearParser(parser);
 
     lineElements = {"isotropy", "=", "full_anisotropic"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getIsotropy(), Isotropy::FULL_ANISOTROPIC);
+    EXPECT_EQ(settings.get_isotropy(), Isotropy::FULL_ANISOTROPIC);
 
     _clearParser(parser);
 
     lineElements = {"isotropy", "=", "xz"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getIsotropy(), Isotropy::SEMI_ISOTROPIC_XZ);
+    EXPECT_EQ(settings.get_isotropy(), Isotropy::SEMI_ISOTROPIC_XZ);
 
     _clearParser(parser);
 
     lineElements = {"isotropy", "=", "zx"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getIsotropy(), Isotropy::SEMI_ISOTROPIC_XZ);
+    EXPECT_EQ(settings.get_isotropy(), Isotropy::SEMI_ISOTROPIC_XZ);
 
     _clearParser(parser);
 
     lineElements = {"isotropy", "=", "yz"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getIsotropy(), Isotropy::SEMI_ISOTROPIC_YZ);
+    EXPECT_EQ(settings.get_isotropy(), Isotropy::SEMI_ISOTROPIC_YZ);
 
     _clearParser(parser);
 
     lineElements = {"isotropy", "=", "zy"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getIsotropy(), Isotropy::SEMI_ISOTROPIC_YZ);
+    EXPECT_EQ(settings.get_isotropy(), Isotropy::SEMI_ISOTROPIC_YZ);
 
     _clearParser(parser);
 
     lineElements = {"isotropy", "=", "xy"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getIsotropy(), Isotropy::SEMI_ISOTROPIC_XY);
+    EXPECT_EQ(settings.get_isotropy(), Isotropy::SEMI_ISOTROPIC_XY);
 
     _clearParser(parser);
 
     lineElements = {"isotropy", "=", "yx"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getIsotropy(), Isotropy::SEMI_ISOTROPIC_XY);
+    EXPECT_EQ(settings.get_isotropy(), Isotropy::SEMI_ISOTROPIC_XY);
 
     _clearParser(parser);
 
@@ -276,74 +276,74 @@ TEST_F(TestInputFileReader, ParseFixedAxis)
 
     std::vector<std::string> lineElements = {"fixed_axis", "=", "none"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::NONE);
+    EXPECT_EQ(settings.get_fixedAxis(), FixedAxis::NONE);
 
     _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "x"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::X);
+    EXPECT_EQ(settings.get_fixedAxis(), FixedAxis::X);
 
     _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "y"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::Y);
+    EXPECT_EQ(settings.get_fixedAxis(), FixedAxis::Y);
 
     _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "z"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::Z);
+    EXPECT_EQ(settings.get_fixedAxis(), FixedAxis::Z);
 
     _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "xy"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::XY);
-    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::XY);
+    EXPECT_EQ(settings.get_fixedAxis(), FixedAxis::XY);
+    EXPECT_EQ(settings.get_fixedAxis(), FixedAxis::XY);
 
     _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "yx"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::XY);
+    EXPECT_EQ(settings.get_fixedAxis(), FixedAxis::XY);
 
     _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "xz"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::XZ);
+    EXPECT_EQ(settings.get_fixedAxis(), FixedAxis::XZ);
 
     _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "zx"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::XZ);
+    EXPECT_EQ(settings.get_fixedAxis(), FixedAxis::XZ);
 
     _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "yz"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::YZ);
+    EXPECT_EQ(settings.get_fixedAxis(), FixedAxis::YZ);
 
     _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "zy"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::YZ);
+    EXPECT_EQ(settings.get_fixedAxis(), FixedAxis::YZ);
 
     _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "all"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::ALL);
+    EXPECT_EQ(settings.get_fixedAxis(), FixedAxis::ALL);
 
     _clearParser(parser);
 
     lineElements = {"fixed_axis", "=", "xyz"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::ALL);
+    EXPECT_EQ(settings.get_fixedAxis(), FixedAxis::ALL);
 
     _clearParser(parser);
 

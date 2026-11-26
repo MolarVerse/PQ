@@ -37,6 +37,8 @@ namespace engine
      * @param xtbSettings The XTB settings to configure the QM runner with
      * @param externalQMSettings The external QM settings to configure the QM
      * runner with
+     * @param generalSettings The general settings to configure the QM runner
+     * with, such as computational resources and execution preferences
      */
     void QMCapableEngine::setQMRunner(
         const QMSettings         &qmSettings,
@@ -44,7 +46,8 @@ namespace engine
         const FennolSettings     &fennolSettings,
         const DftbSettings       &dftbSettings,
         const XtbSettings        &xtbSettings,
-        const ExternalQMSettings &externalQMSettings
+        const ExternalQMSettings &externalQMSettings,
+        const GeneralSettings    &generalSettings
     )
     {
         _qmRunner = QMRunnerManager::createQMRunner(
@@ -53,7 +56,8 @@ namespace engine
             fennolSettings,
             dftbSettings,
             xtbSettings,
-            externalQMSettings
+            externalQMSettings,
+            generalSettings
         );
     }
 

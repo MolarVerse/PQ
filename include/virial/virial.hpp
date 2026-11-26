@@ -30,6 +30,8 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
+class ManostatSettings;   // forward declaration
+
 namespace virial
 {
     [[nodiscard]]
@@ -39,7 +41,10 @@ namespace virial
     VirialPerMol calculateVirial(molsys::SimulationBox&);
 
     [[nodiscard]]
-    VirialPerMol intraMolecularVirialCorrection(const molsys::SimulationBox&);
+    VirialPerMol intraMolecularVirialCorrection(
+        const molsys::SimulationBox&,
+        const ManostatSettings&
+    );
 }   // namespace virial
 
 #endif   // VIRIAL__VIRIAL_HPP

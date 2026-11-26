@@ -480,7 +480,7 @@ namespace setup
 
         std::unique_ptr<waterModel::InterWaterStrategy> strategy;
 
-        if (GeneralSettings::isCellListActivated())
+        if (_engine.getSettings().generalSettings.isCellListActivated())
         {
             strategy = std::make_unique<waterModel::InterWaterStrategyCellList>(
                 _engine.getSettings().hybridSettings

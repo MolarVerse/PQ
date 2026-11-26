@@ -47,22 +47,12 @@ namespace engine
      *
      * @tparam T
      */
-    template <typename T>
-    inline void MDEngine::makeThermostat(T thermostat)
+    template <typename T, typename... Args>
+    inline void MDEngine::makeThermostat(Args &&...args)
     {
-        _thermostat = std::make_unique<T>(thermostat);
+        _thermostat = std::make_unique<T>(std::forward<Args>(args)...);
     }
 
-    /**
-     * @brief make unique_ptr for manostat
-     *
-     * @tparam T
-     */
-    template <typename T>
-    inline void MDEngine::makeManostat(T manostat)
-    {
-        _manostat = std::make_unique<T>(manostat);
-    }
 }   // namespace engine
 
 #endif   // ENGINE__MD_ENGINE_TPP

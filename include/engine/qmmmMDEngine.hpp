@@ -44,7 +44,7 @@ namespace engine
         physicalData::PhysicalData _qmmmPhysicalData{};
 
        public:
-        using HybridMDEngine::HybridMDEngine;
+        explicit QMMMMDEngine(const Settings &settings);
 
         ~QMMMMDEngine() override = default;
 

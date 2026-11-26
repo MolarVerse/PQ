@@ -177,7 +177,7 @@ int main()
         settings.potentialSettings
     );
 
-    GeneralSettings::activateCellList();
+    settings.generalSettings.activateCellListByUser();
 
     molsys::CellList cellList;
     cellList.setNumberOfCells(3);
@@ -185,7 +185,7 @@ int main()
     const auto& coulombCutoff =
         settings.potentialSettings.getCoulombRadiusCutoff();
     cellList.setup(simBox, coulombCutoff);
-    cellList.updateCellList(simBox, coulombCutoff);
+    cellList.updateCellList(simBox, coulombCutoff, settings.generalSettings);
 
     auto physicalData = physicalData::PhysicalData();
 
