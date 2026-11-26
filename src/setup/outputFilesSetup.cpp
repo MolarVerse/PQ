@@ -77,11 +77,11 @@ namespace setup
 
         const auto logFileName     = outputFileSettings.get_logFile();
         const auto timingsFileName = outputFileSettings.get_timeFile();
-        const auto restartFileName = outputFileSettings.get_rpmdRstFile();
-        const auto energyFileName  = outputFileSettings.get_rpmdEnergyFile();
-        const auto xyzFileName     = outputFileSettings.get_rpmdTrajFile();
+        const auto restartFileName = outputFileSettings.get_rstFile();
+        const auto energyFileName  = outputFileSettings.get_energyFile();
+        const auto xyzFileName     = outputFileSettings.get_trajFile();
         const auto infoFileName    = outputFileSettings.get_infoFile();
-        const auto forceFileName   = outputFileSettings.get_rpmdForceFile();
+        const auto forceFileName   = outputFileSettings.get_forceFile();
 
         _engine.getLogOutput().setFilename(logFileName, overwriteOutputFiles);
         _engine.getTimingsOutput().setFilename(
@@ -122,8 +122,8 @@ namespace setup
             auto &mdEngine = dynamic_cast<engine::MDEngine &>(_engine);
 
             const auto instEnFile = outputFileSettings.get_instEnFile();
-            const auto velFile    = outputFileSettings.get_rpmdVelFile();
-            const auto chargeFile = outputFileSettings.get_rpmdChargeFile();
+            const auto velFile    = outputFileSettings.get_velFile();
+            const auto chargeFile = outputFileSettings.get_chargeFile();
             const auto momFile    = outputFileSettings.get_momFile();
             const auto virialFile = outputFileSettings.get_virialFile();
             const auto stressFile = outputFileSettings.get_stressFile();
