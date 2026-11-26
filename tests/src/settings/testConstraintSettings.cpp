@@ -213,19 +213,19 @@ TEST(ConstraintSettingsTest, FinalizeSetsOptIterationDefaults)
     ConstraintSettings mdSettings;
     mdSettings.finalize(referenceSettings, waterModelSettings, JobType::MM_MD);
 
-    EXPECT_EQ(mdSettings.getShakeMaxIter(), defaults::SHAKE_MAX_ITER_DEFAULT);
-    EXPECT_EQ(mdSettings.getRattleMaxIter(), defaults::RATTLE_MAX_ITER_DEFAULT);
+    EXPECT_EQ(mdSettings.get_shakeMaxIter(), defaults::SHAKE_MAX_ITER_DEFAULT);
+    EXPECT_EQ(mdSettings.get_rattleMaxIter(), defaults::RATTLE_MAX_ITER_DEFAULT);
 
     ConstraintSettings optSettings;
     optSettings
         .finalize(referenceSettings, waterModelSettings, JobType::MM_OPT);
 
     EXPECT_EQ(
-        optSettings.getShakeMaxIter(),
+        optSettings.get_shakeMaxIter(),
         defaults::SHAKE_MAX_ITER_OPT_DEFAULT
     );
     EXPECT_EQ(
-        optSettings.getRattleMaxIter(),
+        optSettings.get_rattleMaxIter(),
         defaults::RATTLE_MAX_ITER_OPT_DEFAULT
     );
 }
@@ -236,10 +236,10 @@ TEST(ConstraintSettingsTest, FinalizeKeepsUserIterationsInOpt)
     ReferenceSettings  referenceSettings;
 
     ConstraintSettings settings;
-    settings.setShakeMaxIterByUser(30U);
-    settings.setRattleMaxIterByUser(40U);
+    settings.set_shakeMaxIterByUser(30U);
+    settings.set_rattleMaxIterByUser(40U);
     settings.finalize(referenceSettings, waterModelSettings, JobType::MM_OPT);
 
-    EXPECT_EQ(settings.getShakeMaxIter(), 30U);
-    EXPECT_EQ(settings.getRattleMaxIter(), 40U);
+    EXPECT_EQ(settings.get_shakeMaxIter(), 30U);
+    EXPECT_EQ(settings.get_rattleMaxIter(), 40U);
 }
