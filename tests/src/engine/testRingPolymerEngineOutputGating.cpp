@@ -104,7 +104,7 @@ class TestRingPolymerEngineOutputGating : public ::testing::Test
         _settings->generalSettings.setJobtypeByUser(
             JobType::RING_POLYMER_QM_MD
         );
-        _settings->outputFiles.setFilePrefixByUser(PREFIX);
+        _settings->outputFiles.set_filePrefixByUser(PREFIX);
         _settings->outputFiles.setOutputFrequencyByUser(1);
         _settings->timings.setTimeStepByUser(0.5 * fs);
         _settings->timings.setNumberOfStepsByUser(100U);

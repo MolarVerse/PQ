@@ -94,7 +94,7 @@ namespace
             (extxyz ? "Ext" : "");
 
         OutputFileSettings outputFileSettings;
-        outputFileSettings.setAsyncOutputByUser(async);
+        outputFileSettings.set_asyncOutputByUser(async);
         const ReferenceSettings referenceSettings;
 
         std::string content;
@@ -171,7 +171,7 @@ TEST(TestEngineOutputFrames, aseTrajReplacesTheXyzFiles)
     const std::string prefix = "engineOutputAse";
 
     OutputFileSettings outputFileSettings;
-    outputFileSettings.setAsyncOutputByUser(false);
+    outputFileSettings.set_asyncOutputByUser(false);
     const ReferenceSettings referenceSettings;
 
     {

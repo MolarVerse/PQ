@@ -73,15 +73,15 @@ namespace setup
         const auto &outputFileSettings = _engine.getSettings().outputFiles;
 
         const auto overwriteOutputFiles =
-            outputFileSettings.getOverwriteOutputFiles();
+            outputFileSettings.get_overwriteOutputFiles();
 
-        const auto logFileName     = outputFileSettings.getLogFileName();
-        const auto timingsFileName = outputFileSettings.getTimingsFileName();
-        const auto restartFileName = outputFileSettings.getRestartFileName();
-        const auto energyFileName  = outputFileSettings.getEnergyFileName();
-        const auto xyzFileName     = outputFileSettings.getTrajectoryFileName();
-        const auto infoFileName    = outputFileSettings.getInfoFileName();
-        const auto forceFileName   = outputFileSettings.getForceFileName();
+        const auto logFileName     = outputFileSettings.get_logFile();
+        const auto timingsFileName = outputFileSettings.get_timeFile();
+        const auto restartFileName = outputFileSettings.get_rpmdRstFile();
+        const auto energyFileName  = outputFileSettings.get_rpmdEnergyFile();
+        const auto xyzFileName     = outputFileSettings.get_rpmdTrajFile();
+        const auto infoFileName    = outputFileSettings.get_infoFile();
+        const auto forceFileName   = outputFileSettings.get_rpmdForceFile();
 
         _engine.getLogOutput().setFilename(logFileName, overwriteOutputFiles);
         _engine.getTimingsOutput().setFilename(
@@ -100,7 +100,7 @@ namespace setup
 
         // extxyz, h5md or ase replace the xyz, velocity, force and charge files
         // of MD runs
-        const auto format = outputFileSettings.getTrajectoryFormat();
+        const auto format = outputFileSettings.get_trajFormat();
         const auto textTrajectory =
             !isMDJobType(_engine.getSettings().generalSettings.getJobtype()) ||
             format == TrajectoryFormat::XYZ;
@@ -121,14 +121,13 @@ namespace setup
         {
             auto &mdEngine = dynamic_cast<engine::MDEngine &>(_engine);
 
-            const auto instEnFile =
-                outputFileSettings.getInstantEnergyFileName();
-            const auto velFile    = outputFileSettings.getVelocityFileName();
-            const auto chargeFile = outputFileSettings.getChargeFileName();
-            const auto momFile    = outputFileSettings.getMomentumFileName();
-            const auto virialFile = outputFileSettings.getVirialFileName();
-            const auto stressFile = outputFileSettings.getStressFileName();
-            const auto boxFile    = outputFileSettings.getBoxFileName();
+            const auto instEnFile = outputFileSettings.get_instEnFile();
+            const auto velFile    = outputFileSettings.get_rpmdVelFile();
+            const auto chargeFile = outputFileSettings.get_rpmdChargeFile();
+            const auto momFile    = outputFileSettings.get_momFile();
+            const auto virialFile = outputFileSettings.get_virialFile();
+            const auto stressFile = outputFileSettings.get_stressFile();
+            const auto boxFile    = outputFileSettings.get_boxFile();
 
             mdEngine.getInstantEnergyOutput().setFilename(
                 instEnFile,
@@ -137,7 +136,7 @@ namespace setup
             if (format == TrajectoryFormat::EXTXYZ)
             {
                 mdEngine.getEngineOutput().openExtxyzOutput(
-                    outputFileSettings.getExtxyzFileName(),
+                    outputFileSettings.get_extxyzFile(),
                     overwriteOutputFiles
                 );
             }
@@ -147,7 +146,7 @@ namespace setup
                     _engine.getSettings().timings.getTimeStep();
 
                 mdEngine.getEngineOutput().openH5mdOutput(
-                    outputFileSettings.getH5mdFileName(),
+                    outputFileSettings.get_h5mdFile(),
                     overwriteOutputFiles,
                     timeStep.numerical_value_in(fs)
                 );
@@ -155,7 +154,7 @@ namespace setup
             else if (format == TrajectoryFormat::ASE)
             {
                 mdEngine.getEngineOutput().openAseTrajOutput(
-                    outputFileSettings.getAseTrajFileName(),
+                    outputFileSettings.get_aseTrajFile(),
                     overwriteOutputFiles
                 );
             }
@@ -193,14 +192,14 @@ namespace setup
                 ))
             {
                 const auto hybridCenterFile =
-                    outputFileSettings.getHybridCenterFileName();
+                    outputFileSettings.get_hybridCenterFile();
                 mdEngine.getXyzHybridCenterOutput().setFilename(
                     hybridCenterFile,
                     overwriteOutputFiles
                 );
             }
 
-            if (outputFileSettings.getIncludeOutputMetadata())
+            if (outputFileSettings.get_includeOutputMetadata())
             {
                 const auto timeStep =
                     _engine.getSettings().timings.getTimeStep();
@@ -212,18 +211,14 @@ namespace setup
                     _engine.getSettings().generalSettings.getJobtype()
                 ))
             {
-                const auto rstFile_ =
-                    outputFileSettings.getRPMDRestartFileName();
-                const auto xyzFile_ = outputFileSettings.getRPMDTrajFileName();
-                const auto velFile_ =
-                    outputFileSettings.getRPMDVelocityFileName();
-                const auto forceFile_ =
-                    outputFileSettings.getRPMDForceFileName();
+                const auto rstFile_   = outputFileSettings.get_rpmdRstFile();
+                const auto xyzFile_   = outputFileSettings.get_rpmdTrajFile();
+                const auto velFile_   = outputFileSettings.get_rpmdVelFile();
+                const auto forceFile_ = outputFileSettings.get_rpmdForceFile();
                 const auto chargeFile_ =
-                    outputFileSettings.getRPMDChargeFileName();
+                    outputFileSettings.get_rpmdChargeFile();
                 const auto energyFile_ =
-                    outputFileSettings.getRPMDEnergyFileName();
-
+                    outputFileSettings.get_rpmdEnergyFile();
                 mdEngine.getRingPolymerRstFileOutput().setFilename(
                     rstFile_,
                     overwriteOutputFiles
@@ -255,7 +250,7 @@ namespace setup
         {
             auto &optEngine = dynamic_cast<engine::OptEngine &>(_engine);
 
-            const auto optFileName = outputFileSettings.getOptFileName();
+            const auto optFileName = outputFileSettings.get_optFile();
 
             optEngine.getOptOutput().setFilename(
                 optFileName,
@@ -270,7 +265,7 @@ namespace setup
             auto &hessianEngine =
                 dynamic_cast<engine::HessianEngine &>(_engine);
 
-            const auto optFileName = outputFileSettings.getOptFileName();
+            const auto optFileName = outputFileSettings.get_optFile();
 
             hessianEngine.getOptOutput().setFilename(
                 optFileName,
