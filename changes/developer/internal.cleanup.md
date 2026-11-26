@@ -3,3 +3,4 @@
 - use `mstd` `CONST_GETTER_SETTER` for `PhysicalData` members
 - enforce writing cutoff without capital `O`
 - make simulationBox being owned by value from engine along with other members and remove them from evaluator/optimizer 
+- remove engine deps from `RestartFileReader`

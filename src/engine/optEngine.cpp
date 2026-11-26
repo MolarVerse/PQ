@@ -104,6 +104,9 @@ namespace engine
 
             getLogOutput().writeInfo(msg);
             out::StdoutOutput::writeInfo(msg);
+
+            getLogOutput().writeEndedNormally(elapsedTime);
+            out::StdoutOutput::writeEndedNormally(elapsedTime);
         }
         else
         {
@@ -112,9 +115,6 @@ namespace engine
             getLogOutput().writeOptWarning(msg);
             out::StdoutOutput::writeOptWarning(msg);
         }
-
-        getLogOutput().writeEndedNormally(elapsedTime);
-        out::StdoutOutput::writeEndedNormally(elapsedTime);
     }
 
     /**
@@ -427,7 +427,7 @@ namespace engine
      * @brief get the optimizer
      *
      */
-    opt::Optimizer &OptEngine::getOptimizer() { return *_optimizer; }
+    opt::Optimizer &OptEngine::get_optimizer() { return *_optimizer; }
 
     /**
      * @brief get the learning rate strategy

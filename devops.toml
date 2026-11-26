@@ -49,6 +49,7 @@ ast_check_enabled_ids = [
     "preferMstdCopyMoveMacros",
     "noConstValueParam",
     "noInClassMemberDefinition",
+    "maxAnonymousNamespaceSize",
 ]
 
 [cpp.forbidden_spellings]
@@ -95,3 +96,6 @@ extensions = ["hpp", "h", "tpp"]
 
 [cpp.ast_check_config.noForbiddenInclude]
 libs = ["mp-units"]
+
+[cpp.ast_check_config.maxAnonymousNamespaceSize]
+exclude_paths = ["tests/", "benchmarks/"]

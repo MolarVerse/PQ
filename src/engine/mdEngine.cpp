@@ -54,7 +54,8 @@ namespace engine
           _thermostat(std::make_unique<thermostat::Thermostat>()),
           _manostat(
               manostat::ManostatFactory::createManostat(
-                  settings.manostatSettings
+                  settings.manostatSettings,
+                  settings.generalSettings
               )
           )
     {
@@ -155,8 +156,10 @@ namespace engine
         const auto jobType = getSettings().generalSettings.getJobtype();
         if (!isHybridJobtype(jobType))
         {
-            const auto virial =
-                virial::intraMolecularVirialCorrection(get_simulationBox());
+            const auto virial = virial::intraMolecularVirialCorrection(
+                get_simulationBox(),
+                getSettings().manostatSettings
+            );
             get_physicalData().addVirial(virial);
         }
 

@@ -244,14 +244,17 @@ std::optional<size_t> ResetKineticsSettings::getMomentumResetInterval() const
 {
     std::optional<size_t> interval;
 
-    for (const auto* setting : {&_fReset, &_fScale})
+    const auto consider = [&interval](const auto& setting)
     {
-        if (setting->isSetByUser() && setting->get() > 0)
+        if (setting.isSetByUser() && setting.get() > 0)
         {
             interval =
-                std::min(interval.value_or(setting->get()), setting->get());
+                std::min(interval.value_or(setting.get()), setting.get());
         }
-    }
+    };
+
+    consider(_fReset);
+    consider(_fScale);
 
     return interval;
 }

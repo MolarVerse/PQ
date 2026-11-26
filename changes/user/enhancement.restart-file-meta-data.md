@@ -1,0 +1,1 @@
+- Restart files now start with a `!META_DATA version <PQ version>` line that records the PQ version that wrote them; the line is read back when restarting. Restart files written with this version cannot be read by older PQ versions.

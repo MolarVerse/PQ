@@ -57,9 +57,9 @@ int main()
 
     Settings settings;
     settings.potentialSettings.setCoulombRadiusCutoffByUser(4.0 * angstrom);
-    settings.manostatSettings.setTargetPressureByUser(1.0 * bar);
-    settings.manostatSettings.setTauByUser(100.0 * fs);
-    settings.manostatSettings.setCompressibilityByUser(4.6e-5 * per_bar);
+    settings.manostatSettings.set_targetPressureByUser(1.0 * bar);
+    settings.manostatSettings.set_tauByUser(100.0 * fs);
+    settings.manostatSettings.set_compressibilityByUser(4.6e-5 * per_bar);
     ReferenceSettings referenceSettings;
     settings.manostatSettings.finalize(referenceSettings);
     auto manostat = manostat::BerendsenManostat(settings.manostatSettings);

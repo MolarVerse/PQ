@@ -118,7 +118,7 @@ namespace constraints
 
         size_t iter = 0;
 
-        while (!converged && iter <= _constraintSettings->getShakeMaxIter())
+        while (!converged && iter <= _constraintSettings->get_shakeMaxIter())
         {
             convergedVector.clear();
 
@@ -129,7 +129,7 @@ namespace constraints
             {
                 convergedVector.push_back(bondConst.applyShake(
                     simulationBox,
-                    _constraintSettings->getShakeTolerance(),
+                    _constraintSettings->get_shakeTolerance(),
                     timeStep
                 ));
             };
@@ -170,8 +170,8 @@ namespace constraints
         auto _ = scopedTimer(TimerId::Constraints, "MShake - Shake");
         _mShake->applyMShake(
             simulationBox,
-            _constraintSettings->getMShakeMaxIter(),
-            _constraintSettings->getMShakeTolerance(),
+            _constraintSettings->get_mshakeMaxIter(),
+            _constraintSettings->get_mshakeTolerance(),
             timeStep
         );
     }
@@ -212,7 +212,7 @@ namespace constraints
 
         size_t iter = 0;
 
-        while (!converged && iter <= _constraintSettings->getRattleMaxIter())
+        while (!converged && iter <= _constraintSettings->get_rattleMaxIter())
         {
             convergedVector.clear();
 
@@ -220,7 +220,7 @@ namespace constraints
                 [&convergedVector, this](auto &bondConstraint)
             {
                 convergedVector.push_back(bondConstraint.applyRattle(
-                    _constraintSettings->getRattleTolerance()
+                    _constraintSettings->get_rattleTolerance()
                 ));
             };
 
@@ -265,7 +265,7 @@ namespace constraints
 
         const auto velocities = simulationBox.getVelocities();
 
-        applyShake(simulationBox, _constraintSettings->getOptRattleTimeStep());
+        applyShake(simulationBox, _constraintSettings->get_optRattleTimeStep());
 
         _setVelocities(simulationBox, velocities);
     }
@@ -288,7 +288,7 @@ namespace constraints
         }
 
         const auto  velocities = simulationBox.getVelocities();
-        const auto &timeStep   = _constraintSettings->getOptRattleTimeStep();
+        const auto &timeStep   = _constraintSettings->get_optRattleTimeStep();
 
         for (const auto &atom : simulationBox.getAtoms())
         {

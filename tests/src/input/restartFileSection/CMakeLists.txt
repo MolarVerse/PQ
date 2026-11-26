@@ -1,6 +1,7 @@
 set(source_files
     testAtomSection.cpp
     testBoxSection.cpp
+    testMetaDataSection.cpp
     testNoseHooverSection.cpp
     testStepCountSection.cpp
 )

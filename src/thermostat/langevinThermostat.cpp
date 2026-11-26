@@ -27,6 +27,7 @@
 
 #include "globalTimer.hpp"
 #include "physicalData.hpp"
+#include "randomNumberGenerator.hpp"
 #include "simulationBox.hpp"
 #include "unit_types.hpp"
 #include "units.hpp"
@@ -40,39 +41,18 @@ namespace thermostat
      * @details automatically calculates sigma from friction and target
      * temperature
      *
-     * @param friction
+     * @param friction The friction coefficient for the Langevin thermostat
+     * @param generalSettings The general settings object containing relevant
+     * configuration for the simulation, including random number generator
+     * settings.
      */
-    LangevinThermostat::LangevinThermostat(const Frequency &friction)
-        : _friction(friction)
-    {
-    }
-
-    /**
-     * @brief Copy constructor for Langevin Thermostat
-     *
-     * @param other
-     */
-    LangevinThermostat::LangevinThermostat(const LangevinThermostat &other)
-        : Thermostat(other), _friction(other._friction)
-    {
-    }
-
-    /**
-     * @brief Copy assignment operator for Langevin Thermostat
-     *
-     * @param other
-     * @return LangevinThermostat&
-     */
-    LangevinThermostat &LangevinThermostat::operator=(
-        const LangevinThermostat &other
+    LangevinThermostat::LangevinThermostat(
+        const Frequency       &friction,
+        const GeneralSettings &generalSettings
     )
+        : _rng(rng::RandomNumberGenerator::create(generalSettings)),
+          _friction(friction)
     {
-        if (this != &other)
-        {
-            Thermostat::operator=(other);
-            _friction = other._friction;
-        }
-        return *this;
     }
 
     /**
@@ -121,9 +101,9 @@ namespace thermostat
             const auto propagationFactor = 0.5 * timeStep / mass;
 
             const linalg::Vec3D randomFactor = {
-                _randomNumberGenerator.getNormalDistribution(0.0, 1.0),
-                _randomNumberGenerator.getNormalDistribution(0.0, 1.0),
-                _randomNumberGenerator.getNormalDistribution(0.0, 1.0)
+                _rng.getNormalDistribution(0.0, 1.0),
+                _rng.getNormalDistribution(0.0, 1.0),
+                _rng.getNormalDistribution(0.0, 1.0)
             };
 
             const auto velocity = atom->getVelocity();
