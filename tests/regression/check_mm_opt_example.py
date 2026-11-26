@@ -46,17 +46,18 @@ def main():
 
     problems = []
     cases = [
-        ("converges", "", 0, ["Optimizer converged after", "PQ ended normally"]),
+        ("converges", "", 0, ["Optimizer converged after", "PQ ended normally"], []),
         (
             "warns at nstep",
             "nstep = 2;\n",
             0,
-            ["Optimizer did not converge after 2 epochs.", "PQ ended normally"],
+            ["Optimizer did not converge after 2 epochs."],
+            ["PQ ended normally"],
         ),
-        ("rejects shake", "shake = on;\n", None, ["does not apply SHAKE"]),
+        ("rejects shake", "shake = on;\n", None, ["does not apply SHAKE"], []),
     ]
 
-    for name, extra, expected_code, texts in cases:
+    for name, extra, expected_code, texts, absent in cases:
         with tempfile.TemporaryDirectory() as tmp:
             directory = Path(tmp) / "example"
             shutil.copytree(args.example, directory)
@@ -67,6 +68,9 @@ def main():
 
         for text in texts:
             check(f"{name} ({text!r} missing)", text in output, output, problems)
+
+        for text in absent:
+            check(f"{name} ({text!r} printed)", text not in output, output, problems)
 
     for problem in problems:
         print(f"FAIL {problem}", file=sys.stderr)

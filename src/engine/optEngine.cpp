@@ -106,6 +106,9 @@ namespace engine
 
             getLogOutput().writeInfo(msg);
             out::StdoutOutput::writeInfo(msg);
+
+            getLogOutput().writeEndedNormally(elapsedTime);
+            out::StdoutOutput::writeEndedNormally(elapsedTime);
         }
         else
         {
@@ -114,9 +117,6 @@ namespace engine
             getLogOutput().writeOptWarning(msg);
             out::StdoutOutput::writeOptWarning(msg);
         }
-
-        getLogOutput().writeEndedNormally(elapsedTime);
-        out::StdoutOutput::writeEndedNormally(elapsedTime);
     }
 
     /**
