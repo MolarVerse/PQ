@@ -29,7 +29,6 @@
 
 #include "atom.hpp"
 #include "enums/jobtype.hpp"
-#include "generalSettings.hpp"
 #include "molecule.hpp"
 #include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
@@ -51,7 +50,6 @@ class TestVirial : public ::testing::Test
 inline void TestVirial::SetUp()
 {
     _simBox = std::make_unique<molsys::SimulationBox>();
-    GeneralSettings::setVirialType(VirialType::ATOMIC);
 
     auto molecule1 = molsys::Molecule();
 

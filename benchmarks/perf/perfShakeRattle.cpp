@@ -58,10 +58,10 @@ int main()
     auto &molecules = box.getMolecules();
 
     Settings settings;
-    settings.constraintSettings.setShakeMaxIterByUser(100);
-    settings.constraintSettings.setRattleMaxIterByUser(100);
-    settings.constraintSettings.setShakeToleranceByUser(1.0e-8);
-    settings.constraintSettings.setRattleToleranceByUser(
+    settings.constraintSettings.set_shakeMaxIterByUser(100);
+    settings.constraintSettings.set_rattleMaxIterByUser(100);
+    settings.constraintSettings.set_shakeToleranceByUser(1.0e-8);
+    settings.constraintSettings.set_rattleToleranceByUser(
         1.0e-8 * g_per_mol / s
     );
     settings.constraintSettings.activateShakeByUser();

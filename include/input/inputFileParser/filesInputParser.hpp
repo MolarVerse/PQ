@@ -28,6 +28,7 @@
 #include "inputFileParser.hpp"
 
 class FileSettings;
+class GeneralSettings;
 
 namespace input
 {
@@ -39,13 +40,15 @@ namespace input
      */
     class FilesInputParser : public InputFileParser
     {
-        bool                    _validateFilePaths;
-        mstd::Ref<FileSettings> _fileSettings;
+        bool                       _validateFilePaths;
+        mstd::Ref<FileSettings>    _fileSettings;
+        mstd::Ref<GeneralSettings> _generalSettings;
 
        public:
         explicit FilesInputParser(
-            bool          validateFilePaths,
-            FileSettings& fileSettings
+            bool             validateFilePaths,
+            FileSettings&    fileSettings,
+            GeneralSettings& generalSettings
         );
 
         void addIntraNonBondedFileKey();

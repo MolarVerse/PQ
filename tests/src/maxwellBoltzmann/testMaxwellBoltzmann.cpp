@@ -25,6 +25,7 @@
 #include <cmath>
 #include <cstddef>
 #include <memory>
+#include <mstd/types.hpp>
 #include <mstd/utils.hpp>
 #include <string>
 #include <vector>
@@ -90,17 +91,25 @@ namespace
     // fixes the random seed for the lifetime of the guard
     struct SeedGuard
     {
+        mstd::Ref<GeneralSettings> generalSettings;
         MSTD_NO_MOVE(SeedGuard);
-        explicit SeedGuard(uint_fast32_t seed)
-        {
-            GeneralSettings::setRandomSeed(seed);
-            GeneralSettings::setIsRandomSeedSet(true);
-        }
+        explicit SeedGuard(
+            GeneralSettings &generalSettings,
+            uint_fast32_t    seed
+        );
 
-        ~SeedGuard() { GeneralSettings::setIsRandomSeedSet(false); }
+        ~SeedGuard();
 
         MSTD_NO_COPY(SeedGuard);
     };
+
+    SeedGuard::SeedGuard(GeneralSettings &generalSettings_, uint_fast32_t seed)
+        : generalSettings(generalSettings_)
+    {
+        generalSettings->setRandomSeedByUser(seed);
+    }
+
+    SeedGuard::~SeedGuard() { *generalSettings = GeneralSettings{}; }
 
     std::vector<Vel3D> velocitiesOf(molsys::SimulationBox &simulationBox)
     {
@@ -146,11 +155,10 @@ namespace
 
 TEST(TestMaxwellBoltzmann, initializeVelocitiesRemovesLinearMomentum)
 {
-    auto *box = makeBox();
-    maxwellBoltzmann::MaxwellBoltzmann().initializeVelocities(
-        *box,
-        toTemperature(300.0)
-    );
+    auto           *box = makeBox();
+    GeneralSettings generalSettings;
+    maxwellBoltzmann::MaxwellBoltzmann(generalSettings)
+        .initializeVelocities(*box, toTemperature(300.0));
 
     const auto momentum = box->calculateMomentum();
     const auto scale    = momentumScale(*box);
@@ -170,11 +178,10 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesRemovesLinearMomentum)
 
 TEST(TestMaxwellBoltzmann, initializeVelocitiesRemovesAngularMomentum)
 {
-    auto *box = makeBox();
-    maxwellBoltzmann::MaxwellBoltzmann().initializeVelocities(
-        *box,
-        toTemperature(300.0)
-    );
+    auto           *box = makeBox();
+    GeneralSettings generalSettings;
+    maxwellBoltzmann::MaxwellBoltzmann(generalSettings)
+        .initializeVelocities(*box, toTemperature(300.0));
 
     const auto angularMomentum = angularMomentumOf(*box);
     const auto scale           = angularMomentumScale(*box);
@@ -201,11 +208,10 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesReachesTargetTemperature)
     {
         SCOPED_TRACE("target temperature " + std::to_string(target));
 
-        auto *box = makeBox();
-        maxwellBoltzmann::MaxwellBoltzmann().initializeVelocities(
-            *box,
-            toTemperature(target)
-        );
+        auto           *box = makeBox();
+        GeneralSettings generalSettings;
+        maxwellBoltzmann::MaxwellBoltzmann(generalSettings)
+            .initializeVelocities(*box, toTemperature(target));
 
         // temperature is rescaled last and rescaling does not reintroduce
         // any linear or angular momentum
@@ -228,13 +234,12 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesSatisfiesAllConstraintsTogether)
     for (uint_fast32_t seed = 1; seed <= 25; ++seed)
     {
         SCOPED_TRACE("seed " + std::to_string(seed));
-        const SeedGuard guard(seed);
+        GeneralSettings generalSettings;
+        const SeedGuard guard(generalSettings, seed);
 
         auto *box = makeBox();
-        maxwellBoltzmann::MaxwellBoltzmann().initializeVelocities(
-            *box,
-            toTemperature(300.0)
-        );
+        maxwellBoltzmann::MaxwellBoltzmann(generalSettings)
+            .initializeVelocities(*box, toTemperature(300.0));
 
         const auto momentum        = box->calculateMomentum();
         const auto angularMomentum = angularMomentumOf(*box);
@@ -272,11 +277,10 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesSatisfiesAllConstraintsTogether)
 
 TEST(TestMaxwellBoltzmann, initializeVelocitiesGivesFiniteNonZeroVelocities)
 {
-    auto *box = makeBox();
-    maxwellBoltzmann::MaxwellBoltzmann().initializeVelocities(
-        *box,
-        toTemperature(300.0)
-    );
+    auto           *box = makeBox();
+    GeneralSettings generalSettings;
+    maxwellBoltzmann::MaxwellBoltzmann(generalSettings)
+        .initializeVelocities(*box, toTemperature(300.0));
 
     for (const auto &atom : box->getAtoms())
     {
@@ -296,10 +300,9 @@ TEST(
     auto *reference = makeBox();
     auto *box       = makeBox();
 
-    maxwellBoltzmann::MaxwellBoltzmann().initializeVelocities(
-        *box,
-        toTemperature(300.0)
-    );
+    GeneralSettings generalSettings;
+    maxwellBoltzmann::MaxwellBoltzmann(generalSettings)
+        .initializeVelocities(*box, toTemperature(300.0));
 
     ASSERT_EQ(box->getNumberOfAtoms(), reference->getNumberOfAtoms());
     for (size_t i = 0; i < box->getNumberOfAtoms(); ++i)
@@ -325,33 +328,28 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesIsReproducibleForFixedSeed)
     std::vector<Vel3D> second;
     std::vector<Vel3D> other;
 
+    GeneralSettings generalSettings;
     {
-        const SeedGuard guard(4711);
+        const SeedGuard guard(generalSettings, 4711);
         auto           *box = makeBox();
-        maxwellBoltzmann::MaxwellBoltzmann().initializeVelocities(
-            *box,
-            toTemperature(300.0)
-        );
+        maxwellBoltzmann::MaxwellBoltzmann(generalSettings)
+            .initializeVelocities(*box, toTemperature(300.0));
         first = velocitiesOf(*box);
         delete box;
     }
     {
-        const SeedGuard guard(4711);
+        const SeedGuard guard(generalSettings, 4711);
         auto           *box = makeBox();
-        maxwellBoltzmann::MaxwellBoltzmann().initializeVelocities(
-            *box,
-            toTemperature(300.0)
-        );
+        maxwellBoltzmann::MaxwellBoltzmann(generalSettings)
+            .initializeVelocities(*box, toTemperature(300.0));
         second = velocitiesOf(*box);
         delete box;
     }
     {
-        const SeedGuard guard(4712);
+        const SeedGuard guard(generalSettings, 4712);
         auto           *box = makeBox();
-        maxwellBoltzmann::MaxwellBoltzmann().initializeVelocities(
-            *box,
-            toTemperature(300.0)
-        );
+        maxwellBoltzmann::MaxwellBoltzmann(generalSettings)
+            .initializeVelocities(*box, toTemperature(300.0));
         other = velocitiesOf(*box);
         delete box;
     }
@@ -362,10 +360,11 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesIsReproducibleForFixedSeed)
 
 TEST(TestMaxwellBoltzmann, initializeVelocitiesForZeroTargetTemperatureThrows)
 {
-    auto *box = makeBox();
+    GeneralSettings generalSettings;
+    auto           *box = makeBox();
 
     EXPECT_THROW_MSG(
-        maxwellBoltzmann::MaxwellBoltzmann()
+        maxwellBoltzmann::MaxwellBoltzmann(generalSettings)
             .initializeVelocities(*box, toTemperature(0.0)),
         exc::UserInputException,
         "Cannot rescale a zero-temperature system. Initialize velocities first."

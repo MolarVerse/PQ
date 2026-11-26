@@ -72,14 +72,13 @@ namespace
     void ManostatRegression::SetUp()
     {
         _settings = std::make_unique<Settings>();
-        GeneralSettings::setVirialType(VirialType::MOLECULAR);
-        GeneralSettings::setRandomSeed(42);
-        GeneralSettings::setIsRandomSeedSet(true);
-        _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
-        _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
-        _settings->manostatSettings.setTargetPressureByUser(1.0 * bar);
-        _settings->manostatSettings.setTauByUser(1.0 * fs);
-        _settings->manostatSettings.setCompressibilityByUser(0.03 * per_bar);
+        _settings->manostatSettings.set_virialByUser(VirialType::MOLECULAR);
+        _settings->generalSettings.setRandomSeedByUser(42);
+        _settings->manostatSettings.set_isotropyByUser(Isotropy::ISOTROPIC);
+        _settings->manostatSettings.set_fixedAxisByUser(FixedAxis::NONE);
+        _settings->manostatSettings.set_targetPressureByUser(1.0 * bar);
+        _settings->manostatSettings.set_tauByUser(1.0 * fs);
+        _settings->manostatSettings.set_compressibilityByUser(0.03 * per_bar);
         _box.setBox(
             molsys::OrthorhombicBox(
                 {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
@@ -134,12 +133,13 @@ TEST_F(ManostatRegression, triclinicHydrostaticBalancePreservesCell)
             kcal_per_mol
         )
     );
-    _settings->manostatSettings.setIsotropyByUser(Isotropy::FULL_ANISOTROPIC);
+    _settings->manostatSettings.set_isotropyByUser(Isotropy::FULL_ANISOTROPIC);
     manostat::FullAnisotropicBerendsenManostat berendsen(
         _settings->manostatSettings
     );
     manostat::FullAnisotropicStochasticRescalingManostat stochastic(
-        _settings->manostatSettings
+        _settings->manostatSettings,
+        _settings->generalSettings
     );
     for (auto* coupling :
          std::vector<manostat::Manostat*>{&berendsen, &stochastic})
@@ -181,7 +181,7 @@ TEST_F(ManostatRegression, triclinicLengthPressureMatchesMolecularWork)
         ),
         false
     );
-    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::YZ);
+    _settings->manostatSettings.set_fixedAxisByUser(FixedAxis::YZ);
     _data.set_virial(
         linalg::tensor3D{{2.0, -1.0, 0.5}, {4.0, -2.0, 1.0}, {6.0, -3.0, 1.5}} *
         kcal_per_mol
@@ -209,8 +209,8 @@ TEST_F(ManostatRegression, berendsenModesHaveSameHydrostaticVolumeResponse)
     constexpr auto increment = 1e-6;
     for (const auto fixed : {FixedAxis::NONE, FixedAxis::Z})
     {
-        _settings->manostatSettings.setFixedAxisByUser(fixed);
-        _settings->manostatSettings.setCompressibilityByUser(
+        _settings->manostatSettings.set_fixedAxisByUser(fixed);
+        _settings->manostatSettings.set_compressibilityByUser(
             increment * per_bar
         );
 
@@ -218,19 +218,19 @@ TEST_F(ManostatRegression, berendsenModesHaveSameHydrostaticVolumeResponse)
         // a reference, not a copy, so sharing one object would make every
         // mode see only the isotropy set last.
         auto isoSettings = _settings->manostatSettings;
-        isoSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
+        isoSettings.set_isotropyByUser(Isotropy::ISOTROPIC);
         manostat::BerendsenManostat iso(isoSettings);
 
         auto semiSettings = _settings->manostatSettings;
-        semiSettings.setIsotropyByUser(Isotropy::SEMI_ISOTROPIC_XY);
+        semiSettings.set_isotropyByUser(Isotropy::SEMI_ISOTROPIC_XY);
         manostat::SemiIsotropicBerendsenManostat semi(semiSettings);
 
         auto anisoSettings = _settings->manostatSettings;
-        anisoSettings.setIsotropyByUser(Isotropy::ANISOTROPIC);
+        anisoSettings.set_isotropyByUser(Isotropy::ANISOTROPIC);
         manostat::AnisotropicBerendsenManostat aniso(anisoSettings);
 
         auto fullSettings = _settings->manostatSettings;
-        fullSettings.setIsotropyByUser(Isotropy::FULL_ANISOTROPIC);
+        fullSettings.set_isotropyByUser(Isotropy::FULL_ANISOTROPIC);
         manostat::FullAnisotropicBerendsenManostat full(fullSettings);
 
         for (auto* coupling : std::vector<manostat::BerendsenManostat*>{
@@ -259,9 +259,11 @@ TEST_F(ManostatRegression, berendsenModesHaveSameHydrostaticVolumeResponse)
 TEST_F(ManostatRegression, molecularCouplingAllowsAtomicVirial)
 {
     _addMolecule({-0.2, 0.2}, 0.0);
-    GeneralSettings::setVirialType(VirialType::ATOMIC);
+    _settings->manostatSettings.set_virialByUser(VirialType::ATOMIC);
     manostat::BerendsenManostat berendsen(_settings->manostatSettings);
-    manostat::StochasticRescalingManostat stochastic(_settings->manostatSettings
+    manostat::StochasticRescalingManostat stochastic(
+        _settings->manostatSettings,
+        _settings->generalSettings
     );
     testing::internal::CaptureStdout();
     for (size_t step = 0; step < 2; ++step)
@@ -305,32 +307,38 @@ TEST_F(ManostatRegression, invalidScalingPreservesSimulationState)
     // a reference, not a copy, so sharing one object would make every
     // proposal see only the values set last (e.g. overflow/underflow would
     // both end up with cutoff's target pressure and compressibility).
-    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
-    _settings->manostatSettings.setTargetPressureByUser(1.0 * bar);
-    _settings->manostatSettings.setTauByUser(1.0 * fs);
+    _settings->manostatSettings.set_fixedAxisByUser(FixedAxis::NONE);
+    _settings->manostatSettings.set_targetPressureByUser(1.0 * bar);
+    _settings->manostatSettings.set_tauByUser(1.0 * fs);
 
     auto negativeRootSettings = _settings->manostatSettings;
-    negativeRootSettings.setIsotropyByUser(Isotropy::SEMI_ISOTROPIC_XY);
-    negativeRootSettings.setCompressibilityByUser(2.0 * per_bar);
+    negativeRootSettings.set_isotropyByUser(Isotropy::SEMI_ISOTROPIC_XY);
+    negativeRootSettings.set_compressibilityByUser(2.0 * per_bar);
     manostat::SemiIsotropicBerendsenManostat negativeRoot(negativeRootSettings);
 
     auto negativeVolumeSettings = _settings->manostatSettings;
-    negativeVolumeSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
-    negativeVolumeSettings.setCompressibilityByUser(2.0 * per_bar);
+    negativeVolumeSettings.set_isotropyByUser(Isotropy::ISOTROPIC);
+    negativeVolumeSettings.set_compressibilityByUser(2.0 * per_bar);
     manostat::BerendsenManostat negativeVolume(negativeVolumeSettings);
 
     auto overflowSettings = negativeVolumeSettings;
-    overflowSettings.setTargetPressureByUser(-3000.0 * bar);
-    overflowSettings.setCompressibilityByUser(1.0 * per_bar);
-    manostat::StochasticRescalingManostat overflow(overflowSettings);
+    overflowSettings.set_targetPressureByUser(-3000.0 * bar);
+    overflowSettings.set_compressibilityByUser(1.0 * per_bar);
+    manostat::StochasticRescalingManostat overflow(
+        overflowSettings,
+        _settings->generalSettings
+    );
 
     auto underflowSettings = negativeVolumeSettings;
-    underflowSettings.setTargetPressureByUser(3000.0 * bar);
-    underflowSettings.setCompressibilityByUser(1.0 * per_bar);
-    manostat::StochasticRescalingManostat underflow(underflowSettings);
+    underflowSettings.set_targetPressureByUser(3000.0 * bar);
+    underflowSettings.set_compressibilityByUser(1.0 * per_bar);
+    manostat::StochasticRescalingManostat underflow(
+        underflowSettings,
+        _settings->generalSettings
+    );
 
     auto cutoffSettings = negativeVolumeSettings;
-    cutoffSettings.setCompressibilityByUser(0.875 * per_bar);
+    cutoffSettings.set_compressibilityByUser(0.875 * per_bar);
     manostat::BerendsenManostat cutoff(cutoffSettings);
 
     const auto proposals = std::array<manostat::Manostat*, 5>{
@@ -360,7 +368,7 @@ TEST_F(ManostatRegression, invalidScalingPreservesSimulationState)
         _addMolecule({4.95, -4.85}, 1.0);
         const auto oldCenter  = _box.getMolecule(0).getCenterOfMass();
         const auto oldDensity = _box.getDensity();
-        proposalSettings.at(i)->setIsotropyByUser(
+        proposalSettings.at(i)->set_isotropyByUser(
             i == 0 ? Isotropy::SEMI_ISOTROPIC_XY : Isotropy::ISOTROPIC
         );
         EXPECT_THROW_MSG(
@@ -463,27 +471,39 @@ TEST_F(ManostatRegression, stochasticCellModesHaveIndependentNoise)
     constexpr auto compressibility = 4.591e-5;
 
     ManostatSettings semiSettings;
-    semiSettings.setTargetPressureByUser(0.0 * bar);
-    semiSettings.setTauByUser(tau * fs);
-    semiSettings.setCompressibilityByUser(compressibility * per_bar);
-    semiSettings.setIsotropyByUser(Isotropy::SEMI_ISOTROPIC_XY);
-    semiSettings.setFixedAxisByUser(FixedAxis::NONE);
-    manostat::SemiIsotropicStochasticRescalingManostat semi(semiSettings);
+    semiSettings.set_targetPressureByUser(0.0 * bar);
+    semiSettings.set_tauByUser(tau * fs);
+    semiSettings.set_compressibilityByUser(compressibility * per_bar);
+    semiSettings.set_isotropyByUser(Isotropy::SEMI_ISOTROPIC_XY);
+    semiSettings.set_fixedAxisByUser(FixedAxis::NONE);
+    manostat::SemiIsotropicStochasticRescalingManostat semi(
+        semiSettings,
+        _settings->generalSettings
+    );
 
     ManostatSettings freeSettings;
-    freeSettings.setTargetPressureByUser(0.0 * bar);
-    freeSettings.setTauByUser(tau * fs);
-    freeSettings.setCompressibilityByUser(compressibility * per_bar);
-    freeSettings.setFixedAxisByUser(FixedAxis::NONE);
-    manostat::AnisotropicStochasticRescalingManostat     aniso(freeSettings);
-    manostat::FullAnisotropicStochasticRescalingManostat full(freeSettings);
+    freeSettings.set_targetPressureByUser(0.0 * bar);
+    freeSettings.set_tauByUser(tau * fs);
+    freeSettings.set_compressibilityByUser(compressibility * per_bar);
+    freeSettings.set_fixedAxisByUser(FixedAxis::NONE);
+    manostat::AnisotropicStochasticRescalingManostat aniso(
+        freeSettings,
+        _settings->generalSettings
+    );
+    manostat::FullAnisotropicStochasticRescalingManostat full(
+        freeSettings,
+        _settings->generalSettings
+    );
 
     ManostatSettings fixedSettings;
-    fixedSettings.setTargetPressureByUser(0.0 * bar);
-    fixedSettings.setTauByUser(tau * fs);
-    fixedSettings.setCompressibilityByUser(compressibility * per_bar);
-    fixedSettings.setFixedAxisByUser(FixedAxis::Y);
-    manostat::FullAnisotropicStochasticRescalingManostat fixed(fixedSettings);
+    fixedSettings.set_targetPressureByUser(0.0 * bar);
+    fixedSettings.set_tauByUser(tau * fs);
+    fixedSettings.set_compressibilityByUser(compressibility * per_bar);
+    fixedSettings.set_fixedAxisByUser(FixedAxis::Y);
+    manostat::FullAnisotropicStochasticRescalingManostat fixed(
+        fixedSettings,
+        _settings->generalSettings
+    );
 
     for (auto* coupling :
          std::vector<manostat::Manostat*>{&semi, &aniso, &full, &fixed})
@@ -564,13 +584,15 @@ TEST_F(ManostatRegression, stochasticRescalingRefreshesKineticsBeforeReset)
     manostat::Manostat pressure(_settings->manostatSettings);
     pressure.calculatePressure(_box, _data);
 
-    _settings->manostatSettings.setTargetPressureByUser(
+    _settings->manostatSettings.set_targetPressureByUser(
         _data.get_pressure() - (3.0 * std::log(scale) * bar)
     );
-    _settings->manostatSettings.setTauByUser(1.0 * fs);
-    _settings->manostatSettings.setCompressibilityByUser(1.0 * per_bar);
-    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
-    manostat::StochasticRescalingManostat stochastic(_settings->manostatSettings
+    _settings->manostatSettings.set_tauByUser(1.0 * fs);
+    _settings->manostatSettings.set_compressibilityByUser(1.0 * per_bar);
+    _settings->manostatSettings.set_fixedAxisByUser(FixedAxis::NONE);
+    manostat::StochasticRescalingManostat stochastic(
+        _settings->manostatSettings,
+        _settings->generalSettings
     );
     stochastic.applyManostat(
         _box,
@@ -630,10 +652,12 @@ TEST_F(ManostatRegression, atomicVirialSupportsMonatomicPressureCoupling)
     _addMolecule({-1.0}, 1e13);
     _addMolecule({1.0}, -1e13);
     _data.calculateKinetics(_box);
-    GeneralSettings::setVirialType(VirialType::ATOMIC);
-    _settings->manostatSettings.setCompressibilityByUser(0.001 * per_bar);
+    _settings->manostatSettings.set_virialByUser(VirialType::ATOMIC);
+    _settings->manostatSettings.set_compressibilityByUser(0.001 * per_bar);
     manostat::BerendsenManostat berendsen(_settings->manostatSettings);
-    manostat::StochasticRescalingManostat stochastic(_settings->manostatSettings
+    manostat::StochasticRescalingManostat stochastic(
+        _settings->manostatSettings,
+        _settings->generalSettings
     );
     EXPECT_NO_THROW(berendsen.applyManostat(
         _box,

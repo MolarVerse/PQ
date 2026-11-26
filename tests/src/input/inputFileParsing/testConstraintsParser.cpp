@@ -105,7 +105,7 @@ TEST_F(TestInputFileReader, testParseShakeTolerance)
 
     std::vector<std::string> lineElements = {"shake-tolerance", "=", "0.0001"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(constraintSettings.getShakeTolerance(), 0.0001);
+    EXPECT_EQ(constraintSettings.get_shakeTolerance(), 0.0001);
 
     _clearParser(parser);
 
@@ -145,7 +145,7 @@ TEST_F(TestInputFileReader, testParseShakeIteration)
 
     std::vector<std::string> lineElements = {"shake-iter", "=", "100"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(constraintSettings.getShakeMaxIter(), 100);
+    EXPECT_EQ(constraintSettings.get_shakeMaxIter(), 100);
 
     _clearParser(parser);
 
@@ -185,7 +185,7 @@ TEST_F(TestInputFileReader, testParseRattleTolerance)
 
     std::vector<std::string> lineElements = {"rattle-tolerance", "=", "0.0001"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(constraintSettings.getRattleTolerance(), 0.0001 * g_per_mol / s);
+    EXPECT_EQ(constraintSettings.get_rattleTolerance(), 0.0001 * g_per_mol / s);
 
     _clearParser(parser);
 
@@ -225,7 +225,7 @@ TEST_F(TestInputFileReader, testParseRattleIteration)
 
     std::vector<std::string> lineElements = {"rattle-iter", "=", "100"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(constraintSettings.getRattleMaxIter(), 100);
+    EXPECT_EQ(constraintSettings.get_rattleMaxIter(), 100);
 
     _clearParser(parser);
 
@@ -265,7 +265,7 @@ TEST_F(TestInputFileReader, testParseOptRattleTimeStep)
 
     std::vector<std::string> lineElements = {"opt-rattle-timestep", "=", "0.5"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(constraintSettings.getOptRattleTimeStep(), 0.5 * fs);
+    EXPECT_EQ(constraintSettings.get_optRattleTimeStep(), 0.5 * fs);
 
     _clearParser(parser);
 
@@ -295,7 +295,7 @@ TEST_F(TestInputFileReader, testParseMShakeTolerance)
 
     std::vector<std::string> lineElements = {"mshake-tolerance", "=", "0.01"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(constraintSettings.getMShakeTolerance(), 0.01);
+    EXPECT_EQ(constraintSettings.get_mshakeTolerance(), 0.01);
 
     _clearParser(parser);
 
@@ -335,7 +335,7 @@ TEST_F(TestInputFileReader, testParseMShakeIteration)
 
     std::vector<std::string> lineElements = {"mshake-iter", "=", "73"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(constraintSettings.getMShakeMaxIter(), 73);
+    EXPECT_EQ(constraintSettings.get_mshakeMaxIter(), 73);
 
     _clearParser(parser);
 

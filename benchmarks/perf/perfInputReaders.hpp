@@ -143,7 +143,7 @@ namespace benchInputReaders
             (directory / "topology.top").string()
         );
 
-        settings.forceFieldSettings.setTypeByUser(ForceFieldType::BONDED);
+        settings.forceFieldSettings.set_typeByUser(ForceFieldType::BONDED);
 
         std::size_t atoms = 0;
 
@@ -158,9 +158,9 @@ namespace benchInputReaders
             input::molDescriptor::MoldescriptorReader moldescriptor(engine);
             moldescriptor.read();
             input::restartFile::readRestartFile(
-                engine,
-                settings.noseHooverSettings,
-                settings.timings
+                settings,
+                engine.get_simulationBox(),
+                engine.getLogOutput()
             );
             input::topology::readTopologyFile(engine);
 

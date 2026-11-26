@@ -28,6 +28,7 @@
 #include "dftbplusRunner.hpp"
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "orcaRunner.hpp"
 #include "pyscfRunner.hpp"
 #include "qmSettings.hpp"
@@ -58,8 +59,13 @@ namespace engine
      * for the DFTB+ runner
      * @param externalQMSettings The ExternalQMSettings object containing the
      * configuration for any external QM programs that may be used by the runner
+     * @param generalSettings The GeneralSettings object containing the
+     * configuration for general computational resources and execution
+     * preferences
+     *
      * @return std::shared_ptr<QM::QMRunner> Shared pointer to the created QM
      * runner
+     *
      * @throws InputFileException if the method is not supported
      */
     std::shared_ptr<QM::QMRunner> QMRunnerManager::createQMRunner(
@@ -68,7 +74,8 @@ namespace engine
         const FennolSettings     &fennolSettings,
         const DftbSettings       &dftbSettings,
         const XtbSettings        &xtbSettings,
-        const ExternalQMSettings &externalQMSettings
+        const ExternalQMSettings &externalQMSettings,
+        const GeneralSettings    &generalSettings
     )
     {
         using enum QMMethod;
@@ -104,10 +111,19 @@ namespace engine
                     externalQMSettings
                 );
 
-            case MACE: return createAseMaceRunner(qmSettings, maceSettings);
+            case MACE:
+                return createAseMaceRunner(
+                    qmSettings,
+                    maceSettings,
+                    generalSettings
+                );
 
             case FENNOL:
-                return createAseFennolRunner(qmSettings, fennolSettings);
+                return createAseFennolRunner(
+                    qmSettings,
+                    fennolSettings,
+                    generalSettings
+                );
 
             case NONE:
                 throw exc::InputFileException(
@@ -126,16 +142,22 @@ namespace engine
      * @throws exc::CompileTimeException if ASE was not enabled at compile time
      */
     std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseMaceRunner(
-        const QMSettings   &qmSettings,
-        const MaceSettings &maceSettings
+        const QMSettings      &qmSettings,
+        const MaceSettings    &maceSettings,
+        const GeneralSettings &generalSettings
     )
     {
 #ifdef WITH_ASE
-        return std::make_shared<QM::AseMaceRunner>(qmSettings, maceSettings);
+        return std::make_shared<QM::AseMaceRunner>(
+            qmSettings,
+            maceSettings,
+            generalSettings
+        );
 #else
         // to silence unused parameter warnings when ASE is not enabled
         (void) qmSettings;
         (void) maceSettings;
+        (void) generalSettings;
         throw exc::CompileTimeException(
             "A MACE type QM method was requested but ASE was not enabled at "
             "compile time. Please recompile with ASE enabled to use MACE type "
@@ -207,19 +229,22 @@ namespace engine
      * @throws exc::CompileTimeException if ASE was not enabled at compile time
      */
     std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseFennolRunner(
-        const QMSettings     &qmSettings,
-        const FennolSettings &fennolSettings
+        const QMSettings      &qmSettings,
+        const FennolSettings  &fennolSettings,
+        const GeneralSettings &generalSettings
     )
     {
 #ifdef WITH_ASE
         return std::make_shared<QM::AseFennolRunner>(
             qmSettings,
-            fennolSettings
+            fennolSettings,
+            generalSettings
         );
 #else
         // to silence unused parameter warnings when ASE is not enabled
         (void) qmSettings;
         (void) fennolSettings;
+        (void) generalSettings;
         throw exc::CompileTimeException(
             "The ASE FeNNol QM method was requested but ASE was not enabled at "
             "compile time. Please recompile with ASE enabled to use the ASE "

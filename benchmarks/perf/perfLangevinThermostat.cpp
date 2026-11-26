@@ -46,16 +46,16 @@ static constexpr std::uint64_t ITERATIONS = 1000;
 
 int main()
 {
-    const auto timeStep = 0.001 * fs;
-    GeneralSettings::setRandomSeed(42);
-    GeneralSettings::setIsRandomSeedSet(true);
+    const auto      timeStep = 0.001 * fs;
+    GeneralSettings generalSettings;
+    generalSettings.setRandomSeedByUser(42);
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
     auto       physicalData      = physicalData::PhysicalData();
     const auto targetTemperature = toTemperature(300.0);
     benchSetup::scaleVelocitiesToTemperature(box, targetTemperature);
-    auto thermostat = thermostat::LangevinThermostat(1.0 * Hz);
+    auto thermostat = thermostat::LangevinThermostat(1.0 * Hz, generalSettings);
 
     perfAllocBegin();
 

@@ -33,6 +33,7 @@ class FennolSettings;
 class DftbSettings;
 class XtbSettings;
 class ExternalQMSettings;
+class GeneralSettings;
 
 namespace engine
 {
@@ -59,7 +60,8 @@ namespace engine
             const FennolSettings     &fennolSettings,
             const DftbSettings       &dftbSettings,
             const XtbSettings        &xtbSettings,
-            const ExternalQMSettings &externalQMSettings
+            const ExternalQMSettings &externalQMSettings,
+            const GeneralSettings    &generalSettings
         );
         [[nodiscard]] std::shared_ptr<QM::QMRunner> getQMRunner() const;
         [[nodiscard]] bool                          hasQMRunner() const;

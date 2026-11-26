@@ -39,7 +39,7 @@ TEST(TestOptimizerSettings, MaxLearningRateReturnsTheValueWhenSet)
 {
     const auto settings =
         testSettings::make<OptimizerSettings>()
-            .with(&OptimizerSettings::setMaxLearningRateByUser, 0.5)
+            .with(&OptimizerSettings::set_maxLearningRateByUser, 0.5)
             .build();
 
     EXPECT_TRUE(settings.isMaxLearningRateSetByUser());

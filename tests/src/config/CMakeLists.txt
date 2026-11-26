@@ -1,5 +1,6 @@
 set(source_files
     testDeprecations.cpp
+    testVersion.cpp
 )
 
 foreach(source_file ${source_files})

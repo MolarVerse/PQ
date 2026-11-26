@@ -22,9 +22,9 @@
 
 #include "virialInputParser.hpp"
 
-#include "generalSettings.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyRegistry.hpp"
+#include "manostatSettings.hpp"
 
 namespace input
 {
@@ -36,7 +36,11 @@ namespace input
      * @details following keywords are added to the _keywordFuncMap,
      * _keywordRequiredMap and _keywordCountMap: 1) virial "<molecular/atomic>"
      */
-    VirialInputParser::VirialInputParser() { addVirialKey(); }
+    VirialInputParser::VirialInputParser(ManostatSettings& manostatSettings)
+        : _manostatSettings(manostatSettings)
+    {
+        addVirialKey();
+    }
 
     /**
      * @brief adds virial key metadata
@@ -51,8 +55,8 @@ namespace input
             .description = "Specifies the type of virial: molecular or atomic",
         };
 
-        const auto onSet = [](VirialType virial)
-        { GeneralSettings::setVirialType(virial); };
+        const auto onSet = [this](VirialType virial)
+        { _manostatSettings->set_virialByUser(virial); };
 
         auto& key = _getRegistry().registerKey(
             KeyRegistry<VirialType>{

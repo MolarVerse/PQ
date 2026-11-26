@@ -185,7 +185,7 @@ namespace opt
      *
      * @return double
      */
-    double LearningRateStrategy::_getInitialLearningRate() const
+    double LearningRateStrategy::_get_initialLearningRate() const
     {
         return _initialLearningRate;
     }

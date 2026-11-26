@@ -31,23 +31,6 @@
 ForceFieldSettings::ForceFieldSettings() : _type(ForceFieldType::OFF) {}
 
 /**
- * @brief Get the type of the force field
- *
- * @return ForceFieldType
- */
-ForceFieldType ForceFieldSettings::getType() const { return _type.get(); }
-
-/**
- * @brief Set the type of the force field
- *
- * @param value
- */
-void ForceFieldSettings::setTypeByUser(ForceFieldType value)
-{
-    _type.setByUser(value);
-}
-
-/**
  * @brief Get if the force field is active
  *
  * @return ForceFieldType

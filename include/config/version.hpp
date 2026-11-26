@@ -31,7 +31,10 @@ using SemVer = mstd::SemVerWithPrefix;
 static constexpr SemVer CURRENT_VERSION = SemVer::from_string(COMPILE_VERSION_);
 #undef COMPILE_VERSION_
 
+constexpr auto v0_0_0 = SemVer{{.major = 0, .minor = 0, .patch = 0}};
 constexpr auto v1_1_0 = SemVer{{.major = 1, .minor = 1, .patch = 0}};
 constexpr auto v2_0_0 = SemVer{{.major = 2, .minor = 0, .patch = 0}};
+
+[[nodiscard]] bool isValid(const SemVer& version);
 
 #endif   // CONFIG__VERSION_HPP

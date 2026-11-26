@@ -38,14 +38,15 @@
 class ResetKineticsSettings
 {
    private:
-    Setting<size_t>  _nScale;
-    Setting<size_t>  _fScale;
-    Setting<size_t>  _nReset;
-    Setting<size_t>  _fReset;
-    Setting<size_t>  _nResetAngular;
-    Setting<size_t>  _fResetAngular;
-    Setting<size_t>  _fResetForces;
-    Setting<Percent> _momentumWarnThreshold;
+    Setting<size_t, "Number of initial temperature scaling steps"> _nScale;
+    Setting<size_t, "Frequency of temperaturescaling steps">       _fScale;
+    Setting<size_t, "Number of initial momentum reset steps">      _nReset;
+    Setting<size_t, "Frequency of momentum reset steps">           _fReset;
+    Setting<size_t, "Number of initial angular momentum reset steps">
+                                                                 _nResetAngular;
+    Setting<size_t, "Frequency of angular momentum reset steps"> _fResetAngular;
+    Setting<size_t, "Frequency of force reset steps">            _fResetForces;
+    Setting<Percent, "Momentum warning threshold"> _momentumWarnThreshold;
 
    public:
     ResetKineticsSettings();

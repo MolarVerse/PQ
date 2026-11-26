@@ -43,7 +43,7 @@ TEST(testHybridConfigurator, calculateInnerRegionCenterAndShiftAtoms)
     HybridSettings                   hybridSettings;
     configurator::HybridConfigurator hybridConfigurator{hybridSettings};
     molsys::SimulationBox            simBox;
-    hybridSettings.setInnerRegionCenterByUser({});
+    hybridSettings.set_innerRegionCenterByUser({});
 
     EXPECT_THROW_MSG(
         hybridConfigurator.calculateInnerRegionCenter(simBox),
@@ -83,7 +83,7 @@ TEST(testHybridConfigurator, calculateInnerRegionCenterAndShiftAtoms)
         {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
     };
     simBox.setBox(orthoBox, false);
-    hybridSettings.setInnerRegionCenterByUser({0, 1, 2});
+    hybridSettings.set_innerRegionCenterByUser({0, 1, 2});
 
     hybridConfigurator.calculateInnerRegionCenter(simBox);
 
@@ -143,10 +143,10 @@ TEST(testHybridConfigurator, calculateInnerRegionCenterAndShiftAtoms)
 TEST(testHybridConfigurator, assignHybridZones)
 {
     HybridSettings hybridSettings;
-    hybridSettings.setCoreRadiusByUser(6.0 * angstrom);
-    hybridSettings.setLayerRadiusByUser(12.0 * angstrom);
-    hybridSettings.setSmoothingRegionThicknessByUser(2.0 * angstrom);
-    hybridSettings.setPointChargeThicknessByUser(7.0 * angstrom);
+    hybridSettings.set_coreRadiusByUser(6.0 * angstrom);
+    hybridSettings.set_layerRadiusByUser(12.0 * angstrom);
+    hybridSettings.set_smoothingRegionThicknessByUser(2.0 * angstrom);
+    hybridSettings.set_pointChargeThicknessByUser(7.0 * angstrom);
     configurator::HybridConfigurator hybridConfigurator{hybridSettings};
     molsys::SimulationBox            simBox;
 
@@ -230,10 +230,10 @@ TEST(testHybridConfigurator, assignHybridZonesCoreZero)
     };
     simBox.setBox(orthoBox, false);
 
-    hybridSettings.setCoreRadiusByUser(0.0 * angstrom);
-    hybridSettings.setLayerRadiusByUser(7.0 * angstrom);
-    hybridSettings.setSmoothingRegionThicknessByUser(0.2 * angstrom);
-    hybridSettings.setPointChargeThicknessByUser(7.0 * angstrom);
+    hybridSettings.set_coreRadiusByUser(0.0 * angstrom);
+    hybridSettings.set_layerRadiusByUser(7.0 * angstrom);
+    hybridSettings.set_smoothingRegionThicknessByUser(0.2 * angstrom);
+    hybridSettings.set_pointChargeThicknessByUser(7.0 * angstrom);
 
     auto atom = std::make_shared<molsys::Atom>();
     atom->setPosition(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom);
@@ -249,7 +249,7 @@ TEST(testHybridConfigurator, assignHybridZonesCoreZero)
     using enum molsys::HybridZone;
     EXPECT_EQ(simBox.getMolecule(0).getHybridZone(), LAYER);
 
-    hybridSettings.setCoreRadiusByUser(0.00001 * angstrom);
+    hybridSettings.set_coreRadiusByUser(0.00001 * angstrom);
     hybridConfigurator.assignHybridZones(simBox);
 
     EXPECT_EQ(simBox.getMolecule(0).getHybridZone(), CORE);
@@ -266,10 +266,10 @@ TEST(testHybridConfigurator, forcedZonesOverrideDistanceAssignment)
     };
     simBox.setBox(orthoBox, false);
 
-    hybridSettings.setCoreRadiusByUser(2.0 * angstrom);
-    hybridSettings.setLayerRadiusByUser(4.0 * angstrom);
-    hybridSettings.setSmoothingRegionThicknessByUser(1.0 * angstrom);
-    hybridSettings.setPointChargeThicknessByUser(2.0 * angstrom);
+    hybridSettings.set_coreRadiusByUser(2.0 * angstrom);
+    hybridSettings.set_layerRadiusByUser(4.0 * angstrom);
+    hybridSettings.set_smoothingRegionThicknessByUser(1.0 * angstrom);
+    hybridSettings.set_pointChargeThicknessByUser(2.0 * angstrom);
 
     auto makeMolecule = [](const linalg::Vec3D &position)
     {
@@ -397,8 +397,8 @@ TEST(testHybridConfigurator, calculateSmoothingFactors)
     };
     simBox.setBox(orthoBox, false);
 
-    hybridSettings.setLayerRadiusByUser(12.0 * angstrom);
-    hybridSettings.setSmoothingRegionThicknessByUser(2.0 * angstrom);
+    hybridSettings.set_layerRadiusByUser(12.0 * angstrom);
+    hybridSettings.set_smoothingRegionThicknessByUser(2.0 * angstrom);
 
     using enum molsys::HybridZone;
 
@@ -507,7 +507,7 @@ TEST(testHybridConfigurator, restorePositionsRefreshesMoleculeCenters)
         box.addMolecule(molecule);
     }
     HybridSettings hybridSettings;
-    hybridSettings.setInnerRegionCenterByUser({0});
+    hybridSettings.set_innerRegionCenterByUser({0});
     configurator::HybridConfigurator configurator{hybridSettings};
     configurator.calculateInnerRegionCenter(box);
     configurator.shiftAtomsToInnerRegionCenter(box);

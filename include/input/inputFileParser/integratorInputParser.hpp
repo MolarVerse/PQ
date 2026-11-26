@@ -40,13 +40,13 @@ namespace input
      */
     class IntegratorInputParser : public InputFileParser
     {
-        mstd::Ref<ReferenceSettings>    _referenceSettings;
-        mstd::ConstRef<GeneralSettings> _generalSettings;
+        mstd::Ref<ReferenceSettings> _referenceSettings;
+        mstd::Ref<GeneralSettings>   _generalSettings;
 
        public:
         explicit IntegratorInputParser(
-            ReferenceSettings&     referenceSettings,
-            const GeneralSettings& generalSettings
+            ReferenceSettings& referenceSettings,
+            GeneralSettings&   generalSettings
         );
 
         void addIntegratorKey();

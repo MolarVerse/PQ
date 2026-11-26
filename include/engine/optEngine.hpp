@@ -91,7 +91,7 @@ namespace engine
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] opt::Optimizer            &getOptimizer();
+        [[nodiscard]] opt::Optimizer            &get_optimizer();
         [[nodiscard]] opt::LearningRateStrategy &getLearningRate();
         [[nodiscard]] opt::Evaluator            &getEvaluator();
         [[nodiscard]] opt::Convergence          &getConvergence();

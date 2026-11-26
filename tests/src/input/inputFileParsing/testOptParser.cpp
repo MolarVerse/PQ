@@ -50,12 +50,12 @@ TEST_F(TestInputFileReader, parserOptimizer)
     const auto& parseFunc = funcMap.at("optimizer");
 
     parseFunc({"optimizer", "=", "steepest-descent"}, 0);
-    EXPECT_EQ(optimizerSettings.getOptimizer(), STEEPEST_DESCENT);
+    EXPECT_EQ(optimizerSettings.get_optimizer(), STEEPEST_DESCENT);
 
     _clearParser(parser);
 
     parseFunc({"optimizer", "=", "adam"}, 0);
-    EXPECT_EQ(optimizerSettings.getOptimizer(), ADAM);
+    EXPECT_EQ(optimizerSettings.get_optimizer(), ADAM);
 
     _clearParser(parser);
 
@@ -82,7 +82,7 @@ TEST_F(TestInputFileReader, parserLearningRateStrategy)
 
     OptimizerSettings optimizerSettings;
 
-    EXPECT_EQ(optimizerSettings.getLearningRateStrategy(), EXPONENTIAL_DECAY);
+    EXPECT_EQ(optimizerSettings.get_lRStrategy(), EXPONENTIAL_DECAY);
 
     auto       parser  = input::OptInputParser(optimizerSettings);
     const auto funcMap = parser.getKeywordFuncMap();
@@ -90,27 +90,27 @@ TEST_F(TestInputFileReader, parserLearningRateStrategy)
     const auto& parseFunc = funcMap.at("learning_rate_strategy");
 
     parseFunc({"learning-rate-strategy", "=", "constant-decay"}, 0);
-    EXPECT_EQ(optimizerSettings.getLearningRateStrategy(), CONSTANT_DECAY);
+    EXPECT_EQ(optimizerSettings.get_lRStrategy(), CONSTANT_DECAY);
 
     _clearParser(parser);
 
     parseFunc({"learning-rate-strategy", "=", "constant"}, 0);
-    EXPECT_EQ(optimizerSettings.getLearningRateStrategy(), CONSTANT);
+    EXPECT_EQ(optimizerSettings.get_lRStrategy(), CONSTANT);
 
     _clearParser(parser);
 
     parseFunc({"learning-rate-strategy", "=", "exponential-decay"}, 0);
-    EXPECT_EQ(optimizerSettings.getLearningRateStrategy(), EXPONENTIAL_DECAY);
+    EXPECT_EQ(optimizerSettings.get_lRStrategy(), EXPONENTIAL_DECAY);
 
     _clearParser(parser);
 
     parseFunc({"learning-rate-strategy", "=", "lineSearch-wolfe"}, 0);
-    EXPECT_EQ(optimizerSettings.getLearningRateStrategy(), LINESEARCH_WOLFE);
+    EXPECT_EQ(optimizerSettings.get_lRStrategy(), LINESEARCH_WOLFE);
 
     _clearParser(parser);
 
     parseFunc({"learning-rate-strategy", "=", "linesearch"}, 0);
-    EXPECT_EQ(optimizerSettings.getLearningRateStrategy(), LINESEARCH_WOLFE);
+    EXPECT_EQ(optimizerSettings.get_lRStrategy(), LINESEARCH_WOLFE);
 
     _clearParser(parser);
 
@@ -133,11 +133,11 @@ TEST_F(TestInputFileReader, parserInitialLearningRate)
 {
     OptimizerSettings optimizerSettings;
     EXPECT_EQ(
-        optimizerSettings.getInitialLearningRate(),
+        optimizerSettings.get_initialLearningRate(),
         defaults::INITIAL_LEARNING_RATE_DEFAULT
     );
 
-    optimizerSettings.setInitialLearningRateByUser(0.0);
+    optimizerSettings.set_initialLearningRateByUser(0.0);
 
     auto       parser  = input::OptInputParser(optimizerSettings);
     const auto funcMap = parser.getKeywordFuncMap();
@@ -145,7 +145,7 @@ TEST_F(TestInputFileReader, parserInitialLearningRate)
     const auto& parseFunc = funcMap.at("initial_learning_rate");
 
     parseFunc({"initial-learning-rate", "=", "0.99"}, 0);
-    EXPECT_EQ(optimizerSettings.getInitialLearningRate(), 0.99);
+    EXPECT_EQ(optimizerSettings.get_initialLearningRate(), 0.99);
 
     _clearParser(parser);
 
@@ -169,7 +169,7 @@ TEST_F(TestInputFileReader, parserLearningRateDecay)
     OptimizerSettings optimizerSettings;
     EXPECT_FALSE(optimizerSettings.isLearningRateDecaySetByUser());
 
-    optimizerSettings.setLearningRateDecayByUser(0.0);
+    optimizerSettings.set_learningRateDecayByUser(0.0);
 
     auto       parser  = input::OptInputParser(optimizerSettings);
     const auto funcMap = parser.getKeywordFuncMap();
@@ -177,7 +177,7 @@ TEST_F(TestInputFileReader, parserLearningRateDecay)
     const auto& parseFunc = funcMap.at("learning_rate_decay");
 
     parseFunc({"learning-rate-decay", "=", "0.99"}, 0);
-    EXPECT_EQ(optimizerSettings.getLearningRateDecay(), 0.99);
+    EXPECT_EQ(optimizerSettings.get_learningRateDecay(), 0.99);
 
     _clearParser(parser);
 
@@ -202,7 +202,7 @@ TEST_F(TestInputFileReader, parserMaxLearningRate)
 
     EXPECT_FALSE(optimizerSettings.isMaxLearningRateSetByUser());
 
-    optimizerSettings.setMaxLearningRateByUser(0.0);
+    optimizerSettings.set_maxLearningRateByUser(0.0);
 
     auto       parser  = input::OptInputParser(optimizerSettings);
     const auto funcMap = parser.getKeywordFuncMap();
@@ -236,11 +236,11 @@ TEST_F(TestInputFileReader, parserLRUpdateFrequency)
 {
     OptimizerSettings optimizerSettings;
     EXPECT_EQ(
-        optimizerSettings.getLRUpdateFrequency(),
+        optimizerSettings.get_lRupdateFrequency(),
         defaults::LR_UPDATE_FREQUENCY_DEFAULT
     );
 
-    optimizerSettings.setLRUpdateFrequencyByUser(0);
+    optimizerSettings.set_lRupdateFrequencyByUser(0);
 
     auto       parser  = input::OptInputParser(optimizerSettings);
     const auto funcMap = parser.getKeywordFuncMap();
@@ -248,7 +248,7 @@ TEST_F(TestInputFileReader, parserLRUpdateFrequency)
     const auto& parseFunc = funcMap.at("learning_rate_update_freq");
 
     parseFunc({"lr-update-frequency", "=", "100"}, 0);
-    EXPECT_EQ(optimizerSettings.getLRUpdateFrequency(), 100);
+    EXPECT_EQ(optimizerSettings.get_lRupdateFrequency(), 100);
 
     _clearParser(parser);
 
@@ -270,11 +270,11 @@ TEST_F(TestInputFileReader, parserMinLearningRate)
 {
     OptimizerSettings optimizerSettings;
     EXPECT_EQ(
-        optimizerSettings.getMinLearningRate(),
+        optimizerSettings.get_minLearningRate(),
         defaults::MIN_LEARNING_RATE_DEFAULT
     );
 
-    optimizerSettings.setMinLearningRateByUser(0.0);
+    optimizerSettings.set_minLearningRateByUser(0.0);
 
     auto       parser  = input::OptInputParser(optimizerSettings);
     const auto funcMap = parser.getKeywordFuncMap();
@@ -282,7 +282,7 @@ TEST_F(TestInputFileReader, parserMinLearningRate)
     const auto& parseFunc = funcMap.at("min_learning_rate");
 
     parseFunc({"min-learning-rate", "=", "0.99"}, 0);
-    EXPECT_EQ(optimizerSettings.getMinLearningRate(), 0.99);
+    EXPECT_EQ(optimizerSettings.get_minLearningRate(), 0.99);
 
     _clearParser(parser);
 

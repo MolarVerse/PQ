@@ -35,24 +35,19 @@
 class ForceFieldSettings
 {
    private:
-    Setting<ForceFieldType> _type;
+    Setting<ForceFieldType, "Force Field Type"> _type;
 
    public:
     ForceFieldSettings();
+
+    SETTING_GETTER_AND_SETTER_BY_USER(_type);
 
     /********************
      * standard getters *
      ********************/
 
-    [[nodiscard]] bool           isActive() const;
-    [[nodiscard]] bool           isNonCoulombicActive() const;
-    [[nodiscard]] ForceFieldType getType() const;
-
-    /********************
-     * standard setters *
-     ********************/
-
-    void setTypeByUser(ForceFieldType value);
+    [[nodiscard]] bool isActive() const;
+    [[nodiscard]] bool isNonCoulombicActive() const;
 };
 
 #endif   // SETTINGS__FORCE_FIELD_SETTINGS_HPP

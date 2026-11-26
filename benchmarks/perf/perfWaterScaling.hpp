@@ -187,7 +187,7 @@ namespace benchWaterScaling
             settings.potentialSettings
         );
 
-        GeneralSettings::activateCellList();
+        settings.generalSettings.activateCellListByUser();
         molsys::CellList cellList;
         cellList.setNumberOfCells(numberOfCells);
         cellList.resizeCells();
@@ -206,7 +206,8 @@ namespace benchWaterScaling
         {
             cellList.updateCellList(
                 simBox,
-                settings.potentialSettings.getCoulombRadiusCutoff()
+                settings.potentialSettings.getCoulombRadiusCutoff(),
+                settings.generalSettings
             );
             interWater.calculate(
                 simBox,

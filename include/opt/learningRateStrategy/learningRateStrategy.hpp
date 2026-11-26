@@ -90,7 +90,7 @@ namespace opt
 
        protected:
         [[nodiscard]]
-        double _getInitialLearningRate() const;
+        double _get_initialLearningRate() const;
 
         [[nodiscard]]
         size_t _getFrequency() const;

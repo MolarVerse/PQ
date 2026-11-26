@@ -24,6 +24,7 @@
 #define SETTINGS__HYBRID_SETTINGS_HPP
 
 #include <mstd/units/new_units.hpp>
+#include <mstd/utils/members.hpp>
 #include <optional>
 #include <string>
 #include <vector>
@@ -44,63 +45,57 @@ class HybridSettings
    private:
     bool _isActive{false};
 
-    Setting<std::vector<size_t>> _innerRegionCenter{std::vector<size_t>{0}};
-    Setting<std::vector<int>>    _forcedCoreList{std::vector<int>{}};
-    Setting<std::vector<int>>    _forcedLayerList{std::vector<int>{}};
-    Setting<std::vector<int>>    _forcedOuterList{std::vector<int>{}};
-    std::optional<std::string>   _innerRegionCenterExpression;
+    Setting<std::vector<size_t>, "Inner Region Center"> _innerRegionCenter{
+        std::vector<size_t>{0}
+    };
+    Setting<std::vector<int>, "Forced Core List"> _forcedCoreList{
+        std::vector<int>{}
+    };
+    Setting<std::vector<int>, "Forced Layer List"> _forcedLayerList{
+        std::vector<int>{}
+    };
+    Setting<std::vector<int>, "Forced Outer List"> _forcedOuterList{
+        std::vector<int>{}
+    };
+    std::optional<std::string> _innerRegionCenterExpression;
 
-    Setting<bool> _useQMCharges{true};
+    Setting<bool, "Use QM Charges"> _useQMCharges{true};
 
-    Setting<Distance> _coreRadius{0.0 * mstd::units::angstrom};
-    Setting<Distance> _layerRadius{0.0 * mstd::units::angstrom};
-    Setting<Distance> _smoothingRegionThickness{0.0 * mstd::units::angstrom};
-    Setting<Distance> _pointChargeThickness{0.0 * mstd::units::angstrom};
+    Setting<Distance, "Core Radius">  _coreRadius{0.0 * mstd::units::angstrom};
+    Setting<Distance, "Layer Radius"> _layerRadius{0.0 * mstd::units::angstrom};
+    Setting<Distance, "Smoothing Region Thickness"> _smoothingRegionThickness{
+        0.0 * mstd::units::angstrom
+    };
+    Setting<Distance, "Point Charge Thickness"> _pointChargeThickness{
+        0.0 * mstd::units::angstrom
+    };
 
-    Setting<SmoothingMethod> _smoothing{SmoothingMethod::HOTSPOT};
-    Setting<QMForceDist>     _qmForceDist{QMForceDist::EQUAL};
+    Setting<SmoothingMethod, "Smoothing Method"> _smoothing{
+        SmoothingMethod::HOTSPOT
+    };
+    Setting<QMForceDist, "QM Force Distribution"> _qmForceDist{
+        QMForceDist::EQUAL
+    };
 
    public:
     void finalize(const FileSettings &fileSettings, JobType jobType);
 
-    /********************
-     * standard setters *
-     ********************/
+    SETTING_GETTER_AND_SETTER_BY_USER(_innerRegionCenter);
+    CONST_GETTER_SETTER(_innerRegionCenterExpression);
 
-    void setInnerRegionCenterByUser(const std::vector<size_t> &);
-    void setInnerRegionCenterExpression(const std::string &);
-    void setForcedCoreListByUser(const std::vector<int> &);
-    void setForcedLayerListByUser(const std::vector<int> &);
-    void setForcedOuterListByUser(const std::vector<int> &);
+    SETTING_GETTER_AND_SETTER_BY_USER(_forcedCoreList);
+    SETTING_GETTER_AND_SETTER_BY_USER(_forcedLayerList);
+    SETTING_GETTER_AND_SETTER_BY_USER(_forcedOuterList);
 
-    void setUseQMChargesByUser(bool useQMCharges);
+    SETTING_GETTER_AND_SETTER_BY_USER(_useQMCharges);
 
-    void setCoreRadiusByUser(const Distance &radius);
-    void setLayerRadiusByUser(const Distance &radius);
-    void setSmoothingRegionThicknessByUser(const Distance &thickness);
-    void setPointChargeThicknessByUser(const Distance &radius);
+    SETTING_GETTER_AND_SETTER_BY_USER(_coreRadius);
+    SETTING_GETTER_AND_SETTER_BY_USER(_layerRadius);
+    SETTING_GETTER_AND_SETTER_BY_USER(_smoothingRegionThickness);
+    SETTING_GETTER_AND_SETTER_BY_USER(_pointChargeThickness);
 
-    void setSmoothingMethodByUser(SmoothingMethod method);
-    void setQMForceDistByUser(QMForceDist method);
-
-    /********************
-     * standard getters *
-     ********************/
-
-    [[nodiscard]] const std::vector<size_t> &getInnerRegionCenter() const;
-    [[nodiscard]] const std::vector<int>    &getForcedCoreList() const;
-    [[nodiscard]] const std::vector<int>    &getForcedLayerList() const;
-    [[nodiscard]] const std::vector<int>    &getForcedOuterList() const;
-
-    [[nodiscard]] bool getUseQMCharges() const;
-
-    [[nodiscard]] const Distance &getCoreRadius() const;
-    [[nodiscard]] const Distance &getLayerRadius() const;
-    [[nodiscard]] const Distance &getSmoothingRegionThickness() const;
-    [[nodiscard]] const Distance &getPointChargeThickness() const;
-
-    [[nodiscard]] SmoothingMethod getSmoothingMethod() const;
-    [[nodiscard]] QMForceDist     getQMForceDist() const;
+    SETTING_GETTER_AND_SETTER_BY_USER(_smoothing);
+    SETTING_GETTER_AND_SETTER_BY_USER(_qmForceDist);
 
     [[nodiscard]] bool isActive() const;
 };

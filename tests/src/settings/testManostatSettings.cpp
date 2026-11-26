@@ -30,22 +30,22 @@
 TEST(ManostatSettingsTest, DoubleSettersAndGetters)
 {
     ManostatSettings settings;
-    settings.setTargetPressureByUser(2.5 * bar);
-    EXPECT_EQ(settings.getTargetPressure(), 2.5 * bar);
+    settings.set_targetPressureByUser(2.5 * bar);
+    EXPECT_EQ(settings.get_targetPressure(), 2.5 * bar);
 
-    settings.setTauByUser(1.5 * ps);
-    EXPECT_EQ(settings.getTau(), 1.5 * ps);
+    settings.set_tauByUser(1.5 * ps);
+    EXPECT_EQ(settings.get_tau(), 1.5 * ps);
 
-    settings.setCompressibilityByUser(4.5e-5 / bar);
-    EXPECT_EQ(settings.getCompressibility(), 4.5e-5 / bar);
+    settings.set_compressibilityByUser(4.5e-5 / bar);
+    EXPECT_EQ(settings.get_compressibility(), 4.5e-5 / bar);
 }
 
 TEST(ManostatSettingsTest, SetFixedAxisViaEnum)
 {
     ManostatSettings settings;
 
-    settings.setFixedAxisByUser(FixedAxis::XY);
-    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::XY);
+    settings.set_fixedAxisByUser(FixedAxis::XY);
+    EXPECT_EQ(settings.get_fixedAxis(), FixedAxis::XY);
 }
 
 TEST(ManostatSettingsTest, FixedAxisBitwiseOperators)
@@ -100,33 +100,33 @@ TEST(ManostatSettingsTest, FixedAxisDefaultBehavior)
 {
     // When no manostat is selected and fixed axis was not set, default is ALL
     ManostatSettings settings;
-    settings.setManostatTypeByUser(ManostatType::NONE);
+    settings.set_manostatTypeByUser(ManostatType::NONE);
     ReferenceSettings referenceSettings;
     settings.finalize(referenceSettings);
-    EXPECT_EQ(settings.getFixedAxis(), FixedAxis::ALL);
+    EXPECT_EQ(settings.get_fixedAxis(), FixedAxis::ALL);
 
     // When manostat is selected, default becomes NONE
     ManostatSettings settings2;
-    settings2.setManostatTypeByUser(ManostatType::BERENDSEN);
+    settings2.set_manostatTypeByUser(ManostatType::BERENDSEN);
     settings2.finalize(referenceSettings);
-    EXPECT_EQ(settings2.getFixedAxis(), FixedAxis::NONE);
+    EXPECT_EQ(settings2.get_fixedAxis(), FixedAxis::NONE);
 
     ManostatSettings settings3;
-    settings3.setManostatTypeByUser(ManostatType::STOCHASTIC_RESCALING);
+    settings3.set_manostatTypeByUser(ManostatType::STOCHASTIC_RESCALING);
     settings3.finalize(referenceSettings);
-    EXPECT_EQ(settings3.getFixedAxis(), FixedAxis::NONE);
+    EXPECT_EQ(settings3.get_fixedAxis(), FixedAxis::NONE);
 
     // When explicitly set, it overrides the default and remains set
     ManostatSettings settings4;
-    settings4.setManostatTypeByUser(ManostatType::BERENDSEN);
-    settings4.setFixedAxisByUser(FixedAxis::Z);
+    settings4.set_manostatTypeByUser(ManostatType::BERENDSEN);
+    settings4.set_fixedAxisByUser(FixedAxis::Z);
     settings4.finalize(referenceSettings);
-    EXPECT_EQ(settings4.getFixedAxis(), FixedAxis::Z);
+    EXPECT_EQ(settings4.get_fixedAxis(), FixedAxis::Z);
 
     // Changing manostat type does not override explicitly set fixed axis
-    settings4.setManostatTypeByUser(ManostatType::BERENDSEN);
+    settings4.set_manostatTypeByUser(ManostatType::BERENDSEN);
     settings4.finalize(referenceSettings);
-    EXPECT_EQ(settings4.getFixedAxis(), FixedAxis::Z);
+    EXPECT_EQ(settings4.get_fixedAxis(), FixedAxis::Z);
 }
 
 /**
@@ -136,7 +136,7 @@ TEST(ManostatSettingsTest, FixedAxisDefaultBehavior)
 TEST(ManostatSettingsTest, FinalizeAddsReferenceFileForManostatType)
 {
     ManostatSettings berendsen;
-    berendsen.setManostatTypeByUser(ManostatType::BERENDSEN);
+    berendsen.set_manostatTypeByUser(ManostatType::BERENDSEN);
     ReferenceSettings berendsenReferences;
     berendsen.finalize(berendsenReferences);
     EXPECT_TRUE(berendsenReferences.getReferenceFileNames().contains(
@@ -144,7 +144,7 @@ TEST(ManostatSettingsTest, FinalizeAddsReferenceFileForManostatType)
     ));
 
     ManostatSettings stochasticRescaling;
-    stochasticRescaling.setManostatTypeByUser(
+    stochasticRescaling.set_manostatTypeByUser(
         ManostatType::STOCHASTIC_RESCALING
     );
     ReferenceSettings stochasticReferences;
@@ -175,7 +175,7 @@ TEST(ManostatSettingsTest, FinalizeAddsNoReferenceFileWhenManostatTypeUnset)
 TEST(ManostatSettingsTest, FinalizeAddsNoReferenceFileForManostatTypeNone)
 {
     ManostatSettings settings;
-    settings.setManostatTypeByUser(ManostatType::NONE);
+    settings.set_manostatTypeByUser(ManostatType::NONE);
 
     ReferenceSettings referenceSettings;
     settings.finalize(referenceSettings);

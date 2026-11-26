@@ -45,13 +45,13 @@ static constexpr std::uint64_t ITERATIONS = 1000;
 
 int main()
 {
-    GeneralSettings::setRandomSeed(42);
-    GeneralSettings::setIsRandomSeedSet(true);
+    GeneralSettings generalSettings;
+    generalSettings.setRandomSeedByUser(42);
     const auto targetTemperature = toTemperature(300.0);
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
-    auto maxwellBoltzmann = maxwellBoltzmann::MaxwellBoltzmann();
+    auto maxwellBoltzmann = maxwellBoltzmann::MaxwellBoltzmann(generalSettings);
 
     perfAllocBegin();
 
