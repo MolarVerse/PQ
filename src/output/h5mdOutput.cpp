@@ -70,7 +70,6 @@ namespace out
     struct H5mdOutput::Impl
     {
         hdf5::Handle file;
-        double       timeStep;
         std::size_t  nAtoms = 0;
 
         std::unique_ptr<hdf5::Element<double>> box;
@@ -82,10 +81,10 @@ namespace out
 
         std::vector<float> buffer;
 
-        Impl(const std::string &filename, bool overwrite, double timeStepInFs);
+        Impl(const std::string &filename, bool overwrite);
 
         void init(const Frame &frame);
-        void write(const Frame &frame, std::size_t step);
+        void write(const Frame &frame, std::size_t step, const Time &time);
 
         template <typename Get>
         void appendVectors(
@@ -103,11 +102,7 @@ namespace out
      * @param overwrite whether an existing file may be replaced
      * @param timeStepInFs
      */
-    H5mdOutput::Impl::Impl(
-        const std::string &filename,
-        bool               overwrite,
-        double             timeStepInFs
-    )
+    H5mdOutput::Impl::Impl(const std::string &filename, bool overwrite)
         : file(
               H5Fcreate(
                   filename.c_str(),
@@ -116,8 +111,7 @@ namespace out
                   H5P_DEFAULT
               ),
               H5Fclose
-          ),
-          timeStep(timeStepInFs)
+          )
     {
         const auto h5md = hdf5::createGroup(file.get(), "h5md");
         hdf5::writeAttribute(h5md.get(), "version", std::vector<int>{1, 1});
@@ -253,7 +247,11 @@ namespace out
      *
      * @throw InputFileException if the number of atoms changed
      */
-    void H5mdOutput::Impl::write(const Frame &frame, std::size_t step)
+    void H5mdOutput::Impl::write(
+        const Frame &frame,
+        size_t       step,
+        const Time  &time
+    )
     {
         if (nAtoms == 0)
         {
@@ -268,20 +266,23 @@ namespace out
         }
 
         const auto stepValue = static_cast<std::int64_t>(step);
-        const auto time      = static_cast<double>(step) * timeStep;
 
         // H5MD edges are the box vectors as rows
         const auto edges = linalg::transpose(frame.box->getBoxMatrix())
                                .numerical_value_in(angstrom)
                                .toStdVector();
 
-        box->append(stepValue, time, std::span<const double>{edges});
+        box->append(
+            stepValue,
+            time.numerical_value_in(fs),
+            std::span<const double>{edges}
+        );
 
         const auto &atoms = frame.atoms;
         appendVectors(
             *position,
             stepValue,
-            time,
+            time.numerical_value_in(fs),
             [&](std::size_t atomIndex)
             {
                 return frame.box->wrapPositionIntoBox(atoms[atomIndex].position)
@@ -291,7 +292,7 @@ namespace out
         appendVectors(
             *velocity,
             stepValue,
-            time,
+            time.numerical_value_in(fs),
             [&](std::size_t atomIndex)
             {
                 return atoms[atomIndex].velocity.numerical_value_in(
@@ -302,7 +303,7 @@ namespace out
         appendVectors(
             *force,
             stepValue,
-            time,
+            time.numerical_value_in(fs),
             [&](std::size_t atomIndex)
             {
                 return atoms[atomIndex].force.numerical_value_in(
@@ -319,14 +320,17 @@ namespace out
         }
         charge->append(
             stepValue,
-            time,
+            time.numerical_value_in(fs),
             std::span<const float>{buffer.data(), nAtoms}
         );
 
         const auto energy =
             frame.potentialEnergy.numerical_value_in(kcal_per_mol);
-        potentialEnergy
-            ->append(stepValue, time, std::span<const double>{&energy, 1});
+        potentialEnergy->append(
+            stepValue,
+            time.numerical_value_in(fs),
+            std::span<const double>{&energy, 1}
+        );
 
         hdf5::check(H5Fflush(file.get(), H5F_SCOPE_LOCAL));
     }
@@ -340,11 +344,7 @@ namespace out
      *
      * @throw InputFileException if the file exists and overwrite is false
      */
-    H5mdOutput::H5mdOutput(
-        const std::string &filename,
-        bool               overwrite,
-        double             timeStep
-    )
+    H5mdOutput::H5mdOutput(const std::string &filename, bool overwrite)
     {
         if (!overwrite && std::filesystem::exists(filename))
         {
@@ -353,7 +353,7 @@ namespace out
             );
         }
 
-        _impl = std::make_unique<Impl>(filename, overwrite, timeStep);
+        _impl = std::make_unique<Impl>(filename, overwrite);
     }
 
     /**
@@ -362,9 +362,9 @@ namespace out
      * @param frame
      * @param step
      */
-    void H5mdOutput::write(const Frame &frame, size_t step)
+    void H5mdOutput::write(const Frame &frame, size_t step, const Time &time)
     {
-        _impl->write(frame, step);
+        _impl->write(frame, step, time);
     }
 
 }   // namespace out

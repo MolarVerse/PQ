@@ -112,6 +112,42 @@ namespace exc
     using WaterModelException =
         BaseException<Color::Code::FG_RED, ExceptionType::WaterModelError>;
 
+    /**
+     * @class InternalException
+     *
+     * @brief Exception for internal errors that should never happen
+     *
+     * Indicates a bug in PQ rather than a user mistake. A hint to report the
+     * problem to the developers is appended to every message.
+     */
+    class InternalException : public BaseException<
+                                  Color::Code::FG_RED,
+                                  ExceptionType::InternalError>
+    {
+       private:
+        static constexpr std::string_view _reportHint =
+            "\nOoooops! Something went wrong internally. Please check your "
+            "input files and report this issue to the developers via "
+            "https://github.com/MolarVerse/PQ/issues";
+
+       public:
+        explicit InternalException(std::string_view message)
+            : BaseException(std::string(message) + std::string(_reportHint))
+        {
+        }
+
+        explicit InternalException(
+            std::string_view      message,
+            std::optional<size_t> lineNumber
+        )
+            : BaseException(
+                  std::string(message) + std::string(_reportHint),
+                  lineNumber
+              )
+        {
+        }
+    };
+
 }   // namespace exc
 
 #endif   // EXCEPTIONS__EXCEPTIONS_HPP

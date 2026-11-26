@@ -34,11 +34,6 @@
 #include "throwWithMessage.hpp"
 #include "version.hpp"
 
-namespace
-{
-    const auto metaDataKeyword = std::string(RestartFileMetaDataKeyWord);
-}   // namespace
-
 /**
  * @brief the keyword is the lower case metadata marker, so that it matches the
  * normalised first element of a line in the restart file reader

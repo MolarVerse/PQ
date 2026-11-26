@@ -36,7 +36,6 @@
 #include "stdoutOutput.hpp"
 #include "timingsSettings.hpp"
 #include "trajectoryOutput.hpp"
-#include "units.hpp"
 
 namespace setup
 {
@@ -143,13 +142,9 @@ namespace setup
             }
             else if (format == TrajectoryFormat::H5MD)
             {
-                const auto &timeStep =
-                    _engine.getSettings().timings.getTimeStep();
-
                 mdEngine.getEngineOutput().openH5mdOutput(
                     outputFileSettings.getH5mdFileName(),
-                    overwriteOutputFiles,
-                    timeStep.numerical_value_in(fs)
+                    overwriteOutputFiles
                 );
             }
             else if (format == TrajectoryFormat::ASE)

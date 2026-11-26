@@ -144,9 +144,9 @@ TEST(TestH5mdOutputContent, writesH5mdLayout)
     std::filesystem::remove(filename);
 
     {
-        out::H5mdOutput output{filename, false, 0.5};
-        output.write(makeFrame(-1.5), 10);
-        output.write(makeFrame(-2.5), 20);
+        out::H5mdOutput output{filename, false};
+        output.write(makeFrame(-1.5), 10, 0.5 * fs * 10);
+        output.write(makeFrame(-2.5), 20, 0.5 * fs * 20);
     }
 
     const hid_t file = H5Fopen(filename.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);

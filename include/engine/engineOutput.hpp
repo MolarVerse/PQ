@@ -160,11 +160,7 @@ namespace engine
             const std::optional<Time> &finalTime
         );
         void openExtxyzOutput(const std::string &filename, bool overwrite);
-        void openH5mdOutput(
-            const std::string &filename,
-            bool               overwrite,
-            double             timeStep
-        );
+        void openH5mdOutput(const std::string &filename, bool overwrite);
         void openAseTrajOutput(const std::string &filename, bool overwrite);
         void waitForFrames();
 

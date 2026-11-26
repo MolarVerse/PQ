@@ -54,7 +54,8 @@
     X(HybridMDEngineError)         \
     X(TimerError)                  \
     X(SettingsError)               \
-    X(WaterModelError)
+    X(WaterModelError)             \
+    X(InternalError)
 
 MSTD_ENUM(ExceptionType, std::uint8_t, EXCEPTION_TYPES)
 
