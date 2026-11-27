@@ -240,11 +240,11 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
     cellList.resizeCells();
     cellList.setup(
         simBoxCL,
-        settings.potentialSettings.getCoulombRadiusCutoff()
+        settings.potentialSettings.get_coulombRadiusCutoff()
     );
     cellList.updateCellList(
         simBoxCL,
-        settings.potentialSettings.getCoulombRadiusCutoff(),
+        settings.potentialSettings.get_coulombRadiusCutoff(),
         settings.generalSettings
     );
     cellListPotential.calculateForces(

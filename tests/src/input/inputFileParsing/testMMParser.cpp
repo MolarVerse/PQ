@@ -107,7 +107,7 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
     std::vector<std::string> lineElements = {"noncoulomb", "=", "guff"};
     parseNonCoulombFunc(lineElements, 0);
     EXPECT_EQ(
-        settings.potentialSettings.getNonCoulombType(),
+        settings.potentialSettings.get_nonCoulombType(),
         NonCoulombType::GUFF
     );
 
@@ -116,7 +116,7 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
     lineElements = {"noncoulomb", "=", "lj"};
     parseNonCoulombFunc(lineElements, 0);
     EXPECT_EQ(
-        settings.potentialSettings.getNonCoulombType(),
+        settings.potentialSettings.get_nonCoulombType(),
         NonCoulombType::LJ
     );
 
@@ -125,7 +125,7 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
     lineElements = {"noncoulomb", "=", "buck"};
     parseNonCoulombFunc(lineElements, 0);
     EXPECT_EQ(
-        settings.potentialSettings.getNonCoulombType(),
+        settings.potentialSettings.get_nonCoulombType(),
         NonCoulombType::BUCKINGHAM
     );
 
@@ -134,7 +134,7 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
     lineElements = {"noncoulomb", "=", "morse"};
     parseNonCoulombFunc(lineElements, 0);
     EXPECT_EQ(
-        settings.potentialSettings.getNonCoulombType(),
+        settings.potentialSettings.get_nonCoulombType(),
         NonCoulombType::MORSE
     );
 

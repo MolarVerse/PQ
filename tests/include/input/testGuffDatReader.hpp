@@ -120,7 +120,7 @@ inline void TestGuffDatReader::SetUp()
     );
 
     _settings.fileSettings.set_guffDatFileByUser("data/guffDatReader/guff.dat");
-    _settings.potentialSettings.setNonCoulombTypeByUser(NonCoulombType::GUFF);
+    _settings.potentialSettings.set_nonCoulombTypeByUser(NonCoulombType::GUFF);
 
     _guffDatReader = std::make_unique<input::guffdat::GuffDatReader>(*_engine);
 }

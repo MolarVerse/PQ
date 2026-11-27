@@ -13,3 +13,5 @@
 - enforce `Tag` for `Setting` class
 - add short macros for getter and setters in `ManostatSettings` 
 - add short macros for getter and setters in `OptimizerSettings` 
+- add short macros for getter and setters in `OutputFileSettings` 
+- add short macros for getter and setters in `PotentialSettings` 

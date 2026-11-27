@@ -217,7 +217,7 @@ namespace engine
         _xyzOutput->writeXyz(
             frame,
             step,
-            _outputFileSettings->getIncludeOutputMetadata()
+            _outputFileSettings->get_includeOutputMetadata()
         );
     }
 
@@ -236,7 +236,7 @@ namespace engine
         _xyzHybridCenterOutput->writeHybridCenterXyz(
             configurator,
             step,
-            _outputFileSettings->getIncludeOutputMetadata()
+            _outputFileSettings->get_includeOutputMetadata()
         );
     }
 
@@ -252,7 +252,7 @@ namespace engine
         _velOutput->writeVelocities(
             frame,
             step,
-            _outputFileSettings->getIncludeOutputMetadata()
+            _outputFileSettings->get_includeOutputMetadata()
         );
     }
 
@@ -268,7 +268,7 @@ namespace engine
         _forceOutput->writeForces(
             frame,
             step,
-            _outputFileSettings->getIncludeOutputMetadata()
+            _outputFileSettings->get_includeOutputMetadata()
         );
     }
 
@@ -284,7 +284,7 @@ namespace engine
         _chargeOutput->writeCharges(
             frame,
             step,
-            _outputFileSettings->getIncludeOutputMetadata()
+            _outputFileSettings->get_includeOutputMetadata()
         );
     }
 
@@ -399,7 +399,7 @@ namespace engine
         auto frame            = out::Frame{simulationBox, thermostat};
         frame.potentialEnergy = potentialEnergy;
 
-        const auto metadata = _outputFileSettings->getIncludeOutputMetadata();
+        const auto metadata = _outputFileSettings->get_includeOutputMetadata();
 
         if (!_frameWriter)
         {
@@ -451,7 +451,7 @@ namespace engine
      */
     void EngineOutput::_startFrameWriter(std::size_t nAtoms)
     {
-        if (!_outputFileSettings->getAsyncOutput())
+        if (!_outputFileSettings->get_asyncOutput())
             return;
 
         if (!asyncOutputFits(nAtoms, utilities::availableMemory()))
@@ -627,7 +627,7 @@ namespace engine
         _rpmdXyzOutput->writeXyz(
             beads,
             step,
-            _outputFileSettings->getIncludeOutputMetadata()
+            _outputFileSettings->get_includeOutputMetadata()
         );
     }
 
@@ -646,7 +646,7 @@ namespace engine
         _rpmdVelOutput->writeVelocities(
             beads,
             step,
-            _outputFileSettings->getIncludeOutputMetadata()
+            _outputFileSettings->get_includeOutputMetadata()
         );
     }
 
@@ -665,7 +665,7 @@ namespace engine
         _rpmdForceOutput->writeForces(
             beads,
             step,
-            _outputFileSettings->getIncludeOutputMetadata()
+            _outputFileSettings->get_includeOutputMetadata()
         );
     }
 
@@ -684,7 +684,7 @@ namespace engine
         _rpmdChargeOutput->writeCharges(
             beads,
             step,
-            _outputFileSettings->getIncludeOutputMetadata()
+            _outputFileSettings->get_includeOutputMetadata()
         );
     }
 
@@ -722,8 +722,7 @@ namespace engine
     void EngineOutput::writeReferencesFile()
     {
         auto _ = scopedTimer(TimerId::Output, "ReferencesOutput");
-        _referencesOutput.writeReferencesFile(
-            _outputFileSettings->getRefFileName()
+        _referencesOutput.writeReferencesFile(_outputFileSettings->get_refFile()
         );
     }
 

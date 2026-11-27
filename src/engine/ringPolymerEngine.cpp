@@ -84,7 +84,7 @@ namespace engine
         auto &averageRPMDData = _averageRingPolymerBeadsPhysicalData;
         auto &rpmdData        = _ringPolymerBeadsPhysicalData;
 
-        const auto outputFreq = outputSettings.getOutputFrequency();
+        const auto outputFreq = outputSettings.get_outputFrequency();
         const auto effStep    = getStep() + startingStepCount;
 
         if (0 == getStep() % outputFreq)

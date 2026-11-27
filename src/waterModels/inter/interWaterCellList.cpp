@@ -57,7 +57,7 @@ namespace waterModel
     {
         const auto &box = simulationBox.getBox();
 
-        const auto rCut        = potentialSettings.getCoulombRadiusCutoff();
+        const auto rCut        = potentialSettings.get_coulombRadiusCutoff();
         const auto rCutSquared = rCut * rCut;
 
         auto totalCoulombEnergy    = EnergyPerMol::zero();
@@ -204,7 +204,7 @@ namespace waterModel
     {
         const auto &box = simulationBox.getBox();
 
-        const auto rCut        = potentialSettings.getCoulombRadiusCutoff();
+        const auto rCut        = potentialSettings.get_coulombRadiusCutoff();
         const auto rCutSquared = rCut * rCut;
 
         auto totalCoulombEnergy = EnergyPerMol::zero();
@@ -336,7 +336,7 @@ namespace waterModel
     {
         const auto &box = simulationBox.getBox();
 
-        const auto rCut        = potentialSettings.getCoulombRadiusCutoff();
+        const auto rCut        = potentialSettings.get_coulombRadiusCutoff();
         const auto rCutSquared = rCut * rCut;
 
         auto totalCoulombEnergy    = EnergyPerMol::zero();
@@ -577,7 +577,7 @@ namespace waterModel
     {
         const auto &box = simulationBox.getBox();
 
-        const auto rCut        = potentialSettings.getCoulombRadiusCutoff();
+        const auto rCut        = potentialSettings.get_coulombRadiusCutoff();
         const auto rCutSquared = rCut * rCut;
 
         auto totalCoulombEnergy    = EnergyPerMol::zero();
@@ -763,7 +763,7 @@ namespace waterModel
     {
         const auto &box = simulationBox.getBox();
 
-        const auto rCut        = potentialSettings.getCoulombRadiusCutoff();
+        const auto rCut        = potentialSettings.get_coulombRadiusCutoff();
         const auto rCutSquared = rCut * rCut;
 
         auto totalCoulombEnergy    = EnergyPerMol::zero();
