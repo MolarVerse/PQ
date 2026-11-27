@@ -183,7 +183,7 @@ int main()
     cellList.setNumberOfCells(3);
     cellList.resizeCells();
     const auto& coulombCutoff =
-        settings.potentialSettings.getCoulombRadiusCutoff();
+        settings.potentialSettings.get_coulombRadiusCutoff();
     cellList.setup(simBox, coulombCutoff);
     cellList.updateCellList(simBox, coulombCutoff, settings.generalSettings);
 
