@@ -214,7 +214,10 @@ TEST(ConstraintSettingsTest, FinalizeSetsOptIterationDefaults)
     mdSettings.finalize(referenceSettings, waterModelSettings, JobType::MM_MD);
 
     EXPECT_EQ(mdSettings.get_shakeMaxIter(), defaults::SHAKE_MAX_ITER_DEFAULT);
-    EXPECT_EQ(mdSettings.get_rattleMaxIter(), defaults::RATTLE_MAX_ITER_DEFAULT);
+    EXPECT_EQ(
+        mdSettings.get_rattleMaxIter(),
+        defaults::RATTLE_MAX_ITER_DEFAULT
+    );
 
     ConstraintSettings optSettings;
     optSettings
