@@ -312,7 +312,6 @@ namespace engine
      *
      * @param filename
      * @param overwrite whether an existing file may be replaced
-     * @param timeStep in fs
      *
      * @throw CompileTimeException if PQ was built without HDF5
      */

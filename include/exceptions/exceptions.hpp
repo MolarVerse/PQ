@@ -131,21 +131,12 @@ namespace exc
             "https://github.com/MolarVerse/PQ/issues";
 
        public:
-        explicit InternalException(std::string_view message)
-            : BaseException(std::string(message) + std::string(_reportHint))
-        {
-        }
+        explicit InternalException(std::string_view message);
 
         explicit InternalException(
             std::string_view      message,
             std::optional<size_t> lineNumber
-        )
-            : BaseException(
-                  std::string(message) + std::string(_reportHint),
-                  lineNumber
-              )
-        {
-        }
+        );
     };
 
 }   // namespace exc
