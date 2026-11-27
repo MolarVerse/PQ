@@ -256,9 +256,12 @@ TEST(ConstraintSettingsTest, FinalizeSetsOptIterationDefaultsForHessian)
     settings
         .finalize(referenceSettings, waterModelSettings, JobType::MM_HESSIAN);
 
-    EXPECT_EQ(settings.getShakeMaxIter(), defaults::SHAKE_MAX_ITER_OPT_DEFAULT);
     EXPECT_EQ(
-        settings.getRattleMaxIter(),
+        settings.get_shakeMaxIter(),
+        defaults::SHAKE_MAX_ITER_OPT_DEFAULT
+    );
+    EXPECT_EQ(
+        settings.get_rattleMaxIter(),
         defaults::RATTLE_MAX_ITER_OPT_DEFAULT
     );
 }
