@@ -30,6 +30,6 @@
 TEST(TestPotentialSettings, reactionFieldSettings)
 {
     PotentialSettings potentialSettings;
-    potentialSettings.setReactionFieldEpsilonByUser(80.0);
-    EXPECT_DOUBLE_EQ(potentialSettings.getReactionFieldEpsilon(), 80.0);
+    potentialSettings.set_reactionFieldEpsilonByUser(80.0);
+    EXPECT_DOUBLE_EQ(potentialSettings.get_reactionFieldEpsilon(), 80.0);
 }

@@ -101,7 +101,7 @@ namespace input
 
         const auto setValue = [this](double value)
         {
-            _potentialSettings->setNonCoulombRadiusCutoffByUser(
+            _potentialSettings->set_nonCoulombRadiusCutoffByUser(
                 value * angstrom
             );
         };
