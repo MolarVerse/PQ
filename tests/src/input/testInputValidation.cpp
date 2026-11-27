@@ -736,7 +736,7 @@ TEST_F(TestInputValidation, acceptsExponentialDecayWithDefaultDecay)
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
     EXPECT_DOUBLE_EQ(
-        _settings.optimizerSettings.getLearningRateDecay(),
+        _settings.optimizerSettings.get_learningRateDecay(),
         defaults::LEARNING_RATE_DECAY_DEFAULT
     );
 }
