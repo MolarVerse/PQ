@@ -189,7 +189,7 @@ namespace engine
             get_physicalData(),
             currentTargetTemperature,
             timeStep,
-            getSettings().potentialSettings.getCoulombRadiusCutoff()
+            getSettings().potentialSettings.get_coulombRadiusCutoff()
         );
 
         const auto driftWarning = _resetKinetics.checkMomentumDrift(
@@ -270,7 +270,7 @@ namespace engine
         size_t                    startingStepCount
     )
     {
-        const auto outputFreq = outputSettings.getOutputFrequency();
+        const auto outputFreq = outputSettings.get_outputFrequency();
         const auto effStep    = getStep() + startingStepCount;
 
         if (0 == getStep() % outputFreq)

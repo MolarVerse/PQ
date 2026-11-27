@@ -108,7 +108,7 @@ namespace input
         };
 
         const auto setValue = [this](NonCoulombType value)
-        { _potentialSettings->setNonCoulombTypeByUser(value); };
+        { _potentialSettings->set_nonCoulombTypeByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<NonCoulombType>{

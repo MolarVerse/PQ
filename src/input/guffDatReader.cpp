@@ -284,7 +284,7 @@ namespace input::guffdat
 
         if (rncCutoff < 0.0)
             rncCutoff =
-                _engine.getSettings().potentialSettings.getCoulombRadiusCutoff(
+                _engine.getSettings().potentialSettings.get_coulombRadiusCutoff(
                 );
 
         constexpr auto coulombCoeffIndex = 5;
@@ -340,7 +340,7 @@ namespace input::guffdat
         const Distance            &rncCutoff
     )
     {
-        switch (_engine.getSettings().potentialSettings.getNonCoulombType())
+        switch (_engine.getSettings().potentialSettings.get_nonCoulombType())
         {
             case NonCoulombType::LJ:
             {
@@ -402,7 +402,7 @@ namespace input::guffdat
                         "Invalid nonCoulombic type {} given",
                         NonCoulombTypeMeta::toString(
                             _engine.getSettings()
-                                .potentialSettings.getNonCoulombType()
+                                .potentialSettings.get_nonCoulombType()
                         )
                     )
                 );
