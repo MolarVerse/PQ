@@ -54,7 +54,8 @@ namespace engine
           _thermostat(std::make_unique<thermostat::Thermostat>()),
           _manostat(
               manostat::ManostatFactory::createManostat(
-                  settings.manostatSettings
+                  settings.manostatSettings,
+                  settings.generalSettings
               )
           )
     {
@@ -155,8 +156,10 @@ namespace engine
         const auto jobType = getSettings().generalSettings.getJobtype();
         if (!isHybridJobtype(jobType))
         {
-            const auto virial =
-                virial::intraMolecularVirialCorrection(get_simulationBox());
+            const auto virial = virial::intraMolecularVirialCorrection(
+                get_simulationBox(),
+                getSettings().manostatSettings
+            );
             get_physicalData().addVirial(virial);
         }
 
@@ -186,7 +189,7 @@ namespace engine
             get_physicalData(),
             currentTargetTemperature,
             timeStep,
-            getSettings().potentialSettings.getCoulombRadiusCutoff()
+            getSettings().potentialSettings.get_coulombRadiusCutoff()
         );
 
         const auto driftWarning = _resetKinetics.checkMomentumDrift(
@@ -267,7 +270,7 @@ namespace engine
         size_t                    startingStepCount
     )
     {
-        const auto outputFreq = outputSettings.getOutputFrequency();
+        const auto outputFreq = outputSettings.get_outputFrequency();
         const auto effStep    = getStep() + startingStepCount;
 
         if (0 == getStep() % outputFreq)

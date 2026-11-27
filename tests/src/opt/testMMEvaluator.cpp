@@ -29,7 +29,6 @@
 #include "constraints.hpp"
 #include "enums/virial.hpp"
 #include "forceFieldClass.hpp"
-#include "generalSettings.hpp"
 #include "intraNonBonded.hpp"
 #include "mmEvaluator.hpp"
 #include "molecule.hpp"
@@ -82,7 +81,7 @@ namespace
             std::make_shared<ff::ForceField>(settings.hybridSettings)
         );
 
-        GeneralSettings::setVirialType(VirialType::MOLECULAR);
+        settings.manostatSettings.set_virialByUser(VirialType::MOLECULAR);
     }
 }   // namespace
 
@@ -156,7 +155,7 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
         std::make_shared<ff::ForceField>(settings.hybridSettings)
     );
 
-    GeneralSettings::setVirialType(VirialType::MOLECULAR);
+    settings.manostatSettings.set_virialByUser(VirialType::MOLECULAR);
 
     eval2.evaluate(physicalData, box, intraNonBonded);
 

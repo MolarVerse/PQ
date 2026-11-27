@@ -39,8 +39,6 @@
 
 TEST_F(TestBoxSection, testKeyword) { EXPECT_EQ(_section->keyword(), "box"); }
 
-TEST_F(TestBoxSection, testIsHeader) { EXPECT_TRUE(_section->isHeader()); }
-
 TEST_F(TestBoxSection, testNumberOfArguments)
 {
     size_t lineNumber = 0;
@@ -50,7 +48,12 @@ TEST_F(TestBoxSection, testNumberOfArguments)
         {
             auto line = std::vector<std::string>(i);
             ASSERT_THROW_MSG(
-                _section->process(line, *_engine, lineNumber),
+                _section->process(
+                    line,
+                    lineNumber,
+                    _settings,
+                    _engine->get_simulationBox()
+                ),
                 exc::RstFileException,
                 "Error in line 0: Box section must have 4 or 7 elements"
             );
@@ -67,7 +70,8 @@ TEST_F(TestBoxSection, testProcess)
     size_t lineNumber = 0;
 
     std::vector<std::string> line = {"box", "1.0", "2.0", "3.0"};
-    _section->process(line, *_engine, lineNumber);
+    _section
+        ->process(line, lineNumber, _settings, _engine->get_simulationBox());
     ASSERT_THAT(
         _engine->get_simulationBox().getBoxDimensions().numerical_value_in(
             angstrom
@@ -80,7 +84,8 @@ TEST_F(TestBoxSection, testProcess)
     );
 
     line = {"box", "1.0", "2.0", "3.0", "90.0", "90.0", "70.0"};
-    _section->process(line, *_engine, lineNumber);
+    _section
+        ->process(line, lineNumber, _settings, _engine->get_simulationBox());
     ASSERT_THAT(
         _engine->get_simulationBox().getBoxDimensions().numerical_value_in(
             angstrom
@@ -94,21 +99,36 @@ TEST_F(TestBoxSection, testProcess)
 
     line = {"box", "1.0", "2.0", "-3.0", "90.0", "90.0", "90.0"};
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine, lineNumber),
+        _section->process(
+            line,
+            lineNumber,
+            _settings,
+            _engine->get_simulationBox()
+        ),
         exc::RstFileException,
         "All box dimensions must be positive"
     );
 
     line = {"box", "1.0", "2.0", "3.0", "90.0", "90.0", "190.0"};
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine, lineNumber),
+        _section->process(
+            line,
+            lineNumber,
+            _settings,
+            _engine->get_simulationBox()
+        ),
         exc::RstFileException,
         "Box angles must be positive and smaller than 180°"
     );
 
     line = {"box", "1.0", "2.0", "3.0", "90.0", "90.0", "-90.0"};
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine, lineNumber),
+        _section->process(
+            line,
+            lineNumber,
+            _settings,
+            _engine->get_simulationBox()
+        ),
         exc::RstFileException,
         "Box angles must be positive and smaller than 180°"
     );
@@ -119,13 +139,14 @@ TEST_F(TestBoxSection, testProcess)
 TEST_F(TestBoxSection, testFullAnisotropicManostatNeedsABoxThatCanShear)
 {
     _settings.generalSettings.setJobtypeByUser(JobType::QM_MD);
-    _settings.manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
-    _settings.manostatSettings.setIsotropyByUser(Isotropy::FULL_ANISOTROPIC);
+    _settings.manostatSettings.set_manostatTypeByUser(ManostatType::BERENDSEN);
+    _settings.manostatSettings.set_isotropyByUser(Isotropy::FULL_ANISOTROPIC);
 
     size_t lineNumber = 0;
 
     std::vector<std::string> line = {"box", "1.0", "2.0", "3.0"};
-    _section->process(line, *_engine, lineNumber);
+    _section
+        ->process(line, lineNumber, _settings, _engine->get_simulationBox());
 
     const auto &box = _engine->get_simulationBox().getBox();
     EXPECT_FALSE(box.isOrthorhombic());
@@ -148,14 +169,16 @@ TEST_F(TestBoxSection, testOtherManostatSettingsKeepAnOrthorhombicBox)
     size_t                   lineNumber = 0;
     std::vector<std::string> line       = {"box", "1.0", "2.0", "3.0"};
 
-    _settings.manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
-    _settings.manostatSettings.setIsotropyByUser(Isotropy::ANISOTROPIC);
-    _section->process(line, *_engine, lineNumber);
+    _settings.manostatSettings.set_manostatTypeByUser(ManostatType::BERENDSEN);
+    _settings.manostatSettings.set_isotropyByUser(Isotropy::ANISOTROPIC);
+    _section
+        ->process(line, lineNumber, _settings, _engine->get_simulationBox());
     EXPECT_TRUE(_engine->get_simulationBox().getBox().isOrthorhombic());
 
-    _settings.manostatSettings.setManostatTypeByUser(ManostatType::NONE);
-    _settings.manostatSettings.setIsotropyByUser(Isotropy::FULL_ANISOTROPIC);
-    _section->process(line, *_engine, lineNumber);
+    _settings.manostatSettings.set_manostatTypeByUser(ManostatType::NONE);
+    _settings.manostatSettings.set_isotropyByUser(Isotropy::FULL_ANISOTROPIC);
+    _section
+        ->process(line, lineNumber, _settings, _engine->get_simulationBox());
     EXPECT_TRUE(_engine->get_simulationBox().getBox().isOrthorhombic());
 }
 
@@ -166,13 +189,15 @@ TEST_F(TestBoxSection, testTriclinicBoxMayChangeItsAnglesOnlyForFullAnisotropy)
     std::vector<std::string> line       = {"box", "1.0", "2.0", "3.0"};
     line.insert(line.end(), {"75", "80", "70"});
 
-    _section->process(line, *_engine, lineNumber);
+    _section
+        ->process(line, lineNumber, _settings, _engine->get_simulationBox());
     EXPECT_FALSE(_engine->get_simulationBox().getBox().isOrthorhombic());
     EXPECT_FALSE(_engine->get_simulationBox().getBox().allowChangeOfAngles());
 
-    _settings.manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
-    _settings.manostatSettings.setIsotropyByUser(Isotropy::FULL_ANISOTROPIC);
-    _section->process(line, *_engine, lineNumber);
+    _settings.manostatSettings.set_manostatTypeByUser(ManostatType::BERENDSEN);
+    _settings.manostatSettings.set_isotropyByUser(Isotropy::FULL_ANISOTROPIC);
+    _section
+        ->process(line, lineNumber, _settings, _engine->get_simulationBox());
     EXPECT_TRUE(_engine->get_simulationBox().getBox().allowChangeOfAngles());
 }
 
@@ -185,7 +210,12 @@ TEST_F(TestBoxSection, testMMMDRefusesATriclinicBox)
     line.insert(line.end(), {"90", "90", "70"});
 
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine, lineNumber),
+        _section->process(
+            line,
+            lineNumber,
+            _settings,
+            _engine->get_simulationBox()
+        ),
         exc::InputFileException,
         "Triclinic box is only supported for QM-MD and RP-QM-MD"
     );
@@ -194,14 +224,19 @@ TEST_F(TestBoxSection, testMMMDRefusesATriclinicBox)
 TEST_F(TestBoxSection, testMMMDRefusesFullAnisotropicManostatForAnOrthogonalBox)
 {
     _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
-    _settings.manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
-    _settings.manostatSettings.setIsotropyByUser(Isotropy::FULL_ANISOTROPIC);
+    _settings.manostatSettings.set_manostatTypeByUser(ManostatType::BERENDSEN);
+    _settings.manostatSettings.set_isotropyByUser(Isotropy::FULL_ANISOTROPIC);
 
     size_t                   lineNumber = 0;
     std::vector<std::string> line       = {"box", "1.0", "2.0", "3.0"};
 
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine, lineNumber),
+        _section->process(
+            line,
+            lineNumber,
+            _settings,
+            _engine->get_simulationBox()
+        ),
         exc::InputFileException,
         "isotropy = full_anisotropic needs a triclinic box (it changes the box "
         "angles), which is only supported for QM-MD and RP-QM-MD"

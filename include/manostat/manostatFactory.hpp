@@ -26,6 +26,7 @@
 #include <memory>
 
 class ManostatSettings;
+class GeneralSettings;
 
 namespace manostat
 {
@@ -42,7 +43,8 @@ namespace manostat
        public:
         [[nodiscard]]
         static std::unique_ptr<Manostat> createManostat(
-            const ManostatSettings& settings
+            const ManostatSettings& settings,
+            const GeneralSettings&  generalSettings
         );
 
        private:
@@ -52,7 +54,8 @@ namespace manostat
             const ManostatSettings& settings
         );
         static std::unique_ptr<Manostat> _setupStochasticRescalingManostat(
-            const ManostatSettings& settings
+            const ManostatSettings& settings,
+            const GeneralSettings&  generalSettings
         );
     };
 }   // namespace manostat

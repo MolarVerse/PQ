@@ -54,7 +54,7 @@ namespace input
             const auto  optimizerActive =
                 isOptJobType(jobType) ||
                 (jobType == JobType::MM_HESSIAN &&
-                 settings.hessianSettings.optimizeBeforeHessian());
+                 settings.hessianSettings.get_optimizeBeforeHessian());
 
             if (!optimizerActive)
                 return;
@@ -92,11 +92,12 @@ namespace input
         );
         _validateManostat(settings.manostatSettings, settings.timings, jobType);
         _validateCellList(
-            settings.potentialSettings.getCoulombRadiusCutoff(),
-            jobType
+            settings.potentialSettings.get_coulombRadiusCutoff(),
+            jobType,
+            settings.generalSettings
         );
         _validateReactionFieldCoulomb(
-            settings.potentialSettings.getCoulombLongRangeType()
+            settings.potentialSettings.get_coulombLRType()
         );
         _validateRingPolymer(settings.generalSettings.getJobtype());
     }
@@ -115,7 +116,7 @@ namespace input
         const auto requiresNumberOfSteps =
             isMDJobType(jobType) || isOptJobType(jobType) ||
             (jobType == MM_HESSIAN &&
-             settings.hessianSettings.optimizeBeforeHessian());
+             settings.hessianSettings.get_optimizeBeforeHessian());
 
         if (requiresNumberOfSteps && !getKeywordSet("nstep"))
         {
@@ -313,7 +314,7 @@ namespace input
         JobType                 jobType
     ) const
     {
-        const auto manostatType = manostatSettings.getManostatType();
+        const auto manostatType = manostatSettings.get_manostatType();
 
         if (manostatType == ManostatType::NONE)
             return;
@@ -330,7 +331,7 @@ namespace input
 
         // only an MD job has a time step
         if (isMDJobType(jobType) &&
-            timings.getTimeStep() > manostatSettings.getTau())
+            timings.getTimeStep() > manostatSettings.get_tau())
         {
             throw exc::InputFileException(
                 "The timestep must not exceed the manostat relaxation time"
@@ -345,11 +346,12 @@ namespace input
      * with the selected potential
      */
     void InputFileReader::_validateCellList(
-        const Distance& coulombRadiusCutoff,
-        JobType         jobType
+        const Distance&        coulombRadiusCutoff,
+        JobType                jobType,
+        const GeneralSettings& generalSettings
     )
     {
-        if (!GeneralSettings::isCellListActivated())
+        if (!generalSettings.isCellListActivated())
             return;
 
         if (isQMOnlyJobtype(jobType))

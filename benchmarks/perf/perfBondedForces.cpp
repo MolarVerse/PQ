@@ -68,8 +68,8 @@ int main()
 
     auto molecule = benchSetup::makeMolecule({.nAtoms = 4});
 
-    settings.potentialSettings.setScale14CoulombByUser(0.75);
-    settings.potentialSettings.setScale14VanDerWaalsByUser(0.5);
+    settings.potentialSettings.set_scale14CoulombByUser(0.75);
+    settings.potentialSettings.set_scale14VDWByUser(0.5);
 
     auto bond = ff::BondForceField(
         &molecule,
@@ -115,7 +115,7 @@ int main()
 
     CALLGRIND_ZERO_STATS;
 
-    const auto smoothing = settings.hybridSettings.getSmoothingMethod();
+    const auto smoothing = settings.hybridSettings.get_smoothing();
 
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {

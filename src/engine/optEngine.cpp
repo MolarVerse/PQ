@@ -285,7 +285,7 @@ namespace engine
         size_t                    startingStepCount
     )
     {
-        const auto outputFreq = outputSettings.getOutputFrequency();
+        const auto outputFreq = outputSettings.get_outputFrequency();
         const auto effStep    = getStep() + startingStepCount;
 
         if (0 == getStep() % outputFreq)
@@ -388,7 +388,7 @@ namespace engine
      * @brief get the optimizer
      *
      */
-    opt::Optimizer &OptEngine::getOptimizer() { return *_optimizer; }
+    opt::Optimizer &OptEngine::get_optimizer() { return *_optimizer; }
 
     /**
      * @brief get the learning rate strategy

@@ -7,6 +7,7 @@ add_library(restartFileReader
     atomSection.cpp
     noseHooverSection.cpp
     stepCountSection.cpp
+    metaDataSection.cpp
 )
 
 target_include_directories(restartFileReader

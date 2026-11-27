@@ -41,133 +41,101 @@ struct TestOutputFileSettings;
 class OutputFileSettings
 {
    private:
-    Setting<size_t> _outputFrequency{1};
+    Setting<size_t, "Output Frequency"> _outputFrequency{1};
 
-    Setting<bool>             _overwriteOutputFiles{false};
-    Setting<bool>             _includeOutputMetadata{false};
-    Setting<bool>             _asyncOutput{true};
-    Setting<TrajectoryFormat> _trajFormat{TrajectoryFormat::XYZ};
-    Setting<std::string>      _filePrefix;
+    Setting<bool, "Overwrite Output Files">  _overwriteOutputFiles{false};
+    Setting<bool, "Include Output Metadata"> _includeOutputMetadata{false};
+    Setting<bool, "Async Output">            _asyncOutput{true};
+    Setting<TrajectoryFormat, "Trajectory Format"> _trajFormat{
+        TrajectoryFormat::XYZ
+    };
+    Setting<std::string, "File Prefix"> _filePrefix;
 
-    Setting<std::string> _energyFile{DefaultFiles::energyFile};
-    Setting<std::string> _instEnFile{DefaultFiles::instEnFile};
-    Setting<std::string> _rstFile{DefaultFiles::restartFile};
-    Setting<std::string> _momFile{DefaultFiles::momentumFile};
-    Setting<std::string> _trajFile{DefaultFiles::trajFile};
-    Setting<std::string> _hybridCenterFile{DefaultFiles::hybridCenterFile};
-    Setting<std::string> _velFile{DefaultFiles::velFile};
-    Setting<std::string> _forceFile{DefaultFiles::forceFile};
-    Setting<std::string> _chargeFile{DefaultFiles::chargeFile};
-    Setting<std::string> _extxyzFile;
-    Setting<std::string> _h5mdFile;
-    Setting<std::string> _aseTrajFile;
-    Setting<std::string> _logFile{DefaultFiles::logFile};
-    Setting<std::string> _refFile{DefaultFiles::refFile};
-    Setting<std::string> _infoFile{DefaultFiles::infoFile};
+    Setting<std::string, "Energy File"> _energyFile{DefaultFiles::energyFile};
+    Setting<std::string, "Instant Energy File"> _instEnFile{
+        DefaultFiles::instEnFile
+    };
+    Setting<std::string, "Restart File">  _rstFile{DefaultFiles::restartFile};
+    Setting<std::string, "Momentum File"> _momFile{DefaultFiles::momentumFile};
+    Setting<std::string, "Trajectory File"> _trajFile{DefaultFiles::trajFile};
+    Setting<std::string, "Hybrid Center File"> _hybridCenterFile{
+        DefaultFiles::hybridCenterFile
+    };
+    Setting<std::string, "Velocity File"> _velFile{DefaultFiles::velFile};
+    Setting<std::string, "Force File">    _forceFile{DefaultFiles::forceFile};
+    Setting<std::string, "Charge File">   _chargeFile{DefaultFiles::chargeFile};
+    Setting<std::string, "Extended XYZ File">   _extxyzFile;
+    Setting<std::string, "H5MD File">           _h5mdFile;
+    Setting<std::string, "ASE Trajectory File"> _aseTrajFile;
+    Setting<std::string, "Log File">            _logFile{DefaultFiles::logFile};
+    Setting<std::string, "Reference File">      _refFile{DefaultFiles::refFile};
+    Setting<std::string, "Info File"> _infoFile{DefaultFiles::infoFile};
 
-    Setting<std::string> _virialFile{DefaultFiles::virialFile};
-    Setting<std::string> _stressFile{DefaultFiles::stressFile};
-    Setting<std::string> _boxFile{DefaultFiles::boxFile};
+    Setting<std::string, "Virial File"> _virialFile{DefaultFiles::virialFile};
+    Setting<std::string, "Stress File"> _stressFile{DefaultFiles::stressFile};
+    Setting<std::string, "Box File">    _boxFile{DefaultFiles::boxFile};
 
-    Setting<std::string> _optFile{DefaultFiles::optFile};
+    Setting<std::string, "Optimization File"> _optFile{DefaultFiles::optFile};
 
-    Setting<std::string> _rpmdRstFile{DefaultFiles::rpmdRstFile};
-    Setting<std::string> _rpmdTrajFile{DefaultFiles::rpmdTrajFile};
-    Setting<std::string> _rpmdVelFile{DefaultFiles::rpmdVelFile};
-    Setting<std::string> _rpmdForceFile{DefaultFiles::rpmdForceFile};
-    Setting<std::string> _rpmdChargeFile{DefaultFiles::rpmdChargeFile};
-    Setting<std::string> _rpmdEnergyFile{DefaultFiles::rpmdEnergyFile};
+    Setting<std::string, "RPMD Restart File"> _rpmdRstFile{
+        DefaultFiles::rpmdRstFile
+    };
+    Setting<std::string, "RPMD Trajectory File"> _rpmdTrajFile{
+        DefaultFiles::rpmdTrajFile
+    };
+    Setting<std::string, "RPMD Velocity File"> _rpmdVelFile{
+        DefaultFiles::rpmdVelFile
+    };
+    Setting<std::string, "RPMD Force File"> _rpmdForceFile{
+        DefaultFiles::rpmdForceFile
+    };
+    Setting<std::string, "RPMD Charge File"> _rpmdChargeFile{
+        DefaultFiles::rpmdChargeFile
+    };
+    Setting<std::string, "RPMD Energy File"> _rpmdEnergyFile{
+        DefaultFiles::rpmdEnergyFile
+    };
 
-    Setting<std::string> _timeFile{DefaultFiles::timingsFile};
+    Setting<std::string, "Timings File"> _timeFile{DefaultFiles::timingsFile};
 
    public:
     void finalize();
 
     void setOutputFrequencyByUser(size_t outputFreq);
-    void setFilePrefixByUser(const std::string &prefix);
 
-    /***************************
-     * standard setter methods *
-     ***************************/
+    SETTING_GETTER(_outputFrequency);
 
-    void setRestartFileNameByUser(const std::string &);
-    void setEnergyFileNameByUser(const std::string &);
-    void setInstantEnergyFileNameByUser(const std::string &);
-    void setMomentumFileNameByUser(const std::string &);
-    void setTrajectoryFileNameByUser(const std::string &);
-    void setHybridCenterFileNameByUser(const std::string &);
-    void setVelocityFileNameByUser(const std::string &);
-    void setForceFileNameByUser(const std::string &);
-    void setChargeFileNameByUser(const std::string &);
-    void setExtxyzFileNameByUser(const std::string &);
-    void setH5mdFileNameByUser(const std::string &);
-    void setAseTrajFileNameByUser(const std::string &);
-    void setLogFileNameByUser(const std::string &);
-    void setRefFileNameByUser(const std::string &);
-    void setInfoFileNameByUser(const std::string &);
-
-    void setVirialFileNameByUser(const std::string &);
-    void setStressFileNameByUser(const std::string &);
-    void setBoxFileNameByUser(const std::string &);
-
-    void setOptFileNameByUser(const std::string &);
-
-    void setRingPolymerRestartFileNameByUser(const std::string &);
-    void setRingPolymerTrajectoryFileNameByUser(const std::string &);
-    void setRingPolymerVelocityFileNameByUser(const std::string &);
-    void setRingPolymerForceFileNameByUser(const std::string &);
-    void setRingPolymerChargeFileNameByUser(const std::string &);
-    void setRingPolymerEnergyFileNameByUser(const std::string &);
-
-    void setTimingsFileNameByUser(const std::string &);
-
-    void setOverwriteOutputFilesByUser(bool);
-    void setIncludeOutputMetadataByUser(bool);
-    void setAsyncOutputByUser(bool);
-    void setTrajectoryFormatByUser(TrajectoryFormat);
-
-    /***************************
-     * standard getter methods *
-     ***************************/
-
-    [[nodiscard]] size_t             getOutputFrequency() const;
-    [[nodiscard]] const std::string &getFilePrefix() const;
-
-    [[nodiscard]] const std::string &getRestartFileName() const;
-    [[nodiscard]] const std::string &getEnergyFileName() const;
-    [[nodiscard]] const std::string &getInstantEnergyFileName() const;
-    [[nodiscard]] const std::string &getMomentumFileName() const;
-    [[nodiscard]] const std::string &getTrajectoryFileName() const;
-    [[nodiscard]] const std::string &getHybridCenterFileName() const;
-    [[nodiscard]] const std::string &getVelocityFileName() const;
-    [[nodiscard]] const std::string &getForceFileName() const;
-    [[nodiscard]] const std::string &getChargeFileName() const;
-    [[nodiscard]] const std::string &getExtxyzFileName() const;
-    [[nodiscard]] const std::string &getH5mdFileName() const;
-    [[nodiscard]] const std::string &getAseTrajFileName() const;
-    [[nodiscard]] const std::string &getLogFileName() const;
-    [[nodiscard]] const std::string &getRefFileName() const;
-    [[nodiscard]] const std::string &getInfoFileName() const;
-
-    [[nodiscard]] const std::string &getVirialFileName() const;
-    [[nodiscard]] const std::string &getStressFileName() const;
-    [[nodiscard]] const std::string &getBoxFileName() const;
-
-    [[nodiscard]] const std::string &getOptFileName() const;
-
-    [[nodiscard]] const std::string &getRPMDRestartFileName() const;
-    [[nodiscard]] const std::string &getRPMDTrajFileName() const;
-    [[nodiscard]] const std::string &getRPMDVelocityFileName() const;
-    [[nodiscard]] const std::string &getRPMDForceFileName() const;
-    [[nodiscard]] const std::string &getRPMDChargeFileName() const;
-    [[nodiscard]] const std::string &getRPMDEnergyFileName() const;
-
-    [[nodiscard]] const std::string &getTimingsFileName() const;
-
-    [[nodiscard]] bool             getOverwriteOutputFiles() const;
-    [[nodiscard]] bool             getIncludeOutputMetadata() const;
-    [[nodiscard]] bool             getAsyncOutput() const;
-    [[nodiscard]] TrajectoryFormat getTrajectoryFormat() const;
+    SETTING_GETTER_AND_SETTER_BY_USER(_filePrefix);
+    SETTING_GETTER_AND_SETTER_BY_USER(_rstFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_energyFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_instEnFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_momFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_trajFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_hybridCenterFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_velFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_forceFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_chargeFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_extxyzFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_h5mdFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_aseTrajFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_logFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_refFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_infoFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_virialFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_stressFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_boxFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_optFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_rpmdRstFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_rpmdTrajFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_rpmdVelFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_rpmdForceFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_rpmdChargeFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_rpmdEnergyFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_timeFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_overwriteOutputFiles);
+    SETTING_GETTER_AND_SETTER_BY_USER(_includeOutputMetadata);
+    SETTING_GETTER_AND_SETTER_BY_USER(_asyncOutput);
+    SETTING_GETTER_AND_SETTER_BY_USER(_trajFormat);
 
    private:
     [[nodiscard]] std::string _determineMostCommonPrefix() const;

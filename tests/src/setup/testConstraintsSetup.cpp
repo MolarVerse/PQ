@@ -269,10 +269,10 @@ TEST_F(TestSetup, constraintsSetupLogsToleranceAndMaxIterOfSettings)
 {
     auto &constraintSettings = _settings->constraintSettings;
     constraintSettings.activateShakeByUser();
-    constraintSettings.setShakeToleranceByUser(1e-5);
-    constraintSettings.setRattleToleranceByUser(1e-4 * g_per_mol / s);
-    constraintSettings.setShakeMaxIterByUser(37);
-    constraintSettings.setRattleMaxIterByUser(41);
+    constraintSettings.set_shakeToleranceByUser(1e-5);
+    constraintSettings.set_rattleToleranceByUser(1e-4 * g_per_mol / s);
+    constraintSettings.set_shakeMaxIterByUser(37);
+    constraintSettings.set_rattleMaxIterByUser(41);
 
     _engine->getEngineOutput().getLogOutput().setFilename(
         "constraintsSetup.log",

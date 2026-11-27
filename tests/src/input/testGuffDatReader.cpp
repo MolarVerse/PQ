@@ -167,7 +167,7 @@ TEST_F(TestGuffDatReader, parseLine)
         "2.0", "2.0", "2.0", "2.0", "2.0",  "2.0",  "2.0", "2.0"
     };
     _guffDatReader->setupGuffMaps();
-    _settings.potentialSettings.setNonCoulombTypeByUser(NonCoulombType::LJ);
+    _settings.potentialSettings.set_nonCoulombTypeByUser(NonCoulombType::LJ);
     EXPECT_NO_THROW(_guffDatReader->parseLine(line));
 
     EXPECT_EQ(
@@ -193,7 +193,7 @@ TEST_F(TestGuffDatReader, parseLine)
     EXPECT_EQ(
         pair,
         pot::LennardJonesPair(
-            _settings.potentialSettings.getCoulombRadiusCutoff(),
+            _settings.potentialSettings.get_coulombRadiusCutoff(),
             LJParams{
                 2.0 * kcal_per_mol * angstrom6,
                 3.0 * kcal_per_mol * angstrom12
@@ -452,7 +452,7 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
         };
     _guffDatReader->setupGuffMaps();
 
-    _settings.potentialSettings.setNonCoulombTypeByUser(NonCoulombType::LJ);
+    _settings.potentialSettings.set_nonCoulombTypeByUser(NonCoulombType::LJ);
     _guffDatReader->addNonCoulombPair(
         MolType{1},
         MolType{2},
@@ -475,7 +475,7 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
             )
     );
 
-    _settings.potentialSettings.setNonCoulombTypeByUser(
+    _settings.potentialSettings.set_nonCoulombTypeByUser(
         NonCoulombType::BUCKINGHAM
     );
     _guffDatReader->addNonCoulombPair(
@@ -500,7 +500,7 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
             )
     );
 
-    _settings.potentialSettings.setNonCoulombTypeByUser(NonCoulombType::MORSE);
+    _settings.potentialSettings.set_nonCoulombTypeByUser(NonCoulombType::MORSE);
     _guffDatReader->addNonCoulombPair(
         MolType{1},
         MolType{2},
@@ -522,7 +522,7 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
         )
     );
 
-    _settings.potentialSettings.setNonCoulombTypeByUser(NonCoulombType::GUFF);
+    _settings.potentialSettings.set_nonCoulombTypeByUser(NonCoulombType::GUFF);
     _guffDatReader->addNonCoulombPair(
         MolType{1},
         MolType{2},
@@ -544,7 +544,7 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
         )
     );
 
-    _settings.potentialSettings.setNonCoulombTypeByUser(
+    _settings.potentialSettings.set_nonCoulombTypeByUser(
         NonCoulombType::LJ_9_12
     );
 
@@ -561,7 +561,7 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
         std::format(
             "Invalid nonCoulombic type {} given",
             NonCoulombTypeMeta::toString(
-                _settings.potentialSettings.getNonCoulombType()
+                _settings.potentialSettings.get_nonCoulombType()
             )
         )
     );
@@ -810,7 +810,7 @@ TEST_F(TestGuffDatReader, readGuffDat)
 {
     _guffDatReader->setFilename("data/guffDatReader/guff.dat");
     _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
-    _settings.forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    _settings.forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     _settings.fileSettings.set_guffDatFileByUser("data/guffDatReader/guff.dat");
     EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
 
@@ -825,7 +825,7 @@ TEST_F(TestGuffDatReader, readGuffDat)
 
     EXPECT_EQ(
         pair.get_radialCutoff(),
-        _settings.potentialSettings.getCoulombRadiusCutoff()
+        _settings.potentialSettings.get_coulombRadiusCutoff()
     );
 }
 
@@ -833,7 +833,7 @@ TEST_F(TestGuffDatReader, readGuffDatErrorButNoThrowNotActivated)
 {
     _guffDatReader->setFilename("");   // just to produce any kind of error
     _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
-    _settings.forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    _settings.forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
 }
 
@@ -841,7 +841,7 @@ TEST_F(TestGuffDatReader, readGuffDatErrorButNoThrowMMNotActivated)
 {
     _guffDatReader->setFilename("");   // just to produce any kind of error
     _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
-    _settings.forceFieldSettings.setTypeByUser(ForceFieldType::ON);
+    _settings.forceFieldSettings.set_typeByUser(ForceFieldType::ON);
     EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
 }
 
@@ -859,9 +859,9 @@ TEST_F(TestGuffDatReader, isNeeded)
     EXPECT_FALSE(input::guffdat::isNeeded(settings));
 
     settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
-    settings.forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    settings.forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     EXPECT_TRUE(input::guffdat::isNeeded(settings));
 
-    settings.forceFieldSettings.setTypeByUser(ForceFieldType::ON);
+    settings.forceFieldSettings.set_typeByUser(ForceFieldType::ON);
     EXPECT_FALSE(input::guffdat::isNeeded(settings));
 }

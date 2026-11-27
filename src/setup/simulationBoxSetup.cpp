@@ -395,7 +395,7 @@ namespace setup
     {
         const auto &simBox = _engine.get_simulationBox();
         const auto  coulombCutoff =
-            _engine.getSettings().potentialSettings.getCoulombRadiusCutoff();
+            _engine.getSettings().potentialSettings.get_coulombRadiusCutoff();
         const auto minDim = simBox.getMinimalBoxDimension();
 
         if (coulombCutoff > minDim / 2.0)
@@ -452,7 +452,9 @@ namespace setup
              !getZeroVelocities()))
             return;
 
-        maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
+        maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann{
+            _engine.getSettings().generalSettings
+        };
         maxwellBoltzmann.initializeVelocities(
             _engine.get_simulationBox(),
             _engine.getSettings().kinetics.getStartTemperature()
@@ -551,7 +553,7 @@ namespace setup
         log.writeEmptyLine();
 
         const auto coulombCutoff =
-            _engine.getSettings().potentialSettings.getCoulombRadiusCutoff();
+            _engine.getSettings().potentialSettings.get_coulombRadiusCutoff();
         const auto coulombCutoffStr = std::format(
             "{:14.5f} {}",
             coulombCutoff.numerical_value_in(angstrom),

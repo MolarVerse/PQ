@@ -24,6 +24,8 @@
 
 #include <gtest/gtest.h>
 
+#include "enums/virial.hpp"
+#include "manostatSettings.hpp"
 #include "units.hpp"
 #include "virial.hpp"
 
@@ -86,8 +88,10 @@ TEST_F(TestVirial, calculateVirial)
 
 TEST_F(TestVirial, atomicVirialHasNoIntramolecularCorrection)
 {
+    ManostatSettings manostatSettings;
+    manostatSettings.set_virialByUser(VirialType::ATOMIC);
     EXPECT_EQ(
-        virial::intraMolecularVirialCorrection(*_simBox),
+        virial::intraMolecularVirialCorrection(*_simBox, manostatSettings),
         linalg::tensor3D{0.0} * kcal_per_mol
     );
 }
@@ -179,7 +183,8 @@ TEST_F(TestVirial, calculateQMVirialSumsOnlyQMAtomContributions)
 
 TEST_F(TestVirial, calculateMolecularVirial)
 {
-    GeneralSettings::setVirialType(VirialType::MOLECULAR);
+    ManostatSettings manostatSettings;
+    manostatSettings.set_virialByUser(VirialType::MOLECULAR);
 
     const auto &molecule0 = _simBox->getMolecule(0);
     const auto &molecule1 = _simBox->getMolecule(1);
@@ -201,7 +206,7 @@ TEST_F(TestVirial, calculateMolecularVirial)
         force_mol2_atom1 * (position_mol2_atom1 - centerOfMass_mol2);
 
     const auto virialCalculated =
-        virial::intraMolecularVirialCorrection(*_simBox);
+        virial::intraMolecularVirialCorrection(*_simBox, manostatSettings);
 
     EXPECT_EQ(diagonal(virialCalculated), virial);
 }

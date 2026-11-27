@@ -134,8 +134,8 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
     );
     bondForceField.setIsLinker(false);
 
-    potentialSettings.setScale14CoulombByUser(0.75);
-    potentialSettings.setScale14VanDerWaalsByUser(0.5);
+    potentialSettings.set_scale14CoulombByUser(0.75);
+    potentialSettings.set_scale14VDWByUser(0.5);
 
     bondForceField.calculateEnergyAndForces(
         box,
@@ -143,7 +143,7 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         false,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings.getSmoothingMethod(),
+        hybridSettings.get_smoothing(),
         potentialSettings
     );
 
@@ -274,7 +274,7 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         true,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings.getSmoothingMethod(),
+        hybridSettings.get_smoothing(),
         potentialSettings
     );
 
@@ -405,7 +405,7 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         false,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings.getSmoothingMethod(),
+        hybridSettings.get_smoothing(),
         potentialSettings
     );
 

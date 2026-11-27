@@ -132,7 +132,7 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings.getSmoothingMethod(),
+        hybridSettings.get_smoothing(),
         potentialSettings
     );
 
@@ -235,7 +235,7 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings.getSmoothingMethod(),
+        hybridSettings.get_smoothing(),
         potentialSettings
     );
 
@@ -395,7 +395,7 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings.getSmoothingMethod(),
+        hybridSettings.get_smoothing(),
         potentialSettings
     );
 

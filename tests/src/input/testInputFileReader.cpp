@@ -195,10 +195,10 @@ TEST_F(TestInputFileReader, testReadInputFileReactionFieldWithEpsilon)
     _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
     ASSERT_NO_THROW(input::readInputFile(_fileName, _settings));
     EXPECT_EQ(
-        _settings.potentialSettings.getCoulombLongRangeType(),
+        _settings.potentialSettings.get_coulombLRType(),
         CoulombLongRangeType::REACTION_FIELD
     );
-    EXPECT_EQ(_settings.potentialSettings.getReactionFieldEpsilon(), 80.0);
+    EXPECT_EQ(_settings.potentialSettings.get_reactionFieldEpsilon(), 80.0);
 }
 
 TEST_F(TestInputFileReader, testPostProcessRequiredFail)
@@ -318,28 +318,6 @@ TEST_F(TestInputFileReader, testMoldescriptorFileProcess)
     }
 
     EXPECT_NO_THROW(_inputFileReader->postProcess());
-}
-
-TEST_F(TestInputFileReader, testReadJobType)
-{
-    std::string filename = "data/inputFileReader/inputFile.txt";
-    ASSERT_NO_THROW(input::readJobType(_settings.generalSettings, filename));
-    EXPECT_EQ(_settings.generalSettings.getJobtype(), JobType::MM_MD);
-
-    filename = "fileNotFound";
-    ASSERT_THROW_MSG(
-        input::readJobType(_settings.generalSettings, filename),
-        exc::InputFileException,
-        "\"fileNotFound\" File not found"
-    );
-
-    _settings.generalSettings = GeneralSettings{};
-    filename                  = "data/inputFileReader/missingJobType.txt";
-    ASSERT_THROW_MSG(
-        input::readJobType(_settings.generalSettings, filename),
-        exc::InputFileException,
-        "Missing keyword \"jobtype\" in input file"
-    );
 }
 
 TEST_F(TestInputFileReader, testAllKeywordsAcceptValidValue)

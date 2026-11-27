@@ -39,41 +39,17 @@ namespace thermostat
      * @brief Construct a new Velocity Rescaling Thermostat:: Velocity Rescaling
      * Thermostat object
      *
-     * @param tau
-     */
-    VelocityRescalingThermostat::VelocityRescalingThermostat(const Time &tau)
-        : _tau(tau)
-    {
-    }
-
-    /**
-     * @brief Copy constructor for Velocity Rescaling Thermostat
-     *
-     * @param other
+     * @param tau The relaxation time for the velocity rescaling thermostat
+     * @param generalSettings The general settings object containing relevant
+     * configuration for the simulation, including random number generator
+     * settings.
      */
     VelocityRescalingThermostat::VelocityRescalingThermostat(
-        const VelocityRescalingThermostat &other
+        const Time            &tau,
+        const GeneralSettings &generalSettings
     )
-        : Thermostat(other), _tau(other._tau)
+        : _rng(rng::RandomNumberGenerator::create(generalSettings)), _tau(tau)
     {
-    }
-
-    /**
-     * @brief Copy assignment operator for Velocity Rescaling Thermostat
-     *
-     * @param other
-     * @return VelocityRescalingThermostat&
-     */
-    VelocityRescalingThermostat &VelocityRescalingThermostat::operator=(
-        const VelocityRescalingThermostat &other
-    )
-    {
-        if (this != &other)
-        {
-            Thermostat::operator=(other);
-            _tau = other._tau;
-        }
-        return *this;
     }
 
     /**
@@ -125,7 +101,7 @@ namespace thermostat
         const auto rescalingFactor =
             2.0 * ::sqrt(timeRatio * tempRatio.numerical_value_in(one) / dof);
 
-        auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
+        auto random = _rng.getNormalDistribution(0.0, 1.0);
 
         lambda += rescalingFactor * random;
 
@@ -135,7 +111,7 @@ namespace thermostat
         while (lambda < 0.0)
         {
             lambda -= rescalingFactor * random;
-            random  = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
+            random  = _rng.getNormalDistribution(0.0, 1.0);
             lambda += rescalingFactor * random;
         }
 
