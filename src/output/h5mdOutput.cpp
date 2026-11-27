@@ -383,8 +383,7 @@ namespace out
      */
     H5mdOutput::H5mdOutput(
         const std::string & /*filename*/,
-        bool /*overwrite*/,
-        double /*timeStep*/
+        bool /*overwrite*/
     )
     {
     }
@@ -392,7 +391,10 @@ namespace out
     /**
      * @brief without HDF5 there is no file to write to
      */
-    void H5mdOutput::write(const Frame & /*frame*/, size_t /*step*/) {}
+    void H5mdOutput::
+        write(const Frame & /*frame*/, size_t /*step*/, const Time & /*time*/)
+    {
+    }
 
 }   // namespace out
 
