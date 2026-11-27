@@ -382,8 +382,8 @@ TEST_F(TestForceField, calculateBondedInteractions)
     }});
     improperDihedralForceField.setIsLinker(false);
 
-    potentialSettings.setScale14CoulombByUser(0.75);
-    potentialSettings.setScale14VanDerWaalsByUser(0.5);
+    potentialSettings.set_scale14CoulombByUser(0.75);
+    potentialSettings.set_scale14VDWByUser(0.5);
 
     const HybridSettings hybridSettings;
     auto                 forceField = ff::ForceField(hybridSettings);
@@ -463,8 +463,8 @@ TEST_F(TestForceField, correctLinker)
         AtomIndex{0},
         AtomIndex{1},
         1.0 * angstrom,
-        potentialSettings.getScale14Coulomb(),
-        potentialSettings.getScale14VDW()
+        potentialSettings.get_scale14Coulomb(),
+        potentialSettings.get_scale14VDW()
     );
 
     EXPECT_NEAR(
@@ -485,8 +485,8 @@ TEST_F(TestForceField, correctLinker)
 
     physicalData.reset();
 
-    potentialSettings.setScale14CoulombByUser(0.75);
-    potentialSettings.setScale14VanDerWaalsByUser(0.5);
+    potentialSettings.set_scale14CoulombByUser(0.75);
+    potentialSettings.set_scale14VDWByUser(0.5);
 
     const auto forceScaled = ff::correctLinker<ff::DihedralForceField>(
         coulombPotential,
@@ -497,8 +497,8 @@ TEST_F(TestForceField, correctLinker)
         AtomIndex{0},
         AtomIndex{1},
         1.0 * angstrom,
-        potentialSettings.getScale14Coulomb(),
-        potentialSettings.getScale14VDW()
+        potentialSettings.get_scale14Coulomb(),
+        potentialSettings.get_scale14VDW()
     );
 
     EXPECT_NEAR(

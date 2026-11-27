@@ -81,7 +81,7 @@ int main()
             physicalData,
             toTemperature(300.0),
             timeStep,
-            settings.potentialSettings.getCoulombRadiusCutoff()
+            settings.potentialSettings.get_coulombRadiusCutoff()
         );
     }
 

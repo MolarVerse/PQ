@@ -211,8 +211,8 @@ TEST_F(TestIntraNonBonded, calculate)
     molecule.addAtom(atom2);
 
     PotentialSettings potentialSettings;
-    potentialSettings.setScale14CoulombByUser(0.75);
-    potentialSettings.setScale14VanDerWaalsByUser(0.75);
+    potentialSettings.set_scale14CoulombByUser(0.75);
+    potentialSettings.set_scale14VDWByUser(0.75);
 
     auto intraNonBondedType = intraNonBonded::IntraNonBondedContainer(
         MolType{0},

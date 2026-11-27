@@ -145,7 +145,7 @@ namespace ff
 
             const auto distance23 = norm(dPosition23);
 
-            if (distance23 < potentialSettings.getCoulombRadiusCutoff())
+            if (distance23 < potentialSettings.get_coulombRadiusCutoff())
             {
                 const auto forceMagnitudeLinker =
                     correctLinker<AngleForceField>(
@@ -157,8 +157,8 @@ namespace ff
                         atomIndices[1],
                         atomIndices[2],
                         distance23,
-                        potentialSettings.getScale14Coulomb(),
-                        potentialSettings.getScale14VDW()
+                        potentialSettings.get_scale14Coulomb(),
+                        potentialSettings.get_scale14VDW()
                     );
 
                 forcexyz = forceMagnitudeLinker * dPosition23 / distance23;

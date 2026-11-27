@@ -68,8 +68,8 @@ int main()
 
     auto molecule = benchSetup::makeMolecule({.nAtoms = 4});
 
-    settings.potentialSettings.setScale14CoulombByUser(0.75);
-    settings.potentialSettings.setScale14VanDerWaalsByUser(0.5);
+    settings.potentialSettings.set_scale14CoulombByUser(0.75);
+    settings.potentialSettings.set_scale14VDWByUser(0.5);
 
     auto bond = ff::BondForceField(
         &molecule,

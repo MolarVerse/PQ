@@ -195,10 +195,10 @@ TEST_F(TestInputFileReader, testReadInputFileReactionFieldWithEpsilon)
     _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
     ASSERT_NO_THROW(input::readInputFile(_fileName, _settings));
     EXPECT_EQ(
-        _settings.potentialSettings.getCoulombLongRangeType(),
+        _settings.potentialSettings.get_coulombLRType(),
         CoulombLongRangeType::REACTION_FIELD
     );
-    EXPECT_EQ(_settings.potentialSettings.getReactionFieldEpsilon(), 80.0);
+    EXPECT_EQ(_settings.potentialSettings.get_reactionFieldEpsilon(), 80.0);
 }
 
 TEST_F(TestInputFileReader, testPostProcessRequiredFail)
