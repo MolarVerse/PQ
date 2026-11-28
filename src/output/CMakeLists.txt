@@ -5,6 +5,8 @@ add_library(output
     extxyzOutput.cpp
     h5mdOutput.cpp
     aseTrajOutput.cpp
+    zarrOutput.cpp
+    zarrWriter.cpp
     atomicNumber.cpp
     ulmWriter.cpp
     outputMessages.cpp
@@ -64,6 +66,16 @@ if(BUILD_WITH_HDF5)
         COMPILE_DEFINITIONS WITH_HDF5
     )
     set_source_files_properties(hdf5Wrapper.cpp PROPERTIES
+        SKIP_PRECOMPILE_HEADERS ON
+        SKIP_UNITY_BUILD_INCLUSION ON
+    )
+endif()
+
+# zarrWriter.cpp alone sees zstd: no PCH or unity batch, like the HDF5 sources
+if(BUILD_WITH_ZSTD)
+    target_link_libraries(output PRIVATE zstd::libzstd)
+    set_source_files_properties(zarrWriter.cpp PROPERTIES
+        COMPILE_DEFINITIONS WITH_ZSTD
         SKIP_PRECOMPILE_HEADERS ON
         SKIP_UNITY_BUILD_INCLUSION ON
     )

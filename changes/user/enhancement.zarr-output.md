@@ -1,0 +1,2 @@
+- New `traj_format = zarr`: MD runs write one Zarr v3 store (`default.traj.zarr`, key `zarr_traj_file`) with the groups and units of the H5MD output, readable with zarr-python 3; chunks of 100 frames are written when full, so a run that stops early keeps every frame up to the last full chunk (#1378).
+- With `-DBUILD_WITH_ZSTD=ON` (needs libzstd) the Zarr chunks are zstd compressed (#1378).

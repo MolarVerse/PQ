@@ -49,7 +49,9 @@
 #include "stressOutput.hpp"
 #include "timingsOutput.hpp"
 #include "trajectoryOutput.hpp"
+#include "unit_types.hpp"
 #include "virialOutput.hpp"
+#include "zarrOutput.hpp"
 
 namespace configurator
 {
@@ -95,6 +97,7 @@ namespace engine
         std::unique_ptr<out::ExtxyzOutput>  _extxyzOutput;
         std::unique_ptr<out::H5mdOutput>    _h5mdOutput;
         std::unique_ptr<out::AseTrajOutput> _aseTrajOutput;
+        std::unique_ptr<out::ZarrOutput>    _zarrOutput;
 
         std::unique_ptr<out::LogOutput>    _logOutput;
         std::unique_ptr<out::StdoutOutput> _stdoutOutput;
@@ -166,7 +169,13 @@ namespace engine
             double             timeStep
         );
         void openAseTrajOutput(const std::string &filename, bool overwrite);
+        void openZarrOutput(
+            const std::string &filename,
+            bool               overwrite,
+            Time               timeStep
+        );
         void waitForFrames();
+        void closeZarrOutput();
 
         [[nodiscard]] static bool asyncOutputFits(
             std::size_t                nAtoms,

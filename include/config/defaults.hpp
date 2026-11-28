@@ -50,6 +50,7 @@ struct DefaultFiles
     static constexpr auto extxyzFile       = "default.extxyz";
     static constexpr auto h5mdFile         = "default.h5md";
     static constexpr auto aseTrajFile      = "default.ase.traj";
+    static constexpr auto zarrTrajFile     = "default.traj.zarr";
     static constexpr auto logFile          = "default.log";
     static constexpr auto stdoutFile       = "default.stdout";
     static constexpr auto refFile          = "default.ref";

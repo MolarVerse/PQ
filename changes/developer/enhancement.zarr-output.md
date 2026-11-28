@@ -1,0 +1,3 @@
+- `out::ZarrOutput` writes the Zarr store through the typed `out::zarr` wrapper (`JsonObject`, `Array`, `Element`, `writeArray`), which writes zarr.json and the chunk files itself (no Zarr library); every file is written next to its target and renamed into place (#1378).
+- New CMake option `BUILD_WITH_ZSTD` (default OFF) links libzstd into `zarrWriter.cpp` for the `zstd` codec; without it only the `bytes` codec is written and zstd is refused (#1378).
+- The `hdf5-build` CI job also builds with `-DBUILD_WITH_ZSTD=ON` and runs the Zarr tests; lint and devops checks configure with zstd too (#1378).

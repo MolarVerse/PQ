@@ -83,6 +83,24 @@ Stores every frame as an `ASE <https://wiki.fysik.dtu.dk/ase/>`_ trajectory (ULM
 
 All values are in ASE units: Å, eV, eV/Å, amu, *e* and momenta in amu Å per ASE time unit, so ``atoms.get_velocities()`` gives velocities in Å per ASE time unit (multiply by ``ase.units.fs`` for Å/fs).
 
+.. _zarrTrajFile:
+
+*********************
+Zarr Trajectory File
+*********************
+
+**File Type:** ``.traj.zarr`` directory (written instead of the xyz, velocity, force and charge files if :ref:`trajformatkey` is ``zarr``)
+
+Stores every frame as a `Zarr v3 <https://zarr.dev/>`_ store with the groups, arrays and units of the :ref:`h5mdFile`, which ``zarr.open_group("default.traj.zarr", mode="r")`` (zarr-python 3) reads without PQ:
+
+    - ``particles/all/position``, ``velocity``, ``force`` and ``charge``: ``step``, ``time`` and ``value`` arrays (single precision)
+    - ``particles/all/box/edges``: the box vectors of every frame, as rows of a 3x3 matrix
+    - ``particles/all/species``: atomic numbers, 0 for atoms without element (dummy atoms)
+    - ``observables/potential_energy``: the potential energy of every frame
+    - the PQ atom names in the ``atom_names`` attribute of the ``parameters`` group
+
+Every ``value`` array has a ``unit`` attribute; the units are those of the :ref:`h5mdFile`. Frames are stored in chunks of 100 frames along the first axis, compressed with zstd if PQ was built with ``-DBUILD_WITH_ZSTD=ON``. A full chunk is on disk as soon as it is complete and the last one when the run ends, so the store of a run that stops early holds every frame up to the last full chunk.
+
 .. _chargeFile:
 
 ************

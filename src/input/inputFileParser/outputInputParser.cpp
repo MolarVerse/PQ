@@ -85,6 +85,7 @@ namespace input
         addExtxyzFilenameKeyword();
         addH5mdFilenameKeyword();
         addAseTrajFilenameKeyword();
+        addZarrTrajFilenameKeyword();
         addMomentumFilenameKeyword();
         addVirialFilenameKeyword();
         addStressFilenameKeyword();
@@ -557,8 +558,9 @@ namespace input
             .description =
                 "File format of the MD trajectory: xyz (separate xyz, vel, "
                 "force and chrg files), extxyz (one extended xyz file in PQ "
-                "units), h5md (one H5MD/HDF5 file in PQ units) or ase (one "
-                "ASE .traj file in ASE units)"
+                "units), h5md (one H5MD/HDF5 file in PQ units), ase (one "
+                "ASE .traj file in ASE units) or zarr (one Zarr v3 store in "
+                "PQ units)"
         };
 
         const auto setValue = [this](TrajectoryFormat value)
@@ -655,6 +657,35 @@ namespace input
             KeyRegistry<std::string>{
                 .metadata     = metaData,
                 .defaultValue = DefaultFiles::aseTrajFile,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    /**
+     * @brief add Zarr trajectory filename keyword to the input parser
+     *
+     * @details the Zarr store is only written if traj_format = zarr
+     */
+    void OutputInputParser::addZarrTrajFilenameKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "zarr_traj_file",
+            .title = "Zarr trajectory filename",
+            .description =
+                "Directory of the Zarr v3 trajectory store, written if "
+                "traj_format = zarr"
+        };
+
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->set_zarrTrajFileByUser(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::zarrTrajFile,
                 .onSet        = setValue,
             }
         );

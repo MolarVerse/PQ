@@ -33,6 +33,9 @@ option(BUILD_WITH_MPI "Build with MPI" OFF)
 # H5MD trajectory output (traj_format = h5md) needs the HDF5 C library
 option(BUILD_WITH_HDF5 "Build with HDF5 for H5MD trajectory output" OFF)
 
+# zstd codec of the Zarr trajectory output (traj_format = zarr) needs libzstd
+option(BUILD_WITH_ZSTD "Build with zstd for compressed Zarr trajectory output" OFF)
+
 # ***********
 # BUILD TOOLS
 # ***********

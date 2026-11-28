@@ -22,6 +22,8 @@ set(source_files
     testExtxyzOutput.cpp
     testH5mdOutput.cpp
     testAseTrajOutput.cpp
+    testZarrOutput.cpp
+    testZarrWriter.cpp
     testAtomicNumber.cpp
     testUlmWriter.cpp
 )
@@ -115,6 +117,17 @@ foreach(source_file ${source_files})
 
     set_property(TEST ${test_name} PROPERTY LABELS output)
 endforeach()
+
+# the Zarr tests decompress zstd chunks themselves
+if(BUILD_WITH_ZSTD)
+    foreach(test_name testZarrOutput testZarrWriter)
+        target_link_libraries(${test_name} PRIVATE zstd::libzstd)
+        set_source_files_properties(${test_name}.cpp PROPERTIES
+            COMPILE_DEFINITIONS WITH_ZSTD
+            SKIP_PRECOMPILE_HEADERS ON
+        )
+    endforeach()
+endif()
 
 # reads the H5MD file back with the HDF5 library, so it is built without the
 # shared precompiled header
