@@ -141,14 +141,17 @@ TEST(TestOutputSettings, extxyzFilenameFollowsPrefix)
     EXPECT_EQ(settings.get_extxyzFile(), "run.extxyz");
     EXPECT_EQ(settings.get_h5mdFile(), "run.h5md");
     EXPECT_EQ(settings.get_aseTrajFile(), "run.ase.traj");
+    EXPECT_EQ(settings.get_zarrTrajFile(), "run.traj.zarr");
 
     OutputFileSettings named;
     named.set_extxyzFileByUser("water.extxyz");
     named.set_h5mdFileByUser("water.h5md");
     named.set_aseTrajFileByUser("water.ase.traj");
+    named.set_zarrTrajFileByUser("water.traj.zarr");
     named.finalize();
     EXPECT_EQ(named.get_extxyzFile(), "water.extxyz");
     EXPECT_EQ(named.get_h5mdFile(), "water.h5md");
     EXPECT_EQ(named.get_aseTrajFile(), "water.ase.traj");
+    EXPECT_EQ(named.get_zarrTrajFile(), "water.traj.zarr");
     EXPECT_EQ(named.get_rstFile(), "water.rst");
 }

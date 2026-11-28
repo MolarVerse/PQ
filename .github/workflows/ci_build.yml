@@ -422,8 +422,9 @@ jobs:
       - name: Run tests
         run: ctest --test-dir build --output-on-failure -j1
 
-  # BUILD_WITH_HDF5 is off in every other job: only the H5MD output and the
-  # tests around it are built here, with HDF5 from apt.
+  # BUILD_WITH_HDF5 and BUILD_WITH_ZSTD are off in every other job: only the
+  # H5MD and zstd Zarr output and the tests around them are built here, with
+  # HDF5 and zstd from apt.
   hdf5-build:
     if: needs.changes.outputs.relevant == 'true' && github.event_name != 'schedule'
     needs: changes
@@ -441,7 +442,7 @@ jobs:
       - name: Setup GCC
         uses: ./.github/actions/setup-gcc
         with:
-          packages: mold ninja-build libhdf5-dev
+          packages: mold ninja-build libhdf5-dev libzstd-dev
 
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
@@ -462,23 +463,25 @@ jobs:
           git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
         shell: bash
 
-      - name: Build PQ with HDF5
+      - name: Build PQ with HDF5 and zstd
         run: |
           cmake -S . -B build -G Ninja \
             -DCMAKE_BUILD_TYPE=Release \
             -DBUILD_WITH_HDF5=ON \
+            -DBUILD_WITH_ZSTD=ON \
             -DBUILD_WITH_ASE=OFF \
             -DBUILD_WITH_NATIVE=OFF \
             -DBUILD_WITH_TESTS=ON \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build --parallel "$(nproc)" --target PQ \
             testH5mdOutput testH5mdOutputContent testHdf5Wrapper testOutputFilesSetup \
-            testOutputParser testOutputFileSettings testEngineOutputFrames
+            testOutputParser testOutputFileSettings testEngineOutputFrames \
+            testZarrOutput testZarrWriter
 
-      - name: Run the H5MD tests
+      - name: Run the H5MD and Zarr tests
         run: >-
           ctest --test-dir build --output-on-failure
-          -R 'H5md|Hdf5Wrapper|testOutputFilesSetup|testOutputParser|testOutputFileSettings|testEngineOutputFrames'
+          -R 'H5md|Hdf5Wrapper|Zarr|testOutputFilesSetup|testOutputParser|testOutputFileSettings|testEngineOutputFrames'
 
   # BUILD_WITH_PYTHON_BINDINGS is off in every other job (#543). It installs
   # PQAnalysis through pip while CMake configures and then has to report the

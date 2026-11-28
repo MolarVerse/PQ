@@ -348,6 +348,24 @@ namespace engine
     }
 
     /**
+     * @brief write every MD frame to a Zarr store instead of the xyz,
+     * velocity, force and charge files
+     *
+     * @param filename directory of the store
+     * @param overwrite whether an existing store may be replaced
+     * @param timeStep
+     */
+    void EngineOutput::openZarrOutput(
+        const std::string &filename,
+        bool               overwrite,
+        Time               timeStep
+    )
+    {
+        _zarrOutput =
+            std::make_unique<out::ZarrOutput>(filename, overwrite, timeStep);
+    }
+
+    /**
      * @brief write every MD frame to an extxyz file instead of the xyz,
      * velocity, force and charge files
      *
@@ -375,7 +393,7 @@ namespace engine
      * @param simulationBox
      * @param thermostat
      * @param step
-     * @param potentialEnergy written to the extxyz, H5MD and ASE files
+     * @param potentialEnergy written to the extxyz, H5MD, ASE and Zarr files
      * @param finalTime
      *
      * @throw the first error of an earlier frame write
@@ -469,7 +487,8 @@ namespace engine
 
     /**
      * @brief write the trajectory files (xyz, velocity, force and charge,
-     * or one extxyz, H5MD or ASE file) and the restart file of one frame
+     * or one extxyz, H5MD, ASE or Zarr file) and the restart file of one
+     * frame
      *
      * @param frame
      * @param step
@@ -495,6 +514,10 @@ namespace engine
         else if (_aseTrajOutput)
         {
             _aseTrajOutput->write(frame, step);
+        }
+        else if (_zarrOutput)
+        {
+            _zarrOutput->write(frame, step);
         }
         else
         {
@@ -522,6 +545,17 @@ namespace engine
 
         auto _ = scopedTimer(TimerId::Output, "FrameOutput");
         _frameWriter->wait();
+    }
+
+    /**
+     * @brief write the last frames of the Zarr store, after waitForFrames
+     */
+    void EngineOutput::closeZarrOutput()
+    {
+        if (_zarrOutput)
+        {
+            _zarrOutput->close();
+        }
     }
 
     /**

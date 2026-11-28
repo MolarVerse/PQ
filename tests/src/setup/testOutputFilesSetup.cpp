@@ -252,6 +252,35 @@ TEST_F(TestSetup, setupOutputFilesMDPathAseReplacesTrajectoryFiles)
     cleanupPrefix();
 }
 
+TEST_F(TestSetup, setupOutputFilesMDPathZarrReplacesTrajectoryFiles)
+{
+    cleanupPrefix();
+    const std::string store = std::string(PREFIX) + ".traj.zarr";
+    std::filesystem::remove_all(store);
+
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
+    _settings->outputFiles.set_filePrefixByUser(PREFIX);
+    _settings->outputFiles.set_trajFormatByUser(TrajectoryFormat::ZARR);
+    _settings->timings.setTimeStepByUser(0.5 * fs);
+    _settings->timings.setNumberOfStepsByUser(100U);
+
+    _settings->finalize();
+    setup::OutputFilesSetup setup(*_mdEngine);
+
+    EXPECT_NO_THROW(setup.setup());
+
+    EXPECT_TRUE(std::filesystem::exists(store + "/zarr.json"));
+
+    const std::string prefix = PREFIX;
+    for (const auto *suffix : {".xyz", ".vel", ".force", ".chrg"})
+    {
+        EXPECT_FALSE(std::filesystem::exists(prefix + suffix)) << suffix;
+    }
+
+    std::filesystem::remove_all(store);
+    cleanupPrefix();
+}
+
 TEST_F(TestSetup, setupOutputFilesRPMDPathRunsWithoutThrowing)
 {
     cleanupPrefix();

@@ -221,6 +221,51 @@ TEST(TestEngineOutputFrames, aseTrajReplacesTheXyzFiles)
     std::filesystem::remove(prefix + ".rst");
 }
 
+TEST(TestEngineOutputFrames, zarrReplacesTheXyzFiles)
+{
+    const std::string prefix = "engineOutputZarr";
+    const std::string store  = prefix + ".traj.zarr";
+
+    OutputFileSettings      outputFileSettings;
+    const ReferenceSettings referenceSettings;
+
+    {
+        engine::EngineOutput output{outputFileSettings, referenceSettings};
+        output.getRstFileOutput().setFilename(prefix + ".rst", true);
+        output.openZarrOutput(store, true, 0.5 * fs);
+
+        const auto                   simulationBox = makeSimulationBox();
+        const thermostat::Thermostat thermostat{};
+
+        for (std::size_t step = 1; step <= 3; ++step)
+        {
+            output.writeFrame(
+                simulationBox,
+                thermostat,
+                step,
+                -1.5 * kcal_per_mol,
+                100 * fs
+            );
+        }
+
+        output.waitForFrames();
+        output.closeZarrOutput();
+    }
+
+    const auto metadata =
+        readFile(store + "/particles/all/position/value/zarr.json");
+    EXPECT_NE(metadata.find(R"("shape": [3, 2, 3])"), std::string::npos)
+        << metadata;
+
+    for (const auto *suffix : {".xyz", ".vel", ".force", ".chrg"})
+    {
+        EXPECT_FALSE(std::filesystem::exists(prefix + suffix)) << suffix;
+    }
+
+    std::filesystem::remove_all(store);
+    std::filesystem::remove(prefix + ".rst");
+}
+
 TEST(TestEngineOutputFrames, asyncOutputFitsInHalfOfTheMemory)
 {
     constexpr std::size_t nAtoms = 1'000'000;

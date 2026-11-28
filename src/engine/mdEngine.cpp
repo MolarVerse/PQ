@@ -90,6 +90,7 @@ namespace engine
         }
 
         getEngineOutput().waitForFrames();
+        getEngineOutput().closeZarrOutput();
 
         timings::GlobalTimer::get().stopSimulationTimer();
 

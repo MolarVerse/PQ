@@ -64,12 +64,13 @@ class OutputFileSettings
     Setting<std::string, "Velocity File"> _velFile{DefaultFiles::velFile};
     Setting<std::string, "Force File">    _forceFile{DefaultFiles::forceFile};
     Setting<std::string, "Charge File">   _chargeFile{DefaultFiles::chargeFile};
-    Setting<std::string, "Extended XYZ File">   _extxyzFile;
-    Setting<std::string, "H5MD File">           _h5mdFile;
-    Setting<std::string, "ASE Trajectory File"> _aseTrajFile;
-    Setting<std::string, "Log File">            _logFile{DefaultFiles::logFile};
-    Setting<std::string, "Reference File">      _refFile{DefaultFiles::refFile};
-    Setting<std::string, "Info File"> _infoFile{DefaultFiles::infoFile};
+    Setting<std::string, "Extended XYZ File">    _extxyzFile;
+    Setting<std::string, "H5MD File">            _h5mdFile;
+    Setting<std::string, "ASE Trajectory File">  _aseTrajFile;
+    Setting<std::string, "Zarr Trajectory File"> _zarrTrajFile;
+    Setting<std::string, "Log File">       _logFile{DefaultFiles::logFile};
+    Setting<std::string, "Reference File"> _refFile{DefaultFiles::refFile};
+    Setting<std::string, "Info File">      _infoFile{DefaultFiles::infoFile};
 
     Setting<std::string, "Virial File"> _virialFile{DefaultFiles::virialFile};
     Setting<std::string, "Stress File"> _stressFile{DefaultFiles::stressFile};
@@ -118,6 +119,7 @@ class OutputFileSettings
     SETTING_GETTER_AND_SETTER_BY_USER(_extxyzFile);
     SETTING_GETTER_AND_SETTER_BY_USER(_h5mdFile);
     SETTING_GETTER_AND_SETTER_BY_USER(_aseTrajFile);
+    SETTING_GETTER_AND_SETTER_BY_USER(_zarrTrajFile);
     SETTING_GETTER_AND_SETTER_BY_USER(_logFile);
     SETTING_GETTER_AND_SETTER_BY_USER(_refFile);
     SETTING_GETTER_AND_SETTER_BY_USER(_infoFile);

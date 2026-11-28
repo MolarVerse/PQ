@@ -95,6 +95,11 @@ void OutputFileSettings::_replaceDefaultValues(const std::string& prefix)
         _aseTrajFile.setBySystem(prefix + ".ase.traj");
     }
 
+    if (!_zarrTrajFile.isSetByUser())
+    {
+        _zarrTrajFile.setBySystem(prefix + ".traj.zarr");
+    }
+
     if (!_hybridCenterFile.isSetByUser())
         _hybridCenterFile.setBySystem(prefix + ".center.xyz");
 
@@ -192,6 +197,11 @@ std::string OutputFileSettings::_determineMostCommonPrefix() const
     if (_aseTrajFile.isSetByUser())
     {
         fileNames.push_back(_aseTrajFile.get());
+    }
+
+    if (_zarrTrajFile.isSetByUser())
+    {
+        fileNames.push_back(_zarrTrajFile.get());
     }
 
     auto removeEnding = [](std::string& fileName)

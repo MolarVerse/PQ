@@ -99,6 +99,7 @@ charge_file                  false      charge.dat
 extxyz_file                  false      traj.extxyz
 h5md_file                    false      traj.h5md
 ase_traj_file                false      traj.ase.traj
+zarr_traj_file               false      traj.traj.zarr
 traj_format                  false      extxyz
 force_file                   false      force.dat
 virial_file                  false      virial.dat

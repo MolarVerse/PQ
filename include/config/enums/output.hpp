@@ -36,7 +36,8 @@ enum class TrajectoryFormat : std::uint8_t;
     X(XYZ)                        \
     X(EXTXYZ)                     \
     X(H5MD)                       \
-    X(ASE)
+    X(ASE)                        \
+    X(ZARR)
 
 MSTD_ENUM(TrajectoryFormat, std::uint8_t, TRAJECTORY_FORMAT_LIST)
 

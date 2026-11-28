@@ -98,8 +98,8 @@ namespace setup
         );
         _engine.getInfoOutput().setFilename(infoFileName, overwriteOutputFiles);
 
-        // extxyz, h5md or ase replace the xyz, velocity, force and charge files
-        // of MD runs
+        // extxyz, h5md, ase or zarr replace the xyz, velocity, force and
+        // charge files of MD runs
         const auto format = outputFileSettings.get_trajFormat();
         const auto textTrajectory =
             !isMDJobType(_engine.getSettings().generalSettings.getJobtype()) ||
@@ -156,6 +156,14 @@ namespace setup
                 mdEngine.getEngineOutput().openAseTrajOutput(
                     outputFileSettings.get_aseTrajFile(),
                     overwriteOutputFiles
+                );
+            }
+            else if (format == TrajectoryFormat::ZARR)
+            {
+                mdEngine.getEngineOutput().openZarrOutput(
+                    outputFileSettings.get_zarrTrajFile(),
+                    overwriteOutputFiles,
+                    _engine.getSettings().timings.getTimeStep()
                 );
             }
             else

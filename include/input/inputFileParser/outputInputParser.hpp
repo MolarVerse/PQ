@@ -65,6 +65,7 @@ namespace input
         void addExtxyzFilenameKeyword();
         void addH5mdFilenameKeyword();
         void addAseTrajFilenameKeyword();
+        void addZarrTrajFilenameKeyword();
         void addMomentumFilenameKeyword();
         void addVirialFilenameKeyword();
         void addStressFilenameKeyword();

@@ -327,6 +327,25 @@ TEST_F(TestInputFileReader, testAseTrajFilename)
 }
 
 /**
+ * @brief tests parsing the "zarr_traj_file" command
+ *
+ */
+TEST_F(TestInputFileReader, testZarrTrajFilename)
+{
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
+    const auto               funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("zarr_traj_file"));
+
+    const auto &parseFunc = funcMap.at("zarr_traj_file");
+
+    _fileName                             = "traj.traj.zarr";
+    std::vector<std::string> lineElements = {"zarr_traj_file", "=", _fileName};
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(outputFileSettings.get_zarrTrajFile(), _fileName);
+}
+
+/**
  * @brief tests parsing the "traj_format" command
  *
  */
@@ -354,6 +373,12 @@ TEST_F(TestInputFileReader, testTrajectoryFormat)
     lineElements = {"traj_format", "=", "ase"};
     aseParser.getKeywordFuncMap().at("traj_format")(lineElements, 0);
     EXPECT_EQ(aseSettings.get_trajFormat(), TrajectoryFormat::ASE);
+
+    OutputFileSettings       zarrSettings;
+    input::OutputInputParser zarrParser(zarrSettings);
+    lineElements = {"traj_format", "=", "zarr"};
+    zarrParser.getKeywordFuncMap().at("traj_format")(lineElements, 0);
+    EXPECT_EQ(zarrSettings.get_trajFormat(), TrajectoryFormat::ZARR);
 }
 
 /**
