@@ -75,8 +75,9 @@ TEST(TestH5mdOutput, writesOnlyWithHdf5)
     if (!out::H5mdOutput::available())
     {
         {
-            out::H5mdOutput output{filename, true, 0.5};
-            output.write(makeFrame(), 10);
+            const auto      step = 10;
+            out::H5mdOutput output{filename, true};
+            output.write(makeFrame(), step, 0.5 * fs * step);
             output.close();
         }
         EXPECT_FALSE(std::filesystem::exists(filename));
@@ -84,14 +85,15 @@ TEST(TestH5mdOutput, writesOnlyWithHdf5)
     }
 
     {
-        out::H5mdOutput output{filename, false, 0.5};
-        output.write(makeFrame(), 10);
+        const auto      step = 10;
+        out::H5mdOutput output{filename, false};
+        output.write(makeFrame(), step, 0.5 * fs * step);
         output.close();
     }
 
     EXPECT_TRUE(std::filesystem::exists(filename));
     EXPECT_THROW_MSG(
-        out::H5mdOutput(filename, false, 0.5),
+        out::H5mdOutput(filename, false),
         exc::InputFileException,
         "File already exists - filename = " + filename
     );

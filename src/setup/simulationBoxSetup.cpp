@@ -196,17 +196,11 @@ namespace setup
 
             if (moleculeType.getExternalGlobalVDWTypes().size() != nAtoms)
             {
-                throw exc::UserInputException(
+                throw exc::InternalException(
                     std::format(
-                        "Ooooops! Something went wrong. Please check again "
-                        "your "
-                        "input files and please report this issue to the "
-                        "developers via "
-                        "https://github.com/Molarverse/PQ/issues.\n"
-                        "in simulationBoxSetup.cpp: setExternalVDWTypes()\n"
+                        "\nin simulationBoxSetup.cpp: setExternalVDWTypes()\n"
                         "Number of external VDW types ({}) does not match "
-                        "number "
-                        "of atoms ({}) in molecule type {}",
+                        "number of atoms ({}) in molecule type {}",
                         moleculeType.getExternalGlobalVDWTypes().size(),
                         nAtoms,
                         molType.toString()

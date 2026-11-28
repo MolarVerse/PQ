@@ -23,10 +23,11 @@
 #ifndef OUTPUT__H5MD_OUTPUT_HPP
 #define OUTPUT__H5MD_OUTPUT_HPP
 
-#include <cstddef>
 #include <memory>
 #include <mstd/utils.hpp>
 #include <string>
+
+#include "unit_types.hpp"
 
 namespace out
 {
@@ -46,17 +47,13 @@ namespace out
         std::unique_ptr<Impl> _impl;
 
        public:
-        H5mdOutput(
-            const std::string &filename,
-            bool               overwrite,
-            double             timeStep
-        );
+        H5mdOutput(const std::string &filename, bool overwrite);
         ~H5mdOutput();
 
         MSTD_NO_COPY(H5mdOutput)
         MSTD_NO_MOVE(H5mdOutput)
 
-        void write(const Frame &frame, size_t step);
+        void write(const Frame &frame, size_t step, const Time &time);
         void close();
 
         [[nodiscard]] static bool available();

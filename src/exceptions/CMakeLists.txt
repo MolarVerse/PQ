@@ -1,5 +1,6 @@
 add_library(exceptions 
     baseException.cpp
+    exceptions.cpp
 )
 
 target_include_directories(exceptions
