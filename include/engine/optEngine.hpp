@@ -32,6 +32,8 @@
 #include "evaluator.hpp"
 #include "learningRateStrategy.hpp"
 #include "optimizer.hpp"
+#include "physicalData.hpp"
+#include "unit_types.hpp"
 
 namespace engine
 {
@@ -74,7 +76,10 @@ namespace engine
             size_t                          nEpochs,
             const std::vector<std::string> &errorMessages
         );
-        [[nodiscard]] static std::string notConvergedMessage(size_t nEpochs);
+        [[nodiscard]] static std::string  notConvergedMessage(size_t nEpochs);
+        [[nodiscard]] static EnergyPerMol optimizedEnergy(
+            const physicalData::PhysicalData &physicalData
+        );
 
         /***************************
          * standard setter methods *

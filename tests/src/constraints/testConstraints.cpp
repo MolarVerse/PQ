@@ -30,10 +30,12 @@
 #include <utility>
 #include <vector>
 
+#include "distanceConstraint.hpp"
 #include "exceptions.hpp"
 #include "gmock/gmock.h"
 #include "mShakeReference.hpp"
 #include "moleculeType.hpp"
+#include "physicalData.hpp"
 #include "testSettings.hpp"
 #include "throwWithMessage.hpp"
 #include "unit_types.hpp"
@@ -294,6 +296,140 @@ TEST_F(TestConstraints, projectForcesWithMShakeKeepsTheMoleculeRigid)
     EXPECT_THAT(
         atoms[1]->getVelocity().numerical_value_in(angstrom / s),
         testing::ElementsAre(5.0, 5.0, 5.0)
+    );
+}
+
+TEST_F(TestConstraints, applyStaticDistanceConstraintsIgnoresTheTimeTerm)
+{
+    const auto settings =
+        testSettings::make<ConstraintSettings>()
+            .apply([](auto &config)
+                   { config.activateDistanceConstraintsByUser(); })
+            .build();
+    constraints::Constraints constraints(settings);
+
+    auto  simulationBox = _makeDimerBox();
+    auto *molecule      = simulationBox->getMolecules().data();
+    constraints.addDistanceConstraint(
+        constraints::DistanceConstraint(
+            molecule,
+            molecule,
+            AtomIndex{0},
+            AtomIndex{1},
+            1.0 * angstrom,
+            1.0 * angstrom,
+            10.0 * kcal_per_mol / angstrom2,
+            5.0 * kcal_per_mol / angstrom2 / fs
+        )
+    );
+
+    auto &atoms = simulationBox->getAtoms();
+    for (const auto &atom : atoms)
+    {
+        atom->setForce(Force3D::zero());
+    }
+
+    physicalData::PhysicalData physicalData;
+    constraints.applyStaticDistanceConstraints(*simulationBox, physicalData);
+
+    EXPECT_NEAR(
+        physicalData.get_upperDistanceConstraints().numerical_value_in(
+            kcal_per_mol
+        ),
+        0.05,
+        1e-12
+    );
+    EXPECT_EQ(
+        physicalData.get_lowerDistanceConstraints(),
+        EnergyPerMol::zero()
+    );
+    EXPECT_THAT(
+        atoms[0]->getForce().numerical_value_in(kcal_per_mol / angstrom),
+        testing::ElementsAre(testing::DoubleNear(1.0, 1e-12), 0.0, 0.0)
+    );
+    EXPECT_THAT(
+        atoms[1]->getForce().numerical_value_in(kcal_per_mol / angstrom),
+        testing::ElementsAre(testing::DoubleNear(-1.0, 1e-12), 0.0, 0.0)
+    );
+}
+
+TEST_F(TestConstraints, applyStaticDistanceConstraintsWhenInactiveDoesNothing)
+{
+    const auto settings = testSettings::make<ConstraintSettings>().build();
+    constraints::Constraints constraints(settings);
+
+    auto  simulationBox = _makeDimerBox();
+    auto *molecule      = simulationBox->getMolecules().data();
+    constraints.addDistanceConstraint(
+        constraints::DistanceConstraint(
+            molecule,
+            molecule,
+            AtomIndex{0},
+            AtomIndex{1},
+            1.0 * angstrom,
+            1.0 * angstrom,
+            10.0 * kcal_per_mol / angstrom2,
+            0.0 * kcal_per_mol / angstrom2 / fs
+        )
+    );
+    simulationBox->getAtoms()[0]->setForce(Force3D::zero());
+
+    physicalData::PhysicalData physicalData;
+    constraints.applyStaticDistanceConstraints(*simulationBox, physicalData);
+
+    EXPECT_EQ(
+        physicalData.get_upperDistanceConstraints(),
+        EnergyPerMol::zero()
+    );
+    EXPECT_EQ(simulationBox->getAtoms()[0]->getForce(), Force3D::zero());
+}
+
+TEST_F(TestConstraints, applyDistanceConstraintsUsesTheTimeSinceStart)
+{
+    const auto settings =
+        testSettings::make<ConstraintSettings>()
+            .apply([](auto &config)
+                   { config.activateDistanceConstraintsByUser(); })
+            .build();
+    constraints::Constraints constraints(settings);
+    constraints.setStartTime(1.0 * fs);
+
+    auto  simulationBox = _makeDimerBox();
+    auto *molecule      = simulationBox->getMolecules().data();
+    constraints.addDistanceConstraint(
+        constraints::DistanceConstraint(
+            molecule,
+            molecule,
+            AtomIndex{0},
+            AtomIndex{1},
+            1.0 * angstrom,
+            1.0 * angstrom,
+            10.0 * kcal_per_mol / angstrom2,
+            5.0 * kcal_per_mol / angstrom2 / fs
+        )
+    );
+
+    for (const auto &atom : simulationBox->getAtoms())
+    {
+        atom->setForce(Force3D::zero());
+    }
+
+    physicalData::PhysicalData physicalData;
+    constraints
+        .applyDistanceConstraints(*simulationBox, physicalData, 3.0 * fs);
+
+    EXPECT_NEAR(
+        physicalData.get_upperDistanceConstraints().numerical_value_in(
+            kcal_per_mol
+        ),
+        0.1,
+        1e-12
+    );
+    EXPECT_THAT(
+        simulationBox->getAtoms()[0]->getForce().numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
+        testing::ElementsAre(testing::DoubleNear(2.0, 1e-12), 0.0, 0.0)
     );
 }
 

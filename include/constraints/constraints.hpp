@@ -97,6 +97,10 @@ namespace constraints
             physicalData::PhysicalData &,
             const Time &time
         );
+        void applyStaticDistanceConstraints(
+            const molsys::SimulationBox &simulationBox,
+            physicalData::PhysicalData  &physicalData
+        );
 
         /************************
          * standard add methods *
@@ -144,6 +148,12 @@ namespace constraints
 
         void _applyRattle();
         void _applyMRattle(molsys::SimulationBox &simulationBox);
+
+        void _applyDistanceConstraints(
+            const molsys::SimulationBox &simulationBox,
+            physicalData::PhysicalData  &physicalData,
+            const Time                  &timeInterval
+        );
 
         static void _setVelocities(
             molsys::SimulationBox    &simulationBox,

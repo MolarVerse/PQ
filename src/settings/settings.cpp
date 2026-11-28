@@ -25,7 +25,6 @@
 #include <cmath>
 #include <format>
 
-#include "constraintSettings.hpp"
 #include "enums/jobtype.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
@@ -137,36 +136,6 @@ namespace
             );
         }
     }
-
-    /**
-     * @brief rejects the constraints that geometry optimizations do not apply
-     *
-     * @throws exc::InputFileException if mm-opt has distance constraints
-     * active
-     */
-    void validateOptConstraints(
-        const ConstraintSettings& constraintSettings,
-        const GeneralSettings&    generalSettings
-    )
-    {
-        const auto jobType = generalSettings.getJobtype();
-
-        const auto unsupported =
-            constraintSettings.isDistanceConstraintsActivated();
-
-        if (!isOptJobType(jobType) || !unsupported)
-        {
-            return;
-        }
-
-        throw exc::InputFileException(
-            std::format(
-                "Job type {} does not apply distance constraints. Set "
-                "distance-constraints = off.",
-                JobTypeMeta::toString(jobType)
-            )
-        );
-    }
 }   // namespace
 
 /**
@@ -218,5 +187,4 @@ void Settings::finalize()
 void Settings::validate() const
 {
     validateThermostat(thermostatSettings, kinetics, timings, generalSettings);
-    validateOptConstraints(constraintSettings, generalSettings);
 }
