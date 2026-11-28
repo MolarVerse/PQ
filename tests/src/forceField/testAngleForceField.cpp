@@ -64,7 +64,7 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     box.setBox(orthoBox, false);
 
     auto potentialSettings = PotentialSettings();
-    potentialSettings.setCoulombRadiusCutOffByUser(10.0 * angstrom);
+    potentialSettings.setCoulombRadiusCutoffByUser(10.0 * angstrom);
     auto physicalData     = physicalData::PhysicalData();
     auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
 
@@ -132,7 +132,7 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings.getSmoothingMethod(),
+        hybridSettings.get_smoothing(),
         potentialSettings
     );
 
@@ -235,7 +235,7 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings.getSmoothingMethod(),
+        hybridSettings.get_smoothing(),
         potentialSettings
     );
 
@@ -352,7 +352,7 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
 
     auto              physicalData = physicalData::PhysicalData();
     PotentialSettings potentialSettings;
-    potentialSettings.setCoulombRadiusCutOffByUser(10.0 * angstrom);
+    potentialSettings.setCoulombRadiusCutoffByUser(10.0 * angstrom);
     auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
 
     auto molecule = molsys::Molecule();
@@ -395,7 +395,7 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings.getSmoothingMethod(),
+        hybridSettings.get_smoothing(),
         potentialSettings
     );
 

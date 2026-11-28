@@ -44,20 +44,20 @@ static constexpr std::size_t   PER_SIDE   = 16;
 
 int main()
 {
-    const auto box = benchOptimizers::makeBox(ATOMS, PER_SIDE);
+    auto box = benchOptimizers::makeBox(ATOMS, PER_SIDE);
 
     opt::Adam optimizer(ATOMS);
-    optimizer.setSimulationBox(box);
 
     perfAllocBegin();
     CALLGRIND_ZERO_STATS;
 
     // the bias correction divides by (1 - beta^step), so the first step is 1
-    for (std::uint64_t i = 1; i <= ITERATIONS; ++i) optimizer.update(0.001, i);
+    for (std::uint64_t i = 1; i <= ITERATIONS; ++i)
+        optimizer.update(0.001, i, box);
 
     std::cout << std::format(
         "{:.6f}\n",
-        benchOptimizers::sumOfPositions(*box).numerical_value_in(angstrom)
+        benchOptimizers::sumOfPositions(box).numerical_value_in(angstrom)
     );
     return 0;
 }

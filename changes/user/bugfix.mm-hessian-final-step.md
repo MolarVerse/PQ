@@ -1,0 +1,1 @@
+- The `mm-hessian` pre-optimization now writes its converged final step, so the last `.rst` is the geometry of the Hessian (#1336).

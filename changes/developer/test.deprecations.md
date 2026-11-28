@@ -1,0 +1,1 @@
+- Add unit tests for the key lifecycle/deprecation interface (`Lifecycle`, `deprecate`, `checkWellFormed`).

@@ -57,8 +57,7 @@ namespace input::molDescriptor
     MoldescriptorReader::MoldescriptorReader(engine::Engine &engine)
         : _engine(engine)
     {
-        _fileName =
-            _engine.getSettings().fileSettings.getMolDescriptorFileName();
+        _fileName = _engine.getSettings().fileSettings.get_molDescriptorFile();
         _fp.open(_fileName);
     }
 
@@ -71,7 +70,7 @@ namespace input::molDescriptor
     void readMolDescriptor(engine::Engine &engine)
     {
         const auto filename =
-            engine.getSettings().fileSettings.getMolDescriptorFileName();
+            engine.getSettings().fileSettings.get_molDescriptorFile();
 
         out::StdoutOutput::writeRead("Moldescriptor File", filename);
         engine.getLogOutput().writeRead("Moldescriptor File", filename);
@@ -111,7 +110,7 @@ namespace input::molDescriptor
 
             if (lineElements.size() > 1)
             {
-                auto &simBox = _engine.getSimulationBox();
+                auto &simBox = _engine.get_simulationBox();
 
                 const auto molStr =
                     utilities::toLowerAndReplaceDashesCopy(lineElements[0]);
@@ -156,7 +155,7 @@ namespace input::molDescriptor
     void MoldescriptorReader::_checkQMReferenceEnergies() const
     {
         const auto &moleculeTypes =
-            _engine.getSimulationBox().getMoleculeTypes();
+            _engine.get_simulationBox().getMoleculeTypes();
 
         const auto hasReference = [](const auto &moleculeType)
         { return moleculeType.hasQMReferenceEnergy(); };
@@ -219,7 +218,7 @@ namespace input::molDescriptor
             );
         }
 
-        auto                &simBox = _engine.getSimulationBox();
+        auto                &simBox = _engine.get_simulationBox();
         molsys::MoleculeType molecule(lineElements[0]);
 
         molecule.setNumberOfAtoms(stoul(lineElements[1]));

@@ -57,10 +57,6 @@ class GeneralSettings;         // forward declaration
  */
 namespace input
 {
-    void readJobType(
-        GeneralSettings   &generalSettings,
-        const std::string &fileName
-    );
     void readInputFile(const std::string_view &fileName, Settings &settings);
     void processEqualSign(std::string &command, size_t lineNumber);
 
@@ -148,8 +144,9 @@ namespace input
         ) const;
         void        _validateRingPolymer(JobType jobtype) const;
         static void _validateCellList(
-            const Distance &coulombRadiusCutOff,
-            JobType         jobType
+            const Distance        &coulombRadiusCutoff,
+            JobType                jobType,
+            const GeneralSettings &generalSettings
         );
     };
 

@@ -107,11 +107,11 @@ inline void TestGuffDatReader::SetUp()
     //       and works therefore for all derived classes
     _engine = std::make_unique<engine::MMMDEngine>(_settings);
 
-    _engine->getSimulationBox().addMoleculeType(moleculeType1);
-    _engine->getSimulationBox().addMoleculeType(moleculeType2);
-    _engine->getSimulationBox().addMolecule(molecule1);
+    _engine->get_simulationBox().addMoleculeType(moleculeType1);
+    _engine->get_simulationBox().addMoleculeType(moleculeType2);
+    _engine->get_simulationBox().addMolecule(molecule1);
 
-    _settings.potentialSettings.setCoulombRadiusCutOffByUser(12.5 * angstrom);
+    _settings.potentialSettings.setCoulombRadiusCutoffByUser(12.5 * angstrom);
 
     _engine->makePotential(pot::PotentialBruteForce(_settings.hybridSettings));
     _engine->getPotential()->makeNonCoulombPotential(pot::GuffNonCoulomb());
@@ -119,10 +119,8 @@ inline void TestGuffDatReader::SetUp()
         pot::CoulombShiftedPotential(_settings.potentialSettings)
     );
 
-    _settings.fileSettings.setGuffDatFileNameByUser(
-        "data/guffDatReader/guff.dat"
-    );
-    _settings.potentialSettings.setNonCoulombTypeByUser(NonCoulombType::GUFF);
+    _settings.fileSettings.set_guffDatFileByUser("data/guffDatReader/guff.dat");
+    _settings.potentialSettings.set_nonCoulombTypeByUser(NonCoulombType::GUFF);
 
     _guffDatReader = std::make_unique<input::guffdat::GuffDatReader>(*_engine);
 }

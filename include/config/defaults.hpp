@@ -49,6 +49,7 @@ struct DefaultFiles
     static constexpr auto chargeFile       = "default.charge";
     static constexpr auto extxyzFile       = "default.extxyz";
     static constexpr auto h5mdFile         = "default.h5md";
+    static constexpr auto aseTrajFile      = "default.ase.traj";
     static constexpr auto logFile          = "default.log";
     static constexpr auto stdoutFile       = "default.stdout";
     static constexpr auto refFile          = "default.ref";
@@ -135,8 +136,6 @@ namespace defaults
         4.591e-5 /
         mstd::units::bar;   // in bar^-1 default value for berendsen manostat
 
-    static constexpr size_t DIMENSIONALITY_DEFAULT = 3;
-
     static constexpr TimeMs QM_LOOP_TIME_LIMIT_DEFAULT = 3600 * mstd::units::s;
     static constexpr Pos    VACUUM_BOX_DIMENSION = 1000 * mstd::units::angstrom;
 
@@ -145,6 +144,7 @@ namespace defaults
     static constexpr size_t LR_UPDATE_FREQUENCY_DEFAULT   = 1;
     static constexpr double INITIAL_LEARNING_RATE_DEFAULT = 1.0e-4;
     static constexpr double MIN_LEARNING_RATE_DEFAULT     = 1e-15;
+    static constexpr double LEARNING_RATE_DECAY_DEFAULT   = 1.0;
 
     static constexpr ConvStrategy EN_CONV_STRATEGY_DEFAULT =
         ConvStrategy::RIGOROUS;

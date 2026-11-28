@@ -38,7 +38,7 @@ namespace setup
      */
     void setupCellList(engine::Engine &engine)
     {
-        if (GeneralSettings::isCellListActivated())
+        if (engine.getSettings().generalSettings.isCellListActivated())
         {
             out::StdoutOutput::writeSetup("Cell List");
             engine.getLogOutput().writeSetup("Cell List");
@@ -69,14 +69,17 @@ namespace setup
         const auto &potential     = _engine.getPotential();
         const auto  nonCoulombPot = potential->getNonCoulombPotSharedPtr();
 
-        if (GeneralSettings::isCellListActivated())
+        if (_engine.getSettings().generalSettings.isCellListActivated())
         {
             auto &cellList = _engine.getCellList();
-            cellList.setNumberOfCells(GeneralSettings::getNumberOfCells());
+            cellList.setNumberOfCells(
+                _engine.getSettings().generalSettings.getNumberOfCells()
+            );
             cellList.resizeCells();
             cellList.setup(
-                _engine.getSimulationBox(),
-                _engine.getSettings().potentialSettings.getCoulombRadiusCutOff()
+                _engine.get_simulationBox(),
+                _engine.getSettings().potentialSettings.get_coulombRadiusCutoff(
+                )
             );
             _engine.makePotential(
                 pot::PotentialCellList(_engine.getSettings().hybridSettings)

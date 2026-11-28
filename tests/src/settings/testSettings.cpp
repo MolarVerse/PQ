@@ -61,38 +61,37 @@ TEST(TestSettings, setFloatingPointTypeTest)
 {
     using enum FPType;
 
-    GeneralSettings::setFloatingPointType(FLOAT);
-    EXPECT_EQ(GeneralSettings::getFloatingPointType(), FLOAT);
+    GeneralSettings generalSettings;
+    generalSettings.setFloatingPointTypeByUser(FLOAT);
+    EXPECT_EQ(generalSettings.getFloatingPointType(), FLOAT);
 
-    GeneralSettings::setFloatingPointType(DOUBLE);
-    EXPECT_EQ(GeneralSettings::getFloatingPointType(), DOUBLE);
+    generalSettings.setFloatingPointTypeByUser(DOUBLE);
+    EXPECT_EQ(generalSettings.getFloatingPointType(), DOUBLE);
 
-    GeneralSettings::setFloatingPointType(FLOAT);
-    EXPECT_EQ(GeneralSettings::getFloatingPointPybindString(), "float32");
+    generalSettings.setFloatingPointTypeByUser(FLOAT);
+    EXPECT_EQ(generalSettings.getFloatingPointPybindString(), "float32");
 
-    GeneralSettings::setFloatingPointType(DOUBLE);
-    EXPECT_EQ(GeneralSettings::getFloatingPointPybindString(), "float64");
+    generalSettings.setFloatingPointTypeByUser(DOUBLE);
+    EXPECT_EQ(generalSettings.getFloatingPointPybindString(), "float64");
 }
 
 TEST(TestSettings, setRandomSeedTest)
 {
-    GeneralSettings::setRandomSeed(73);
-    EXPECT_EQ(GeneralSettings::getRandomSeed(), 73);
+    GeneralSettings generalSettings;
+    generalSettings.setRandomSeedByUser(73);
+    EXPECT_EQ(generalSettings.getRandomSeed(), 73);
 }
 
 TEST(TestSettings, setIsRandomSeedTest)
 {
-    GeneralSettings::setIsRandomSeedSet(true);
-    EXPECT_EQ(GeneralSettings::isRandomSeedSet(), true);
+    GeneralSettings generalSettings;
+    generalSettings.setRandomSeedByUser(73);
+    EXPECT_EQ(generalSettings.isRandomSeedSetByUser(), true);
 
-    GeneralSettings::setIsRandomSeedSet(false);
-    EXPECT_EQ(GeneralSettings::isRandomSeedSet(), false);
-}
-
-TEST(TestSettings, setDimensionalityTest)
-{
-    GeneralSettings::setDimensionality(3);
-    EXPECT_EQ(GeneralSettings::getDimensionality(), 3);
+    // There is no direct method to unset the random seed, so we simulate by
+    // creating a new instance
+    GeneralSettings generalSettings2;
+    EXPECT_EQ(generalSettings2.isRandomSeedSetByUser(), false);
 }
 
 TEST(TestSettings, isQMOnlyJobtypeTest)

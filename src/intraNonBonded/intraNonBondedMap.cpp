@@ -137,7 +137,7 @@ namespace intraNonBonded
         dPos                += txyz;
         const auto distance  = norm(dPos);
 
-        if (distance < potentialSettings.getCoulombRadiusCutOff())
+        if (distance < potentialSettings.get_coulombRadiusCutoff())
         {
             const auto charge1 = _molecule->getPartialCharge(atomIdx1);
             const auto charge2 = _molecule->getPartialCharge(atomIdx2);
@@ -148,7 +148,7 @@ namespace intraNonBonded
 
             if (scale)
             {
-                const auto scaling  = potentialSettings.getScale14Coulomb();
+                const auto scaling  = potentialSettings.get_scale14Coulomb();
                 energy             *= scaling;
                 force              *= scaling;
             }
@@ -183,7 +183,7 @@ namespace intraNonBonded
 
                 if (scale)
                 {
-                    const auto scaling     = potentialSettings.getScale14VDW();
+                    const auto scaling     = potentialSettings.get_scale14VDW();
                     nonCoulombEnergyLocal *= scaling;
                     nonCoulombForce       *= scaling;
                 }

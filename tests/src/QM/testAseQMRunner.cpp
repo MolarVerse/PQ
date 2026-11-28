@@ -25,6 +25,8 @@
 #include <pybind11/embed.h>
 
 #include <chrono>
+#include <cstdlib>
+#include <exception>
 #include <memory>
 
 #include "aseFennolRunner.hpp"
@@ -93,10 +95,7 @@ class AseQMRunnerTest : public ::testing::Test
    protected:
     void SetUp() override;
 
-    static QM::AseFennolRunner _runner(
-        const QMSettings &settings,
-        double            delay
-    );
+    static QM::AseFennolRunner _runner(Settings settings, double delay);
 };
 
 void AseQMRunnerTest::SetUpTestSuite()
@@ -132,22 +131,22 @@ void AseQMRunnerTest::SetUp()
     _simulationBox.setBox(box, false);
 }
 
-QM::AseFennolRunner AseQMRunnerTest::_runner(
-    const QMSettings &settings,
-    double            delay
-)
+QM::AseFennolRunner AseQMRunnerTest::_runner(Settings settings, double delay)
 {
     pybind11::module_::import("sys")
         .attr("modules")["ase.atoms"]
         .attr("FENNIXCalculator")
         .attr("delay") = delay;
 
-    FennolSettings fennolSettings;
-    fennolSettings.setFennolModelPathByUser("model.fnx");
-    fennolSettings.setUseGPUPreprocessingByUser(false);
-    GeneralSettings::setFloatingPointType(FPType::DOUBLE);
+    settings.fennolSettings.setFennolModelPathByUser("model.fnx");
+    settings.fennolSettings.setUseGPUPreprocessingByUser(false);
+    settings.generalSettings.setFloatingPointTypeByUser(FPType::DOUBLE);
 
-    return QM::AseFennolRunner{settings, fennolSettings};
+    return QM::AseFennolRunner{
+        settings.qmSettings,
+        settings.fennolSettings,
+        settings.generalSettings
+    };
 }
 
 TEST_F(AseQMRunnerTest, timeoutInterruptsPythonAndThrows)
@@ -155,7 +154,7 @@ TEST_F(AseQMRunnerTest, timeoutInterruptsPythonAndThrows)
     Settings settings;
     settings.qmSettings.setQMMethodByUser(QMMethod::FENNOL);
     settings.qmSettings.setQMLoopTimeLimitByUser(0.5 * s);
-    auto runner = AseQMRunnerTest::_runner(settings.qmSettings, 10.0);
+    auto runner = AseQMRunnerTest::_runner(settings, 10.0);
 
     const auto start = std::chrono::steady_clock::now();
 
@@ -183,7 +182,7 @@ TEST_F(AseQMRunnerTest, timeoutInterruptsPythonAndThrows)
     // the interpreter is usable again
     settings.qmSettings.setQMLoopTimeLimitByUser(0.0 * s);
     EXPECT_NO_THROW(
-        AseQMRunnerTest::_runner(settings.qmSettings, 0.0)
+        AseQMRunnerTest::_runner(settings, 0.0)
             .run(
                 _simulationBox,
                 _physicalData,
@@ -199,7 +198,7 @@ TEST_F(AseQMRunnerTest, finishedStepWithinTimeLimitDoesNotThrow)
     Settings settings;
     settings.qmSettings.setQMLoopTimeLimitByUser(10.0 * s);
     settings.qmSettings.setQMMethodByUser(QMMethod::FENNOL);
-    auto runner = AseQMRunnerTest::_runner(settings.qmSettings, 0.0);
+    auto runner = AseQMRunnerTest::_runner(settings, 0.0);
 
     EXPECT_NO_THROW(runner.run(
         _simulationBox,
@@ -208,4 +207,39 @@ TEST_F(AseQMRunnerTest, finishedStepWithinTimeLimitDoesNotThrow)
         settings.fileSettings,
         settings.hybridSettings
     ));
+}
+
+namespace
+{
+    /**
+     * @brief exit code 0 if building a runner started Python
+     */
+    [[noreturn]] void constructRunnerAndExit()
+    {
+        Settings settings;
+        settings.qmSettings.setQMMethodByUser(QMMethod::FENNOL);
+        const auto exitCode = [] { return ::Py_IsInitialized() != 0 ? 0 : 1; };
+
+        try
+        {
+            const QM::AseFennolRunner runner(
+                settings.qmSettings,
+                settings.fennolSettings,
+                settings.generalSettings
+            );
+        }
+        catch (const std::exception &)
+        {
+            // ase or fennol may be missing
+            std::exit(exitCode());
+        }
+
+        std::exit(exitCode());
+    }
+}   // namespace
+
+// death tests run first, in a child process without an interpreter
+TEST(AseQMRunnerDeathTest, constructorStartsPython)
+{
+    EXPECT_EXIT(constructRunnerAndExit(), testing::ExitedWithCode(0), "");
 }

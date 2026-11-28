@@ -61,6 +61,12 @@ namespace engine
             const OutputFileSettings &outputSettings
         ) override;
 
+        static void throwIfStopped(
+            bool                            optStopped,
+            size_t                          step,
+            size_t                          nEpochs,
+            const std::vector<std::string> &errorMessages
+        );
         static void throwOnFailure(
             bool                            converged,
             bool                            optStopped,
@@ -68,6 +74,7 @@ namespace engine
             size_t                          nEpochs,
             const std::vector<std::string> &errorMessages
         );
+        [[nodiscard]] static std::string notConvergedMessage(size_t nEpochs);
 
         /***************************
          * standard setter methods *
@@ -84,7 +91,7 @@ namespace engine
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] opt::Optimizer            &getOptimizer();
+        [[nodiscard]] opt::Optimizer            &get_optimizer();
         [[nodiscard]] opt::LearningRateStrategy &getLearningRate();
         [[nodiscard]] opt::Evaluator            &getEvaluator();
         [[nodiscard]] opt::Convergence          &getConvergence();

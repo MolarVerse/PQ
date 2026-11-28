@@ -73,7 +73,7 @@ namespace input
         };
 
         const auto setValue = [this](double value)
-        { _potentialSettings->setCoulombRadiusCutOffByUser(value * angstrom); };
+        { _potentialSettings->setCoulombRadiusCutoffByUser(value * angstrom); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -101,7 +101,7 @@ namespace input
 
         const auto setValue = [this](double value)
         {
-            _potentialSettings->setNonCoulombRadiusCutOffByUser(
+            _potentialSettings->set_nonCoulombRadiusCutoffByUser(
                 value * angstrom
             );
         };

@@ -67,8 +67,8 @@ namespace engine
 
         qmCalculation();
 
-        getConstraints()->applyDistanceConstraints(
-            getSimulationBox(),
+        get_constraints().applyDistanceConstraints(
+            get_simulationBox(),
             get_physicalData(),
             calculateTotalSimulationTime(
                 timeStep,
@@ -379,7 +379,7 @@ namespace engine
                     data,
                     _getKinetics().getCurrentTargetTemperature(),
                     timeStep,
-                    getSettings().potentialSettings.getCoulombRadiusCutOff()
+                    getSettings().potentialSettings.get_coulombRadiusCutoff()
                 );
             }
         }
@@ -463,7 +463,7 @@ namespace engine
                 data,
                 _getKinetics().getCurrentTargetTemperature(),
                 timeStep,
-                getSettings().potentialSettings.getCoulombRadiusCutOff()
+                getSettings().potentialSettings.get_coulombRadiusCutoff()
             );
         }
     }

@@ -28,6 +28,7 @@
 #include "benchmarkSetup.hpp"
 #include "celllist.hpp"
 #include "generalSettings.hpp"
+#include "settings.hpp"
 
 namespace
 {
@@ -39,12 +40,17 @@ namespace
         molsys::CellList cellList;
         cellList.setNumberOfCells(cellsPerSide);
         cellList.resizeCells();
-        cellList.setup(simBox, benchmarkSetup::cutOff);
-        GeneralSettings::activateCellList();
+        cellList.setup(simBox, benchmarkSetup::cutoff);
+        Settings settings;
+        settings.generalSettings.activateCellListByUser();
 
         for (auto _ : state)
         {
-            cellList.updateCellList(simBox, benchmarkSetup::cutOff);
+            cellList.updateCellList(
+                simBox,
+                benchmarkSetup::cutoff,
+                settings.generalSettings
+            );
             benchmark::DoNotOptimize(cellList.getCells().data());
         }
 

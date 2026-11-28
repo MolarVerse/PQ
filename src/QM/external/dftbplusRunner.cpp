@@ -220,7 +220,7 @@ namespace QM
             configurator::HybridConfigurator::getMoleculeChangedZone();
 
         // TODO(ape): https://github.com/MolarVerse/PQ/issues/200
-        if (hybridSettings.getSmoothingMethod() == SmoothingMethod::EXACT)
+        if (hybridSettings.get_smoothing() == SmoothingMethod::EXACT)
             molChangedZone = true;
 
         const auto readChargesBin =
@@ -233,8 +233,8 @@ namespace QM
             charge,
             readChargesBin,
             usePointCharges,
-            utilities::shellQuote(fileSettings.getDFTBFileName()),
-            utilities::shellQuote(fileSettings.getPointChargeFileName())
+            utilities::shellQuote(fileSettings.get_dftbFile()),
+            utilities::shellQuote(fileSettings.get_pointChargeFile())
         );
         _executeCommand(command, "DFTB+");
 

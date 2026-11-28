@@ -36,56 +36,48 @@
 class ConvSettings
 {
    private:
-    Setting<double>       _relEnergyConv{defaults::REL_ENERGY_CONV_DEFAULT};
-    Setting<EnergyPerMol> _absEnergyConv{defaults::ABS_ENERGY_CONV_DEFAULT};
+    Setting<double, "Relative Energy Convergence"> _relEnergyConv{
+        defaults::REL_ENERGY_CONV_DEFAULT
+    };
+    Setting<EnergyPerMol, "Absolute Energy Convergence"> _absEnergyConv{
+        defaults::ABS_ENERGY_CONV_DEFAULT
+    };
 
-    Setting<Force> _maxForceConv{defaults::MAX_FORCE_CONV_DEFAULT};
-    Setting<Force> _rmsForceConv{defaults::RMS_FORCE_CONV_DEFAULT};
+    Setting<Force, "Maximum Force Convergence"> _maxForceConv{
+        defaults::MAX_FORCE_CONV_DEFAULT
+    };
+    Setting<Force, "RMS Force Convergence"> _rmsForceConv{
+        defaults::RMS_FORCE_CONV_DEFAULT
+    };
 
-    Setting<bool> _useEnergyConv;
-    Setting<bool> _useForceConv;
-    Setting<bool> _useMaxForceConv;
-    Setting<bool> _useRMSForceConv;
+    Setting<bool, "Use Energy Convergence">        _useEnergyConv;
+    Setting<bool, "Use Force Convergence">         _useForceConv;
+    Setting<bool, "Use Maximum Force Convergence"> _useMaxForceConv;
+    Setting<bool, "Use RMS Force Convergence">     _useRMSForceConv;
 
-    Setting<ConvStrategy> _energyConvStrategy;
+    Setting<ConvStrategy, "Energy Convergence Strategy"> _energyConvStrategy;
 
    public:
     ConvSettings();
 
-   public:
-    /***************************
-     * standard setter methods *
-     ***************************/
-
-    void setRelEnergyConvByUser(double);
-    void setAbsEnergyConvByUser(const EnergyPerMol&);
-
-    void setMaxForceConvByUser(const Force&);
-    void setRMSForceConvByUser(const Force&);
-
-    void setUseEnergyConvByUser(bool);
-    void setUseForceConvByUser(bool);
-    void setUseMaxForceConvByUser(bool);
-    void setUseRMSForceConvByUser(bool);
-
-    void setEnergyConvStrategyByUser(ConvStrategy);
+    SETTING_GETTER_AND_SETTER_BY_USER(_relEnergyConv);
+    SETTING_GETTER_AND_SETTER_BY_USER(_absEnergyConv);
+    SETTING_GETTER_AND_SETTER_BY_USER(_maxForceConv);
+    SETTING_GETTER_AND_SETTER_BY_USER(_rmsForceConv);
+    SETTING_GETTER_AND_SETTER_BY_USER(_energyConvStrategy);
+    SETTING_SETTER_BY_USER(_useEnergyConv);
+    SETTING_SETTER_BY_USER(_useForceConv);
+    SETTING_SETTER_BY_USER(_useMaxForceConv);
+    SETTING_SETTER_BY_USER(_useRMSForceConv);
 
     /***************************
      * standard getter methods *
      ***************************/
 
-    [[nodiscard]] double              getRelEnergyConv() const;
-    [[nodiscard]] const EnergyPerMol& getAbsEnergyConv() const;
-
-    [[nodiscard]] const Force& getMaxForceConv() const;
-    [[nodiscard]] const Force& getRMSForceConv() const;
-
     [[nodiscard]] bool getUseEnergyConv() const;
     [[nodiscard]] bool getUseForceConv() const;
     [[nodiscard]] bool getUseMaxForceConv() const;
     [[nodiscard]] bool getUseRMSForceConv() const;
-
-    [[nodiscard]] ConvStrategy getEnConvStrategy() const;
 
    private:
     [[nodiscard]] bool _anyConvergenceSetByUser() const;

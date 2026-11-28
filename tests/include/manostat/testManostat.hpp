@@ -55,11 +55,11 @@ class TestManostat : public ::testing::Test
 inline void TestManostat::SetUp()
 {
     _settings = std::make_unique<Settings>();
-    _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
-    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
-    _settings->manostatSettings.setTargetPressureByUser(1.0 * bar);
-    _settings->manostatSettings.setTauByUser(1.0 * fs);
-    _settings->manostatSettings.setCompressibilityByUser(0.03 * per_bar);
+    _settings->manostatSettings.set_isotropyByUser(Isotropy::ISOTROPIC);
+    _settings->manostatSettings.set_fixedAxisByUser(FixedAxis::NONE);
+    _settings->manostatSettings.set_targetPressureByUser(1.0 * bar);
+    _settings->manostatSettings.set_tauByUser(1.0 * fs);
+    _settings->manostatSettings.set_compressibilityByUser(0.03 * per_bar);
     _manostat =
         std::make_unique<manostat::Manostat>(_settings->manostatSettings);
     _data = std::make_unique<physicalData::PhysicalData>();

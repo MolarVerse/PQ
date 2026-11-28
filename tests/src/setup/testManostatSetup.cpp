@@ -142,18 +142,18 @@ TEST_F(TestSetup, setupManostatNone)
     manostatSetup.setup();
 
     EXPECT_EQ(
-        _settings->manostatSettings.getManostatType(),
+        _settings->manostatSettings.get_manostatType(),
         ManostatType::NONE
     );
 }
 
 TEST_F(TestSetup, setupManostatBerendsen)
 {
-    _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
-    _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
-    _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
-    _settings->manostatSettings.setTauByUser(0.2 * ps);
-    _settings->manostatSettings.setCompressibilityByUser(4.0 * per_bar);
+    _settings->manostatSettings.set_manostatTypeByUser(ManostatType::BERENDSEN);
+    _settings->manostatSettings.set_isotropyByUser(Isotropy::ISOTROPIC);
+    _settings->manostatSettings.set_targetPressureByUser(300.0 * bar);
+    _settings->manostatSettings.set_tauByUser(0.2 * ps);
+    _settings->manostatSettings.set_compressibilityByUser(4.0 * per_bar);
     _settings->timings.setNumberOfStepsByUser(100U);
     _settings->finalize();
 
@@ -169,11 +169,11 @@ TEST_F(TestSetup, setupManostatBerendsen)
 
 TEST_F(TestSetup, setupManostatNoneIsotropyDefaultsToIsotropic)
 {
-    _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
-    _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
-    _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
-    _settings->manostatSettings.setTauByUser(0.2 * ps);
-    _settings->manostatSettings.setCompressibilityByUser(4.0 * per_bar);
+    _settings->manostatSettings.set_manostatTypeByUser(ManostatType::BERENDSEN);
+    _settings->manostatSettings.set_isotropyByUser(Isotropy::ISOTROPIC);
+    _settings->manostatSettings.set_targetPressureByUser(300.0 * bar);
+    _settings->manostatSettings.set_tauByUser(0.2 * ps);
+    _settings->manostatSettings.set_compressibilityByUser(4.0 * per_bar);
     _settings->timings.setNumberOfStepsByUser(100U);
     _settings->finalize();
 
@@ -188,11 +188,11 @@ TEST_F(TestSetup, setupManostatNoneIsotropyDefaultsToIsotropic)
 
 TEST_F(TestSetup, setupManostatSemiIsotropicBerendsen)
 {
-    _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
-    _settings->manostatSettings.setIsotropyByUser(Isotropy::SEMI_ISOTROPIC_XY);
-    _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
-    _settings->manostatSettings.setTauByUser(0.2 * ps);
-    _settings->manostatSettings.setCompressibilityByUser(4.0 * per_bar);
+    _settings->manostatSettings.set_manostatTypeByUser(ManostatType::BERENDSEN);
+    _settings->manostatSettings.set_isotropyByUser(Isotropy::SEMI_ISOTROPIC_XY);
+    _settings->manostatSettings.set_targetPressureByUser(300.0 * bar);
+    _settings->manostatSettings.set_tauByUser(0.2 * ps);
+    _settings->manostatSettings.set_compressibilityByUser(4.0 * per_bar);
     _settings->timings.setNumberOfStepsByUser(100U);
     _settings->finalize();
 
@@ -206,11 +206,11 @@ TEST_F(TestSetup, setupManostatSemiIsotropicBerendsen)
 
 TEST_F(TestSetup, setupManostatAnisotropicBerendsen)
 {
-    _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
-    _settings->manostatSettings.setIsotropyByUser(Isotropy::ANISOTROPIC);
-    _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
-    _settings->manostatSettings.setTauByUser(0.2 * ps);
-    _settings->manostatSettings.setCompressibilityByUser(4.0 * per_bar);
+    _settings->manostatSettings.set_manostatTypeByUser(ManostatType::BERENDSEN);
+    _settings->manostatSettings.set_isotropyByUser(Isotropy::ANISOTROPIC);
+    _settings->manostatSettings.set_targetPressureByUser(300.0 * bar);
+    _settings->manostatSettings.set_tauByUser(0.2 * ps);
+    _settings->manostatSettings.set_compressibilityByUser(4.0 * per_bar);
     _settings->timings.setNumberOfStepsByUser(100U);
     _settings->finalize();
 
@@ -224,11 +224,11 @@ TEST_F(TestSetup, setupManostatAnisotropicBerendsen)
 
 TEST_F(TestSetup, setupManostatFullAnisotropicBerendsen)
 {
-    _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
-    _settings->manostatSettings.setIsotropyByUser(Isotropy::FULL_ANISOTROPIC);
-    _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
-    _settings->manostatSettings.setTauByUser(0.2 * ps);
-    _settings->manostatSettings.setCompressibilityByUser(4.0 * per_bar);
+    _settings->manostatSettings.set_manostatTypeByUser(ManostatType::BERENDSEN);
+    _settings->manostatSettings.set_isotropyByUser(Isotropy::FULL_ANISOTROPIC);
+    _settings->manostatSettings.set_targetPressureByUser(300.0 * bar);
+    _settings->manostatSettings.set_tauByUser(0.2 * ps);
+    _settings->manostatSettings.set_compressibilityByUser(4.0 * per_bar);
     _settings->timings.setNumberOfStepsByUser(100U);
     _settings->finalize();
 
@@ -242,13 +242,13 @@ TEST_F(TestSetup, setupManostatFullAnisotropicBerendsen)
 
 TEST_F(TestSetup, setupManostatSStochasticRescaling)
 {
-    _settings->manostatSettings.setManostatTypeByUser(
+    _settings->manostatSettings.set_manostatTypeByUser(
         ManostatType::STOCHASTIC_RESCALING
     );
-    _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
-    _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
-    _settings->manostatSettings.setTauByUser(0.2 * ps);
-    _settings->manostatSettings.setCompressibilityByUser(4.0 * per_bar);
+    _settings->manostatSettings.set_isotropyByUser(Isotropy::ISOTROPIC);
+    _settings->manostatSettings.set_targetPressureByUser(300.0 * bar);
+    _settings->manostatSettings.set_tauByUser(0.2 * ps);
+    _settings->manostatSettings.set_compressibilityByUser(4.0 * per_bar);
     _settings->timings.setNumberOfStepsByUser(100U);
     _settings->finalize();
 
@@ -262,13 +262,13 @@ TEST_F(TestSetup, setupManostatSStochasticRescaling)
 
 TEST_F(TestSetup, setupManostatSemiIsotropicSStochasticRescaling)
 {
-    _settings->manostatSettings.setManostatTypeByUser(
+    _settings->manostatSettings.set_manostatTypeByUser(
         ManostatType::STOCHASTIC_RESCALING
     );
-    _settings->manostatSettings.setIsotropyByUser(Isotropy::SEMI_ISOTROPIC_XY);
-    _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
-    _settings->manostatSettings.setTauByUser(0.2 * ps);
-    _settings->manostatSettings.setCompressibilityByUser(4.0 * per_bar);
+    _settings->manostatSettings.set_isotropyByUser(Isotropy::SEMI_ISOTROPIC_XY);
+    _settings->manostatSettings.set_targetPressureByUser(300.0 * bar);
+    _settings->manostatSettings.set_tauByUser(0.2 * ps);
+    _settings->manostatSettings.set_compressibilityByUser(4.0 * per_bar);
     _settings->timings.setNumberOfStepsByUser(100U);
     _settings->finalize();
 
@@ -282,13 +282,13 @@ TEST_F(TestSetup, setupManostatSemiIsotropicSStochasticRescaling)
 
 TEST_F(TestSetup, setupManostatAnisotropicSStochasticRescaling)
 {
-    _settings->manostatSettings.setManostatTypeByUser(
+    _settings->manostatSettings.set_manostatTypeByUser(
         ManostatType::STOCHASTIC_RESCALING
     );
-    _settings->manostatSettings.setIsotropyByUser(Isotropy::ANISOTROPIC);
-    _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
-    _settings->manostatSettings.setTauByUser(0.2 * ps);
-    _settings->manostatSettings.setCompressibilityByUser(4.0 * per_bar);
+    _settings->manostatSettings.set_isotropyByUser(Isotropy::ANISOTROPIC);
+    _settings->manostatSettings.set_targetPressureByUser(300.0 * bar);
+    _settings->manostatSettings.set_tauByUser(0.2 * ps);
+    _settings->manostatSettings.set_compressibilityByUser(4.0 * per_bar);
     _settings->timings.setNumberOfStepsByUser(100U);
     _settings->finalize();
 
@@ -302,13 +302,13 @@ TEST_F(TestSetup, setupManostatAnisotropicSStochasticRescaling)
 
 TEST_F(TestSetup, setupManostatFullAnisotropicSStochasticRescaling)
 {
-    _settings->manostatSettings.setManostatTypeByUser(
+    _settings->manostatSettings.set_manostatTypeByUser(
         ManostatType::STOCHASTIC_RESCALING
     );
-    _settings->manostatSettings.setIsotropyByUser(Isotropy::FULL_ANISOTROPIC);
-    _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
-    _settings->manostatSettings.setTauByUser(0.2 * ps);
-    _settings->manostatSettings.setCompressibilityByUser(4.0 * per_bar);
+    _settings->manostatSettings.set_isotropyByUser(Isotropy::FULL_ANISOTROPIC);
+    _settings->manostatSettings.set_targetPressureByUser(300.0 * bar);
+    _settings->manostatSettings.set_tauByUser(0.2 * ps);
+    _settings->manostatSettings.set_compressibilityByUser(4.0 * per_bar);
     _settings->timings.setNumberOfStepsByUser(100U);
     _settings->finalize();
 
@@ -322,19 +322,19 @@ TEST_F(TestSetup, setupManostatFullAnisotropicSStochasticRescaling)
 
 TEST_F(TestSetup, validateIsotropyFixedAxisCombinationSemiIsotropic)
 {
-    _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
-    _settings->manostatSettings.setIsotropyByUser(Isotropy::SEMI_ISOTROPIC_XY);
-    _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
-    _settings->manostatSettings.setTauByUser(0.2 * ps);
-    _settings->manostatSettings.setCompressibilityByUser(4.0 * per_bar);
+    _settings->manostatSettings.set_manostatTypeByUser(ManostatType::BERENDSEN);
+    _settings->manostatSettings.set_isotropyByUser(Isotropy::SEMI_ISOTROPIC_XY);
+    _settings->manostatSettings.set_targetPressureByUser(300.0 * bar);
+    _settings->manostatSettings.set_tauByUser(0.2 * ps);
+    _settings->manostatSettings.set_compressibilityByUser(4.0 * per_bar);
 
     // Fixing Z (anisotropic axis) is allowed
-    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::Z);
+    _settings->manostatSettings.set_fixedAxisByUser(FixedAxis::Z);
     setup::ManostatSetup manostatSetup(*_mdEngine);
     EXPECT_NO_THROW(manostatSetup.setup());
 
     // Fixing X or Y or XY should throw
-    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::X);
+    _settings->manostatSettings.set_fixedAxisByUser(FixedAxis::X);
     EXPECT_THROW_MSG(
         manostatSetup.setup(),
         exc::UserInputException,
@@ -342,7 +342,7 @@ TEST_F(TestSetup, validateIsotropyFixedAxisCombinationSemiIsotropic)
         "allows fixing the anisotropic axis or none."
     );
 
-    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::XY);
+    _settings->manostatSettings.set_fixedAxisByUser(FixedAxis::XY);
     EXPECT_THROW_MSG(
         manostatSetup.setup(),
         exc::UserInputException,
@@ -350,14 +350,14 @@ TEST_F(TestSetup, validateIsotropyFixedAxisCombinationSemiIsotropic)
         "allows fixing the anisotropic axis or none."
     );
 
-    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
+    _settings->manostatSettings.set_fixedAxisByUser(FixedAxis::NONE);
 }
 
 TEST_F(TestSetup, validateFixedAxisThrowsWhenAllAxesFixedWithManostat)
 {
-    _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
-    _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
-    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::ALL);
+    _settings->manostatSettings.set_manostatTypeByUser(ManostatType::BERENDSEN);
+    _settings->manostatSettings.set_isotropyByUser(Isotropy::ISOTROPIC);
+    _settings->manostatSettings.set_fixedAxisByUser(FixedAxis::ALL);
 
     setup::ManostatSetup manostatSetup(*_mdEngine);
     EXPECT_THROW_MSG(
@@ -367,7 +367,7 @@ TEST_F(TestSetup, validateFixedAxisThrowsWhenAllAxesFixedWithManostat)
         "manostat is selected."
     );
 
-    _settings->manostatSettings.setManostatTypeByUser(
+    _settings->manostatSettings.set_manostatTypeByUser(
         ManostatType::STOCHASTIC_RESCALING
     );
     EXPECT_THROW_MSG(
@@ -377,17 +377,17 @@ TEST_F(TestSetup, validateFixedAxisThrowsWhenAllAxesFixedWithManostat)
         "manostat is selected."
     );
 
-    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
+    _settings->manostatSettings.set_fixedAxisByUser(FixedAxis::NONE);
 }
 
 TEST_F(TestSetup, setupManostatWithFixedAxis)
 {
-    _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
-    _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
-    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::XY);
-    _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
-    _settings->manostatSettings.setTauByUser(0.2 * ps);
-    _settings->manostatSettings.setCompressibilityByUser(4.0 * per_bar);
+    _settings->manostatSettings.set_manostatTypeByUser(ManostatType::BERENDSEN);
+    _settings->manostatSettings.set_isotropyByUser(Isotropy::ISOTROPIC);
+    _settings->manostatSettings.set_fixedAxisByUser(FixedAxis::XY);
+    _settings->manostatSettings.set_targetPressureByUser(300.0 * bar);
+    _settings->manostatSettings.set_tauByUser(0.2 * ps);
+    _settings->manostatSettings.set_compressibilityByUser(4.0 * per_bar);
     _settings->timings.setNumberOfStepsByUser(100U);
     _settings->finalize();
 
@@ -398,7 +398,7 @@ TEST_F(TestSetup, setupManostatWithFixedAxis)
     EXPECT_NO_THROW((void
     ) dynamic_cast<const manostat::BerendsenManostat &>(manostat));
 
-    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
+    _settings->manostatSettings.set_fixedAxisByUser(FixedAxis::NONE);
 }
 
 TEST_F(TestSetup, setupMolecularManostatsWarnForAtomicVirial)
@@ -410,13 +410,13 @@ TEST_F(TestSetup, setupMolecularManostatsWarnForAtomicVirial)
         atom->setMass(1.0 * g_per_mol);
         molecule.addAtom(atom);
     }
-    _mdEngine->getSimulationBox().addMolecule(molecule);
-    GeneralSettings::setVirialType(VirialType::ATOMIC);
-    _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
-    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
-    _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
-    _settings->manostatSettings.setTauByUser(0.2 * ps);
-    _settings->manostatSettings.setCompressibilityByUser(4.0 * per_bar);
+    _mdEngine->get_simulationBox().addMolecule(molecule);
+    _settings->manostatSettings.set_virialByUser(VirialType::ATOMIC);
+    _settings->manostatSettings.set_isotropyByUser(Isotropy::ISOTROPIC);
+    _settings->manostatSettings.set_fixedAxisByUser(FixedAxis::NONE);
+    _settings->manostatSettings.set_targetPressureByUser(300.0 * bar);
+    _settings->manostatSettings.set_tauByUser(0.2 * ps);
+    _settings->manostatSettings.set_compressibilityByUser(4.0 * per_bar);
     _settings->manostatSettings.finalize(_settings->referenceSettings);
     const auto types = std::array{
         ManostatType::BERENDSEN,
@@ -425,7 +425,7 @@ TEST_F(TestSetup, setupMolecularManostatsWarnForAtomicVirial)
     };
     for (const auto type : types)
     {
-        _settings->manostatSettings.setManostatTypeByUser(type);
+        _settings->manostatSettings.set_manostatTypeByUser(type);
         auto &log = _mdEngine->getLogOutput();
         log.setFilename("atomic-virial-warning.log", false);
         setup::ManostatSetup setup(*_mdEngine);
@@ -461,7 +461,6 @@ TEST_F(TestSetup, setupMolecularManostatsWarnForAtomicVirial)
         }
         EXPECT_EQ(std::remove("atomic-virial-warning.log"), 0);
     }
-    GeneralSettings::setVirialType(VirialType::MOLECULAR);
 }
 
 /* ---------- what the setup writes into the log ---------- */
@@ -479,7 +478,7 @@ TEST(TestManostatSetupOutput, selectionNamesTheManostat)
     {
         SCOPED_TRACE(text);
         ManostatSettings settings;
-        settings.setManostatTypeByUser(type);
+        settings.set_manostatTypeByUser(type);
 
         const auto lines = writtenLines(
             [&settings](auto &log)
@@ -493,9 +492,9 @@ TEST(TestManostatSetupOutput, selectionNamesTheManostat)
 TEST(TestManostatSetupOutput, berendsenSetupWritesPressureTauAndCompressibility)
 {
     ManostatSettings settings;
-    settings.setTargetPressureByUser(300.0 * bar);
-    settings.setTauByUser(0.2 * ps);
-    settings.setCompressibilityByUser(4.0 * per_bar);
+    settings.set_targetPressureByUser(300.0 * bar);
+    settings.set_tauByUser(0.2 * ps);
+    settings.set_compressibilityByUser(4.0 * per_bar);
 
     const auto lines = writtenLines(
         [&settings](auto &log)
@@ -516,8 +515,8 @@ TEST(TestManostatSetupOutput, berendsenSetupWritesPressureTauAndCompressibility)
 TEST(TestManostatSetupOutput, relaxationTimeIsWrittenInPicosecondsForAnyUnit)
 {
     ManostatSettings settings;
-    settings.setTargetPressureByUser(1.0 * bar);
-    settings.setTauByUser(500.0 * fs);
+    settings.set_targetPressureByUser(1.0 * bar);
+    settings.set_tauByUser(500.0 * fs);
 
     const auto lines = writtenLines(
         [&settings](auto &log)
@@ -540,7 +539,7 @@ TEST(TestManostatSetupOutput, isotropyWritesOneLineForTheSimpleModes)
     {
         SCOPED_TRACE(text);
         ManostatSettings settings;
-        settings.setIsotropyByUser(isotropy);
+        settings.set_isotropyByUser(isotropy);
 
         const auto lines = writtenLines(
             [&settings](auto &log)
@@ -576,7 +575,7 @@ TEST(TestManostatSetupOutput, semiIsotropicNamesTheAnisotropicAndIsotropicAxes)
     {
         SCOPED_TRACE(isotropicAxes);
         ManostatSettings settings;
-        settings.setIsotropyByUser(isotropy);
+        settings.set_isotropyByUser(isotropy);
 
         const auto lines = writtenLines(
             [&settings](auto &log)
@@ -597,11 +596,11 @@ TEST(TestManostatSetupOutput, semiIsotropicNamesTheAnisotropicAndIsotropicAxes)
 
 TEST_F(TestSetup, setupWritesSelectionParametersAndIsotropyInOrder)
 {
-    _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
-    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
-    _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
-    _settings->manostatSettings.setTauByUser(0.2 * ps);
-    _settings->manostatSettings.setCompressibilityByUser(4.0 * per_bar);
+    _settings->manostatSettings.set_isotropyByUser(Isotropy::ISOTROPIC);
+    _settings->manostatSettings.set_fixedAxisByUser(FixedAxis::NONE);
+    _settings->manostatSettings.set_targetPressureByUser(300.0 * bar);
+    _settings->manostatSettings.set_tauByUser(0.2 * ps);
+    _settings->manostatSettings.set_compressibilityByUser(4.0 * per_bar);
     _settings->manostatSettings.finalize(_settings->referenceSettings);
 
     const auto expectedByType =
@@ -630,7 +629,7 @@ TEST_F(TestSetup, setupWritesSelectionParametersAndIsotropyInOrder)
     for (const auto &[type, expected] : expectedByType)
     {
         SCOPED_TRACE(static_cast<int>(type));
-        _settings->manostatSettings.setManostatTypeByUser(type);
+        _settings->manostatSettings.set_manostatTypeByUser(type);
 
         const std::string fileName = "manostat-setup-order.log";
         // Remove any existing log file before starting the test to ensure a

@@ -47,11 +47,11 @@ TEST_F(TestSetup, forceFieldSetupSetupBonds)
     auto molecule1 = molsys::Molecule();
     auto molecule2 = molsys::Molecule();
 
-    _engine->getSimulationBox().addMolecule(molecule1);
-    _engine->getSimulationBox().addMolecule(molecule2);
+    _engine->get_simulationBox().addMolecule(molecule1);
+    _engine->get_simulationBox().addMolecule(molecule2);
 
-    auto *molecule1Ptr = &_engine->getSimulationBox().getMolecule(0);
-    auto *molecule2Ptr = &_engine->getSimulationBox().getMolecule(1);
+    auto *molecule1Ptr = &_engine->get_simulationBox().getMolecule(0);
+    auto *molecule2Ptr = &_engine->get_simulationBox().getMolecule(1);
 
     auto bond1 = ff::BondForceField(
         molecule1Ptr,
@@ -135,11 +135,11 @@ TEST_F(TestSetup, forceFieldSetupSetupAngles)
     auto molecule1 = molsys::Molecule();
     auto molecule2 = molsys::Molecule();
 
-    _engine->getSimulationBox().addMolecule(molecule1);
-    _engine->getSimulationBox().addMolecule(molecule2);
+    _engine->get_simulationBox().addMolecule(molecule1);
+    _engine->get_simulationBox().addMolecule(molecule2);
 
-    auto *molecule1Ptr = &_engine->getSimulationBox().getMolecule(0);
-    auto *molecule2Ptr = &_engine->getSimulationBox().getMolecule(1);
+    auto *molecule1Ptr = &_engine->get_simulationBox().getMolecule(0);
+    auto *molecule2Ptr = &_engine->get_simulationBox().getMolecule(1);
 
     auto angle1 = ff::AngleForceField(
         {molecule1Ptr, molecule2Ptr, molecule2Ptr},
@@ -217,11 +217,11 @@ TEST_F(TestSetup, forceFieldSetupSetupDihedrals)
     auto molecule1 = molsys::Molecule();
     auto molecule2 = molsys::Molecule();
 
-    _engine->getSimulationBox().addMolecule(molecule1);
-    _engine->getSimulationBox().addMolecule(molecule2);
+    _engine->get_simulationBox().addMolecule(molecule1);
+    _engine->get_simulationBox().addMolecule(molecule2);
 
-    auto *molecule1Ptr = &_engine->getSimulationBox().getMolecule(0);
-    auto *molecule2Ptr = &_engine->getSimulationBox().getMolecule(1);
+    auto *molecule1Ptr = &_engine->get_simulationBox().getMolecule(0);
+    auto *molecule2Ptr = &_engine->get_simulationBox().getMolecule(1);
 
     auto dihedral1 = ff::DihedralForceField(
         {molecule1Ptr, molecule2Ptr, molecule2Ptr, molecule2Ptr},
@@ -295,11 +295,11 @@ TEST_F(TestSetup, forceFieldSetupSetupImproperDihedrals)
     auto molecule1 = molsys::Molecule();
     auto molecule2 = molsys::Molecule();
 
-    _engine->getSimulationBox().addMolecule(molecule1);
-    _engine->getSimulationBox().addMolecule(molecule2);
+    _engine->get_simulationBox().addMolecule(molecule1);
+    _engine->get_simulationBox().addMolecule(molecule2);
 
-    auto *molecule1Ptr = &_engine->getSimulationBox().getMolecule(0);
-    auto *molecule2Ptr = &_engine->getSimulationBox().getMolecule(1);
+    auto *molecule1Ptr = &_engine->get_simulationBox().getMolecule(0);
+    auto *molecule2Ptr = &_engine->get_simulationBox().getMolecule(1);
 
     auto dihedral1 = ff::DihedralForceField(
         {molecule1Ptr, molecule2Ptr, molecule2Ptr, molecule2Ptr},
@@ -380,12 +380,12 @@ TEST_F(TestSetup, forceFieldSetupSetupImproperDihedrals)
  */
 TEST_F(TestSetup, forceFieldSetupSetupForceField)
 {
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::ON);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::ON);
     _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
 
     auto molecule1 = molsys::Molecule();
-    _engine->getSimulationBox().addMolecule(molecule1);
-    auto *molecule1Ptr = &_engine->getSimulationBox().getMolecule(0);
+    _engine->get_simulationBox().addMolecule(molecule1);
+    auto *molecule1Ptr = &_engine->get_simulationBox().getMolecule(0);
 
     auto bond = ff::BondForceField(
         molecule1Ptr,
@@ -493,11 +493,11 @@ TEST_F(TestSetup, forceFieldSetupSetupForceField)
  */
 TEST_F(TestSetup, forceFieldSetupSetupForceFieldDoNothing)
 {
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::ON);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::ON);
 
     auto molecule1 = molsys::Molecule();
-    _engine->getSimulationBox().addMolecule(molecule1);
-    auto *molecule1Ptr = &_engine->getSimulationBox().getMolecule(0);
+    _engine->get_simulationBox().addMolecule(molecule1);
+    auto *molecule1Ptr = &_engine->get_simulationBox().getMolecule(0);
 
     auto bond = ff::BondForceField(
         molecule1Ptr,
@@ -563,7 +563,7 @@ TEST_F(TestSetup, forceFieldSetupSetupForceFieldDoNothing)
     _engine->getForceField()->addDihedralType(dihedralType);
     _engine->getForceField()->addImproperDihedralType(improperDihedralType);
 
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     setup::setupForceField(*_engine);
 
     const auto &bonds     = _engine->getForceField()->getBonds();

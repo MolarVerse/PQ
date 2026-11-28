@@ -26,6 +26,7 @@
 #include <memory>
 #include <string>
 
+#include "constraintSettings.hpp"
 #include "defaults.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
@@ -50,80 +51,85 @@ class TestInputValidation : public ::testing::Test
     std::unique_ptr<engine::OptEngine>      _engine;
     std::unique_ptr<input::InputFileReader> _reader;
 
-    void SetUp() override
-    {
-        _settings.generalSettings.setJobtypeByUser(static_cast<JobType>(0));
+    void SetUp() override;
 
-        _settings.hessianSettings.setOptimizeBeforeHessianByUser(false);
+    void _setKeyword(const std::string &keyword);
 
-        _settings.optimizerSettings.setLearningRateStrategyByUser(
-            LearningRate::CONSTANT
-        );
-        _settings.optimizerSettings.setMinLearningRateByUser(1.0e-15);
-        _settings.optimizerSettings.setMaxLearningRateByUser(1.0);
-
-        _settings.manostatSettings.setManostatTypeByUser(ManostatType::NONE);
-        _settings.manostatSettings.setTauByUser(
-            defaults::BERENDSEN_MANOSTAT_RELAX_TIME
-        );
-
-        _settings.kinetics.setRampingStepsByUser(0);
-        _settings.kinetics.setRampingFrequencyByUser(1);
-        _settings.thermostatSettings.setRelaxationTimeByUser(
-            defaults::BERENDSEN_THERMOSTAT_RELAX_TIME
-        );
-        _settings.thermostatSettings.setFrictionByUser(
-            defaults::LANGEVIN_THERMOSTAT_FRICTION
-        );
-        _settings.simulationBoxSettings.setInitializeVelocsByUser(
-            InitVelocities::FALSE
-        );
-
-        _settings.potentialSettings.setCoulombLongRangeTypeByUser(
-            CoulombLongRangeType::SHIFTED
-        );
-        _settings.potentialSettings.setCoulombRadiusCutOffByUser(
-            defaults::COULOMB_CUT_OFF_DEFAULT
-        );
-
-        _settings.dftbSettings.setSlakosTypeByUser(SlakosType::NONE);
-        _settings.dftbSettings.setUseThirdOrderDftbByUser(false);
-        _settings.fennolSettings.setFennolModelPathByUser("");
-
-        _engine = std::make_unique<engine::OptEngine>(_settings);
-        _reader =
-            std::make_unique<input::InputFileReader>("input.in", _settings);
-
-        _settings.timings.setTimeStepByUser(0.5 * fs);
-        _settings.timings.setNumberOfStepsByUser(100U);
-    }
-
-    void _setKeyword(const std::string &keyword)
-    {
-        _reader->setKeywordCount(keyword, 1);
-    }
-
-    void _configureMDJob(JobType jobType)
-    {
-        _settings.generalSettings.setJobtypeByUser(jobType);
-        _settings.timings.setNumberOfStepsByUser(100U);
-        _setKeyword("nstep");
-        _setKeyword("timestep");
-        if (jobType == JobType::QM_MD || jobType == JobType::RING_POLYMER_QM_MD)
-            _setKeyword("qm_prog");
-    }
+    void _configureMDJob(JobType jobType);
 
     // the value checks moved out of the reader into Settings::validate(),
     // which runs after Settings::finalize()
-    void _finalizeAndValidate()
-    {
-        _reader->validateInputConfiguration(_settings);
-        _settings.finalize();
-        _settings.validate();
-    }
-
-    void TearDown() override { GeneralSettings::deactivateCellList(); }
+    void _finalizeAndValidate();
 };
+
+void TestInputValidation::SetUp()
+{
+    _settings.generalSettings.setJobtypeByUser(static_cast<JobType>(0));
+
+    _settings.hessianSettings.set_optimizeBeforeHessianByUser(false);
+
+    _settings.optimizerSettings.set_lRStrategyByUser(LearningRate::CONSTANT);
+    _settings.optimizerSettings.set_minLearningRateByUser(1.0e-15);
+    _settings.optimizerSettings.set_maxLearningRateByUser(1.0);
+
+    _settings.manostatSettings.set_manostatTypeByUser(ManostatType::NONE);
+    _settings.manostatSettings.set_tauByUser(
+        defaults::BERENDSEN_MANOSTAT_RELAX_TIME
+    );
+
+    _settings.kinetics.setRampingStepsByUser(0);
+    _settings.kinetics.setRampingFrequencyByUser(1);
+    _settings.thermostatSettings.setRelaxationTimeByUser(
+        defaults::BERENDSEN_THERMOSTAT_RELAX_TIME
+    );
+    _settings.thermostatSettings.setFrictionByUser(
+        defaults::LANGEVIN_THERMOSTAT_FRICTION
+    );
+    _settings.simulationBoxSettings.setInitializeVelocsByUser(
+        InitVelocities::FALSE
+    );
+
+    _settings.potentialSettings.set_coulombLRTypeByUser(
+        CoulombLongRangeType::SHIFTED
+    );
+    _settings.potentialSettings.setCoulombRadiusCutoffByUser(
+        defaults::COULOMB_CUT_OFF_DEFAULT
+    );
+
+    _settings.dftbSettings.setSlakosTypeByUser(SlakosType::NONE);
+    _settings.dftbSettings.setUseThirdOrderDftbByUser(false);
+    _settings.fennolSettings.setFennolModelPathByUser("");
+
+    _engine = std::make_unique<engine::OptEngine>(_settings);
+    _reader = std::make_unique<input::InputFileReader>("input.in", _settings);
+
+    _settings.timings.setTimeStepByUser(0.5 * fs);
+    _settings.timings.setNumberOfStepsByUser(100U);
+}
+
+void TestInputValidation::_setKeyword(const std::string &keyword)
+{
+    _reader->setKeywordCount(keyword, 1);
+}
+
+void TestInputValidation::_configureMDJob(JobType jobType)
+{
+    _settings.generalSettings.setJobtypeByUser(jobType);
+    _settings.timings.setNumberOfStepsByUser(100U);
+    _setKeyword("nstep");
+    _setKeyword("timestep");
+    if (jobType == JobType::QM_MD || jobType == JobType::RING_POLYMER_QM_MD)
+        _setKeyword("qm_prog");
+}
+
+// the value checks moved out of the reader into Settings::validate(),
+// which runs after Settings::finalize()
+void TestInputValidation::_finalizeAndValidate()
+{
+    _reader->validateInputConfiguration(_settings);
+    _settings.finalize();
+    _settings.validate();
+}
 
 TEST_F(TestInputValidation, requiresNumberOfStepsForMD)
 {
@@ -151,7 +157,7 @@ TEST_F(TestInputValidation, requiresNumberOfStepsForOptimization)
 TEST_F(TestInputValidation, requiresNumberOfStepsForPreoptimizedHessian)
 {
     _settings.generalSettings.setJobtypeByUser(JobType::MM_HESSIAN);
-    _settings.hessianSettings.setOptimizeBeforeHessianByUser(true);
+    _settings.hessianSettings.set_optimizeBeforeHessianByUser(true);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),
@@ -202,7 +208,7 @@ TEST_F(TestInputValidation, manostatDoesNotNeedTimeStepOutsideMD)
 {
     _settings.generalSettings.setJobtypeByUser(JobType::MM_HESSIAN);
     _settings.timings = TimingsSettings();
-    _settings.manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
+    _settings.manostatSettings.set_manostatTypeByUser(ManostatType::BERENDSEN);
     _setKeyword("pressure");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
@@ -223,7 +229,7 @@ TEST_F(TestInputValidation, requiresTimeStepForMD)
 
 TEST_F(TestInputValidation, requiresPressureForManostat)
 {
-    _settings.manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
+    _settings.manostatSettings.set_manostatTypeByUser(ManostatType::BERENDSEN);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),
@@ -235,8 +241,8 @@ TEST_F(TestInputValidation, requiresPressureForManostat)
 TEST_F(TestInputValidation, rejectsUnstableManostatRelaxationTime)
 {
     _configureMDJob(JobType::MM_MD);
-    _settings.manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
-    _settings.manostatSettings.setTauByUser(0.0001 * ps);
+    _settings.manostatSettings.set_manostatTypeByUser(ManostatType::BERENDSEN);
+    _settings.manostatSettings.set_tauByUser(0.0001 * ps);
     _setKeyword("pressure");
 
     ASSERT_THROW_MSG(
@@ -377,8 +383,8 @@ TEST_F(TestInputValidation, rejectsNonFiniteLangevinRampScale)
 TEST_F(TestInputValidation, rejectsCellListWithoutCoulombCutoff)
 {
     _configureMDJob(JobType::MM_MD);
-    GeneralSettings::activateCellList();
-    _settings.potentialSettings.setCoulombRadiusCutOffByUser(0.0 * angstrom);
+    _settings.generalSettings.activateCellListByUser();
+    _settings.potentialSettings.setCoulombRadiusCutoffByUser(0.0 * angstrom);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),
@@ -391,7 +397,7 @@ TEST_F(TestInputValidation, rejectsCellListForPureQM)
 {
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
-    GeneralSettings::activateCellList();
+    _settings.generalSettings.activateCellListByUser();
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),
@@ -690,7 +696,7 @@ TEST_F(TestInputValidation, acceptsValidConditionalKeywords)
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethodByUser(QMMethod::MACE);
     _settings.maceSettings.setMaceModelByUser(MaceModel::CUSTOM);
-    _settings.manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
+    _settings.manostatSettings.set_manostatTypeByUser(ManostatType::BERENDSEN);
     _settings.thermostatSettings.setThermostatTypeByUser(
         ThermostatType::BERENDSEN
     );
@@ -706,7 +712,7 @@ TEST_F(TestInputValidation, requiresDecayForConstantDecayOptimization)
 {
     _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings.timings.setNumberOfStepsByUser(100U);
-    _settings.optimizerSettings.setLearningRateStrategyByUser(
+    _settings.optimizerSettings.set_lRStrategyByUser(
         LearningRate::CONSTANT_DECAY
     );
     _setKeyword("nstep");
@@ -719,30 +725,65 @@ TEST_F(TestInputValidation, requiresDecayForConstantDecayOptimization)
     );
 }
 
-TEST_F(TestInputValidation, requiresDecayForExponentialDecayOptimization)
+TEST_F(TestInputValidation, acceptsExponentialDecayWithDefaultDecay)
 {
     _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings.timings.setNumberOfStepsByUser(100U);
-    _settings.optimizerSettings.setLearningRateStrategyByUser(
+    _settings.optimizerSettings.set_lRStrategyByUser(
         LearningRate::EXPONENTIAL_DECAY
     );
     _setKeyword("nstep");
 
-    ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(_settings),
-        exc::UserInputException,
-        "The exponential-decay learning rate strategy requires "
-        "learning-rate-decay."
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
+    EXPECT_DOUBLE_EQ(
+        _settings.optimizerSettings.get_learningRateDecay(),
+        defaults::LEARNING_RATE_DECAY_DEFAULT
     );
+}
+
+TEST_F(TestInputValidation, rejectsShakeInOptimization)
+{
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
+    _settings.constraintSettings.activateShakeByUser();
+    _setKeyword("nstep");
+
+    ASSERT_THROW_MSG(
+        _finalizeAndValidate(),
+        exc::InputFileException,
+        "Job type MM_OPT does not apply SHAKE, M-SHAKE or distance "
+        "constraints. Set shake = off and distance-constraints = off (a "
+        "rigid water model also turns SHAKE on)."
+    );
+}
+
+TEST_F(TestInputValidation, rejectsDistanceConstraintsInOptimization)
+{
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
+    _settings.constraintSettings.activateDistanceConstraintsByUser();
+    _setKeyword("nstep");
+
+    ASSERT_THROW_MSG(
+        _finalizeAndValidate(),
+        exc::InputFileException,
+        "Job type MM_OPT does not apply SHAKE, M-SHAKE or distance "
+        "constraints. Set shake = off and distance-constraints = off (a "
+        "rigid water model also turns SHAKE on)."
+    );
+}
+
+TEST_F(TestInputValidation, acceptsShakeInMD)
+{
+    _configureMDJob(JobType::MM_MD);
+    _settings.constraintSettings.activateShakeByUser();
+
+    EXPECT_NO_THROW(_finalizeAndValidate());
 }
 
 TEST_F(TestInputValidation, acceptsConstantOptimizationWithoutDecay)
 {
     _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings.timings.setNumberOfStepsByUser(100U);
-    _settings.optimizerSettings.setLearningRateStrategyByUser(
-        LearningRate::CONSTANT
-    );
+    _settings.optimizerSettings.set_lRStrategyByUser(LearningRate::CONSTANT);
 
     _setKeyword("nstep");
 
@@ -753,7 +794,7 @@ TEST_F(TestInputValidation, rejectsUnimplementedLineSearchOptimization)
 {
     _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings.timings.setNumberOfStepsByUser(100U);
-    _settings.optimizerSettings.setLearningRateStrategyByUser(
+    _settings.optimizerSettings.set_lRStrategyByUser(
         LearningRate::LINESEARCH_WOLFE
     );
     _setKeyword("nstep");
@@ -769,11 +810,9 @@ TEST_F(TestInputValidation, rejectsOverlappingLearningRateBounds)
 {
     _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings.timings.setNumberOfStepsByUser(100U);
-    _settings.optimizerSettings.setLearningRateStrategyByUser(
-        LearningRate::CONSTANT
-    );
-    _settings.optimizerSettings.setMinLearningRateByUser(0.5);
-    _settings.optimizerSettings.setMaxLearningRateByUser(0.5);
+    _settings.optimizerSettings.set_lRStrategyByUser(LearningRate::CONSTANT);
+    _settings.optimizerSettings.set_minLearningRateByUser(0.5);
+    _settings.optimizerSettings.set_maxLearningRateByUser(0.5);
     _setKeyword("nstep");
 
     ASSERT_THROW_MSG(

@@ -110,8 +110,8 @@ namespace input
         {
             if (selection.expression.has_value())
             {
-                _hybridSettings->setInnerRegionCenterExpression(
-                    *selection.expression
+                _hybridSettings->set_innerRegionCenterExpression(
+                    selection.expression
                 );
                 return;
             }
@@ -133,7 +133,7 @@ namespace input
                 convertedIndices.push_back(static_cast<size_t>(index));
             }
 
-            _hybridSettings->setInnerRegionCenterByUser(convertedIndices);
+            _hybridSettings->set_innerRegionCenterByUser(convertedIndices);
         };
 
         auto &key = _getRegistry().registerKey(
@@ -158,7 +158,7 @@ namespace input
         };
 
         const auto setValue = [this](const SelectionTag &selection)
-        { _hybridSettings->setForcedCoreListByUser(selection.indices); };
+        { _hybridSettings->set_forcedCoreListByUser(selection.indices); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<SelectionTag>{
@@ -183,7 +183,7 @@ namespace input
         };
 
         const auto setValue = [this](const SelectionTag &selection)
-        { _hybridSettings->setForcedLayerListByUser(selection.indices); };
+        { _hybridSettings->set_forcedLayerListByUser(selection.indices); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<SelectionTag>{
@@ -208,7 +208,7 @@ namespace input
         };
 
         const auto setValue = [this](const SelectionTag &selection)
-        { _hybridSettings->setForcedOuterListByUser(selection.indices); };
+        { _hybridSettings->set_forcedOuterListByUser(selection.indices); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<SelectionTag>{
@@ -236,10 +236,10 @@ namespace input
             switch (value)
             {
                 case QMCharges::QM:
-                    _hybridSettings->setUseQMChargesByUser(true);
+                    _hybridSettings->set_useQMChargesByUser(true);
                     break;
                 case QMCharges::MM:
-                    _hybridSettings->setUseQMChargesByUser(false);
+                    _hybridSettings->set_useQMChargesByUser(false);
                     break;
             }
         };
@@ -264,7 +264,7 @@ namespace input
         };
 
         const auto setValue = [this](double value)
-        { _hybridSettings->setCoreRadiusByUser(value * angstrom); };
+        { _hybridSettings->set_coreRadiusByUser(value * angstrom); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -287,7 +287,7 @@ namespace input
         };
 
         const auto setValue = [this](double value)
-        { _hybridSettings->setLayerRadiusByUser(value * angstrom); };
+        { _hybridSettings->set_layerRadiusByUser(value * angstrom); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -313,7 +313,7 @@ namespace input
 
         const auto setValue = [this](double value)
         {
-            _hybridSettings->setSmoothingRegionThicknessByUser(
+            _hybridSettings->set_smoothingRegionThicknessByUser(
                 value * angstrom
             );
         };
@@ -340,7 +340,7 @@ namespace input
         };
 
         const auto setValue = [this](double value)
-        { _hybridSettings->setPointChargeThicknessByUser(value * angstrom); };
+        { _hybridSettings->set_pointChargeThicknessByUser(value * angstrom); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -363,7 +363,7 @@ namespace input
         };
 
         const auto setValue = [this](SmoothingMethod value)
-        { _hybridSettings->setSmoothingMethodByUser(value); };
+        { _hybridSettings->set_smoothingByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<SmoothingMethod>{
@@ -391,7 +391,7 @@ namespace input
         };
 
         const auto setValue = [this](QMForceDist value)
-        { _hybridSettings->setQMForceDistByUser(value); };
+        { _hybridSettings->set_qmForceDistByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<QMForceDist>{

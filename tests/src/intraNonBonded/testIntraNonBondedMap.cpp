@@ -79,9 +79,9 @@ physicalData::PhysicalData TestIntraNonBondedMap::_calculatePair(
     molecule.addAtom(atom2);
 
     PotentialSettings potentialSettings;
-    potentialSettings.setScale14CoulombByUser(0.75);
-    potentialSettings.setScale14VanDerWaalsByUser(0.75);
-    potentialSettings.setCoulombRadiusCutOffByUser(10.0 * angstrom);
+    potentialSettings.set_scale14CoulombByUser(0.75);
+    potentialSettings.set_scale14VDWByUser(0.75);
+    potentialSettings.setCoulombRadiusCutoffByUser(10.0 * angstrom);
 
     auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
     _setNonCoulombPairsMatrix(
@@ -148,8 +148,8 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
     molecule.addAtom(atom2);
 
     PotentialSettings potentialSettings;
-    potentialSettings.setScale14CoulombByUser(0.75);
-    potentialSettings.setScale14VanDerWaalsByUser(0.75);
+    potentialSettings.set_scale14CoulombByUser(0.75);
+    potentialSettings.set_scale14VDWByUser(0.75);
 
     auto intraNonBondedType = intraNonBonded::IntraNonBondedContainer(
         MolType{0},
@@ -158,7 +158,7 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
     auto intraNonBondedMap =
         intraNonBonded::IntraNonBondedMap(&molecule, &intraNonBondedType);
 
-    potentialSettings.setCoulombRadiusCutOffByUser(10.0 * angstrom);
+    potentialSettings.setCoulombRadiusCutoffByUser(10.0 * angstrom);
 
     auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
     _setNonCoulombPairsMatrix(

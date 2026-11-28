@@ -22,6 +22,8 @@
 
 #include "interrupt.hpp"
 
+#include "interruptDetail.hpp"
+
 #ifdef WITH_PYBIND11
 #include <pybind11/pybind11.h>
 #endif
@@ -30,17 +32,12 @@
 #include <unistd.h>
 
 #include <csignal>
+#include <stdexcept>
 
-namespace
+namespace utilities::detail
 {
-    struct InterruptState
-    {
-        static inline volatile std::sig_atomic_t interrupted = 0;
-        static inline volatile std::sig_atomic_t wakeOnly    = 0;
-    };
-
     constexpr int _exitCodeInterrupted = 128 + SIGINT;
-}   // namespace
+}   // namespace utilities::detail
 
 /**
  * @brief the first Ctrl-C stops PQ at the next step, the second one exits at
@@ -50,8 +47,11 @@ namespace
  */
 // NOLINTNEXTLINE(misc-use-internal-linkage): C linkage requires external
 // linkage
-extern "C" void pqOnInterrupt(const int /*signalNumber*/)
+extern "C" void pqOnInterrupt(int /*signalNumber*/)
 {
+    using utilities::detail::_exitCodeInterrupted;
+    using utilities::detail::InterruptState;
+
     if (InterruptState::wakeOnly != 0)
     {
         InterruptState::wakeOnly = 0;
@@ -71,15 +71,29 @@ extern "C" void pqOnInterrupt(const int /*signalNumber*/)
 namespace utilities
 {
     /**
-     * @brief throw if a signal recorded by embedded Python is pending
+     * @brief throw if a signal recorded by embedded Python or, without
+     * Python, a Ctrl-C is pending
      *
      * @throw pybind11::error_already_set e.g. KeyboardInterrupt
+     * @throw std::runtime_error on Ctrl-C while Python is not running
      */
     void throwIfInterrupted()
     {
 #ifdef WITH_PYBIND11
-        if (::Py_IsInitialized() != 0 && ::PyErr_CheckSignals() != 0)
-            throw pybind11::error_already_set();
+        if (::Py_IsInitialized() != 0)
+        {
+            if (::PyErr_CheckSignals() != 0)
+            {
+                throw pybind11::error_already_set();
+            }
+            return;
+        }
+#if !defined(_WIN32)
+        if (detail::InterruptState::interrupted != 0)
+        {
+            throw std::runtime_error("KeyboardInterrupt");
+        }
+#endif
 #endif
     }
 
@@ -94,6 +108,23 @@ namespace utilities
         action.sa_handler = pqOnInterrupt;
         ::sigemptyset(&action.sa_mask);
         ::sigaction(SIGINT, &action, nullptr);
+
+        if (detail::InterruptState::interrupted != 0 &&
+            ::Py_IsInitialized() != 0)
+        {
+            ::PyErr_SetInterrupt();
+        }
+    }
+
+    /**
+     * @brief true if PQ's SIGINT handler is the current one
+     */
+    bool isInterruptHandlerInstalled()
+    {
+        struct sigaction current{};
+        ::sigaction(SIGINT, nullptr, &current);
+
+        return current.sa_handler == pqOnInterrupt;
     }
 
     /**
@@ -109,7 +140,7 @@ namespace utilities
             return;
 
         if (current.sa_handler == pqOnInterrupt)
-            InterruptState::wakeOnly = 1;
+            detail::InterruptState::wakeOnly = 1;
 
         ::pthread_kill(thread, SIGINT);
     }

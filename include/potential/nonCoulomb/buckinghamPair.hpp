@@ -47,17 +47,17 @@ namespace pot
         explicit BuckinghamPair(
             ExtVdwType              vanDerWaalsType1,
             ExtVdwType              vanDerWaalsType2,
-            const Pos&              cutOff,
+            const Pos&              cutoff,
             const BuckinghamParams& params
         );
 
         explicit BuckinghamPair(
-            const Pos&              cutOff,
+            const Pos&              cutoff,
             const BuckinghamParams& params
         );
 
         explicit BuckinghamPair(
-            const Pos&              cutOff,
+            const Pos&              cutoff,
             const EnergyPerMol&     energyCutoff,
             const Force&            forceCutoff,
             const BuckinghamParams& params

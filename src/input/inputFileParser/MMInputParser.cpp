@@ -81,7 +81,7 @@ namespace input
         };
 
         const auto setValue = [this](ForceFieldType value)
-        { _forceFieldSettings->setTypeByUser(value); };
+        { _forceFieldSettings->set_typeByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<ForceFieldType>{
@@ -108,7 +108,7 @@ namespace input
         };
 
         const auto setValue = [this](NonCoulombType value)
-        { _potentialSettings->setNonCoulombTypeByUser(value); };
+        { _potentialSettings->set_nonCoulombTypeByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<NonCoulombType>{

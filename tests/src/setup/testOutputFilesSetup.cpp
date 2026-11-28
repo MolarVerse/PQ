@@ -55,7 +55,7 @@ namespace
             ".vir",        ".stress",     ".box",        ".rpmd.rst",
             ".rpmd.xyz",   ".rpmd.vel",   ".rpmd.force", ".rpmd.chrg",
             ".rpmd.en",    ".opt",        ".ref",        ".extxyz",
-            ".h5md"
+            ".h5md",       ".ase.traj"
         };
 
         for (const auto &suffix : suffixes)
@@ -71,7 +71,7 @@ TEST_F(TestSetup, setupOutputFilesOptJobReplaceDefaultsAndAssignsOptFile)
 {
     cleanupPrefix();
     _settings->generalSettings.setJobtypeByUser(JobType::MM_OPT);
-    _settings->outputFiles.setFilePrefixByUser(PREFIX);
+    _settings->outputFiles.set_filePrefixByUser(PREFIX);
     _settings->timings.setTimeStepByUser(0.5 * fs);
     _settings->timings.setNumberOfStepsByUser(100U);
     _settings->finalize();
@@ -80,11 +80,11 @@ TEST_F(TestSetup, setupOutputFilesOptJobReplaceDefaultsAndAssignsOptFile)
 
     // After setup, the log/timings/info filenames are now prefix-substituted.
     EXPECT_EQ(
-        _settings->outputFiles.getLogFileName(),
+        _settings->outputFiles.get_logFile(),
         std::string(PREFIX) + ".log"
     );
     EXPECT_EQ(
-        _settings->outputFiles.getOptFileName(),
+        _settings->outputFiles.get_optFile(),
         std::string(PREFIX) + ".opt"
     );
 
@@ -95,7 +95,7 @@ TEST_F(TestSetup, setupOutputFilesHybridPathAssignsCenterFile)
 {
     cleanupPrefix();
     _settings->generalSettings.setJobtypeByUser(JobType::QMMM_MD);
-    _settings->outputFiles.setFilePrefixByUser(PREFIX);
+    _settings->outputFiles.set_filePrefixByUser(PREFIX);
     _settings->timings.setTimeStepByUser(0.5 * fs);
     _settings->timings.setNumberOfStepsByUser(100U);
 
@@ -116,7 +116,7 @@ TEST_F(TestSetup, setupOutputFilesMDPathPreservesLegacyEnergyFormatByDefault)
 {
     cleanupPrefix();
     _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
-    _settings->outputFiles.setFilePrefixByUser(PREFIX);
+    _settings->outputFiles.set_filePrefixByUser(PREFIX);
     _settings->timings.setTimeStepByUser(0.5 * fs);
     _settings->timings.setNumberOfStepsByUser(100U);
 
@@ -141,8 +141,8 @@ TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
 {
     cleanupPrefix();
     _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
-    _settings->outputFiles.setFilePrefixByUser(PREFIX);
-    _settings->outputFiles.setIncludeOutputMetadataByUser(true);
+    _settings->outputFiles.set_filePrefixByUser(PREFIX);
+    _settings->outputFiles.set_includeOutputMetadataByUser(true);
     _settings->timings.setTimeStepByUser(0.5 * fs);
     _settings->timings.setNumberOfStepsByUser(100U);
 
@@ -171,8 +171,8 @@ TEST_F(TestSetup, setupOutputFilesMDPathExtxyzReplacesTrajectoryFiles)
 {
     cleanupPrefix();
     _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
-    _settings->outputFiles.setFilePrefixByUser(PREFIX);
-    _settings->outputFiles.setTrajectoryFormatByUser(TrajectoryFormat::EXTXYZ);
+    _settings->outputFiles.set_filePrefixByUser(PREFIX);
+    _settings->outputFiles.set_trajFormatByUser(TrajectoryFormat::EXTXYZ);
     _settings->timings.setNumberOfStepsByUser(100U);
 
     _settings->finalize();
@@ -196,8 +196,8 @@ TEST_F(TestSetup, setupOutputFilesMDPathH5mdReplacesTrajectoryFiles)
 {
     cleanupPrefix();
     _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
-    _settings->outputFiles.setFilePrefixByUser(PREFIX);
-    _settings->outputFiles.setTrajectoryFormatByUser(TrajectoryFormat::H5MD);
+    _settings->outputFiles.set_filePrefixByUser(PREFIX);
+    _settings->outputFiles.set_trajFormatByUser(TrajectoryFormat::H5MD);
     _settings->timings.setTimeStepByUser(0.5 * fs);
     _settings->timings.setNumberOfStepsByUser(100U);
 
@@ -228,11 +228,35 @@ TEST_F(TestSetup, setupOutputFilesMDPathH5mdReplacesTrajectoryFiles)
     cleanupPrefix();
 }
 
+TEST_F(TestSetup, setupOutputFilesMDPathAseReplacesTrajectoryFiles)
+{
+    cleanupPrefix();
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
+    _settings->outputFiles.set_filePrefixByUser(PREFIX);
+    _settings->outputFiles.set_trajFormatByUser(TrajectoryFormat::ASE);
+    _settings->timings.setNumberOfStepsByUser(100U);
+
+    _settings->finalize();
+    setup::OutputFilesSetup setup(*_mdEngine);
+
+    EXPECT_NO_THROW(setup.setup());
+
+    const std::string prefix = PREFIX;
+    EXPECT_TRUE(std::filesystem::exists(prefix + ".ase.traj"));
+
+    for (const auto *suffix : {".xyz", ".vel", ".force", ".chrg"})
+    {
+        EXPECT_FALSE(std::filesystem::exists(prefix + suffix)) << suffix;
+    }
+
+    cleanupPrefix();
+}
+
 TEST_F(TestSetup, setupOutputFilesRPMDPathRunsWithoutThrowing)
 {
     cleanupPrefix();
     _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
-    _settings->outputFiles.setFilePrefixByUser(PREFIX);
+    _settings->outputFiles.set_filePrefixByUser(PREFIX);
     _settings->timings.setNumberOfStepsByUser(100U);
 
     _settings->finalize();

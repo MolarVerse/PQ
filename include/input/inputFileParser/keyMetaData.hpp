@@ -23,12 +23,17 @@
 #ifndef INPUT__INPUT_FILE_PARSER__KEY_META_DATA_HPP
 #define INPUT__INPUT_FILE_PARSER__KEY_META_DATA_HPP
 
+#include <mstd/types.hpp>
+#include <mstd/types/semver/semver.hpp>
 #include <optional>
 #include <string>
 #include <vector>
 
+#include "deprecations.hpp"
+
 namespace input
 {
+
     /**
      * @struct KeyMetadata
      *
@@ -52,6 +57,8 @@ namespace input
         // handling!
         // NOLINTNEXTLINE(readability-redundant-member-init)
         std::vector<std::string> aliases = {};
+
+        std::optional<Lifecycle> lifecycle = std::nullopt;
     };
 
 }   // namespace input

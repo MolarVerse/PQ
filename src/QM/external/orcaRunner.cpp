@@ -152,7 +152,7 @@ namespace QM
             configurator::HybridConfigurator::getMoleculeChangedZone();
 
         // TODO(ape): https://github.com/MolarVerse/PQ/issues/200
-        if (hybridSettings.getSmoothingMethod() == EXACT)
+        if (hybridSettings.get_smoothing() == EXACT)
             molChangedZone = true;
 
         const auto reset           = molChangedZone || _isFirstExecution;
@@ -164,8 +164,8 @@ namespace QM
             charge,
             reset ? 1 : 0,
             usePointCharges,
-            utilities::shellQuote(fileSettings.getOrcaFileName()),
-            utilities::shellQuote(fileSettings.getPointChargeFileName())
+            utilities::shellQuote(fileSettings.get_orcaFile()),
+            utilities::shellQuote(fileSettings.get_pointChargeFile())
         );
         _executeCommand(command, "ORCA");
 

@@ -30,6 +30,7 @@
 #include <string>
 #include <vector>
 
+#include "aseTrajOutput.hpp"
 #include "boxOutput.hpp"
 #include "energyOutput.hpp"
 #include "extxyzOutput.hpp"
@@ -91,8 +92,9 @@ namespace engine
         std::unique_ptr<out::TrajectoryOutput> _chargeOutput;
         std::unique_ptr<out::RstFileOutput>    _rstFileOutput;
 
-        std::unique_ptr<out::ExtxyzOutput> _extxyzOutput;
-        std::unique_ptr<out::H5mdOutput>   _h5mdOutput;
+        std::unique_ptr<out::ExtxyzOutput>  _extxyzOutput;
+        std::unique_ptr<out::H5mdOutput>    _h5mdOutput;
+        std::unique_ptr<out::AseTrajOutput> _aseTrajOutput;
 
         std::unique_ptr<out::LogOutput>    _logOutput;
         std::unique_ptr<out::StdoutOutput> _stdoutOutput;
@@ -154,7 +156,7 @@ namespace engine
             const molsys::SimulationBox &,
             const thermostat::Thermostat &,
             size_t                     step,
-            double                     potentialEnergy,
+            const EnergyPerMol        &potentialEnergy,
             const std::optional<Time> &finalTime
         );
         void openExtxyzOutput(const std::string &filename, bool overwrite);
@@ -163,6 +165,7 @@ namespace engine
             bool               overwrite,
             double             timeStep
         );
+        void openAseTrajOutput(const std::string &filename, bool overwrite);
         void waitForFrames();
 
         [[nodiscard]] static bool asyncOutputFits(
@@ -244,7 +247,7 @@ namespace engine
        private:
         void _startFrameWriter(std::size_t nAtoms);
         void _writeFrame(
-            const out::Frame &,
+            const out::Frame          &frame,
             size_t                     step,
             bool                       metadata,
             const std::optional<Time> &finalTime

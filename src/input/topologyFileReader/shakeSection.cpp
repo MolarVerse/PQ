@@ -88,7 +88,7 @@ namespace input::topology
             );
         }
 
-        auto &simBox = engine.getSimulationBox();
+        auto &simBox = engine.get_simulationBox();
 
         const auto [molecule1, atomIndex1] =
             simBox.findMoleculeByGlobalAtomIndex(atom1);
@@ -103,7 +103,7 @@ namespace input::topology
             bondLength
         );
 
-        engine.getConstraints()->addBondConstraint(bondConstraint);
+        engine.get_constraints().addBondConstraint(bondConstraint);
     }
 
     /**

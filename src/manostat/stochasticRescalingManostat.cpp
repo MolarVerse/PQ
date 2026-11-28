@@ -36,6 +36,20 @@
 
 namespace manostat
 {
+    /**
+     * @brief Construct a new Stochastic Rescaling Manostat object
+     *
+     * @param settings The settings for the manostat
+     * @param generalSettings The general settings for the simulation
+     */
+    StochasticRescalingManostat::StochasticRescalingManostat(
+        const ManostatSettings &settings,
+        const GeneralSettings  &generalSettings
+    )
+        : Manostat(settings),
+          _rng(rng::RandomNumberGenerator::create(generalSettings))
+    {
+    }
 
     /**
      * @brief apply Stochastic Rescaling manostat for NPT ensemble
@@ -44,7 +58,7 @@ namespace manostat
      * @param physicalData
      * @param targetTemperature The target temperature for the system
      * @param timeStep the integration time step used for velocity updates
-     * @param coulombRadiusCutOff The Coulomb radius cut-off distance used to
+     * @param coulombRadiusCutoff The Coulomb radius cut-off distance used to
      * check for interactions beyond the specified cut-off
      */
     void StochasticRescalingManostat::applyManostat(
@@ -52,7 +66,7 @@ namespace manostat
         physicalData::PhysicalData &physicalData,
         const Temperature          &targetTemperature,
         const Time                 &timeStep,
-        const Distance             &coulombRadiusCutOff
+        const Distance             &coulombRadiusCutoff
     )
     {
         auto _ = scopedTimer(TimerId::Manostat, "Stochastic Rescaling");
@@ -62,7 +76,7 @@ namespace manostat
         const auto mu =
             calculateMu(simulationBox.getVolume(), targetTemperature, timeStep);
 
-        _validateScaling(simulationBox, mu, coulombRadiusCutOff);
+        _validateScaling(simulationBox, mu, coulombRadiusCutoff);
 
         // Reconstruction temporarily unwraps atoms. Molecule::scale() below
         // wraps every position into the resized box.
@@ -81,9 +95,9 @@ namespace manostat
         const auto  invMuSim   = inverse(muSimSpace);
 
         simulationBox.scaleBox(mu);
-        simulationBox.checkCoulRadiusCutOff(
+        simulationBox.checkCoulRadiusCutoff(
             ExceptionType::ManostatError,
-            coulombRadiusCutOff
+            coulombRadiusCutoff
         );
 
         physicalData.set_volume(simulationBox.getVolume());
@@ -121,19 +135,18 @@ namespace manostat
     )
     {
         const auto &settings  = _getSettings();
-        const auto  fixedAxis = settings.getFixedAxis();
+        const auto  fixedAxis = settings.get_fixedAxis();
 
         if (fixedAxis == FixedAxis::ALL)
             return diagonalMatrix(linalg::Vec3D{1.0, 1.0, 1.0});
 
-        const auto compressibility  = settings.getCompressibility();
-        const auto tau              = settings.getTau();
+        const auto compressibility  = settings.get_compressibility();
+        const auto tau              = settings.get_tau();
         const auto tauTimeStepRatio = timeStep / tau;
 
         const auto thermalEnergy = targetTemperature.quantity_from_zero() * kb;
 
-        const auto random =
-            _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
+        const auto random = _rng.getNormalDistribution(0.0, 1.0);
 
         auto stochasticFactor = mstd::sqrt(
                                     2.0 * thermalEnergy * compressibility *
@@ -143,7 +156,7 @@ namespace manostat
 
         if (fixedAxis == FixedAxis::NONE)
         {
-            const auto deltaP = settings.getTargetPressure() - _getPressure();
+            const auto deltaP = settings.get_targetPressure() - _getPressure();
             constexpr auto dimension = 3.0;
 
             return linalg::diagonalMatrix(
@@ -171,7 +184,7 @@ namespace manostat
 
         p_avg /= numFree;
 
-        const auto deltaP = _getSettings().getTargetPressure() - p_avg;
+        const auto deltaP = _getSettings().get_targetPressure() - p_avg;
 
         const auto mu_scaled = mstd::exp(
             ((-compressibility * tauTimeStepRatio * deltaP) + stochasticFactor
@@ -197,7 +210,7 @@ namespace manostat
      */
     bool StochasticRescalingManostat::_hasFixedAxis(size_t index) const
     {
-        return isAxisFixed(_getSettings().getFixedAxis(), index);
+        return isAxisFixed(_getSettings().get_fixedAxis(), index);
     }
 
     /**
@@ -207,7 +220,7 @@ namespace manostat
      */
     rng::RandomNumberGenerator &StochasticRescalingManostat::_getRNG()
     {
-        return _randomNumberGenerator;
+        return _rng;
     }
 
     /**
@@ -226,9 +239,9 @@ namespace manostat
     )
     {
         const auto &settings         = _getSettings();
-        const auto  tau              = settings.getTau();
+        const auto  tau              = settings.get_tau();
         const auto  tauTimeStepRatio = timeStep / tau;
-        const auto  compress         = settings.getCompressibility();
+        const auto  compress         = settings.get_compressibility();
 
         const auto thermalEnergy = targetTemperature.quantity_from_zero() * kb;
 
@@ -245,7 +258,7 @@ namespace manostat
             ::sqrt(2.0 * stochasticFactor) *
             _getRNG().getNormalDistribution(0.0, 1.0);
 
-        const auto isotropy        = settings.getIsotropy();
+        const auto isotropy        = settings.get_isotropy();
         const auto p_xyz           = diagonal(_getPressureTensor());
         const auto isotropicAxes   = get2DIsotropicAxes(isotropy);
         const auto anisotropicAxis = get2DAnisotropicAxis(isotropy);
@@ -254,7 +267,7 @@ namespace manostat
         const auto p_xy            = (p_x + p_y) / 2.0;
         const auto p_z             = p_xyz[anisotropicAxis];
 
-        const auto targetPressure = settings.getTargetPressure();
+        const auto targetPressure = settings.get_targetPressure();
         const auto deltaPxy       = targetPressure - p_xy;
         const auto deltaPz        = targetPressure - p_z;
 
@@ -298,9 +311,9 @@ namespace manostat
         const Time        &timeStep
     )
     {
-        const auto tau              = _getSettings().getTau();
+        const auto tau              = _getSettings().get_tau();
         const auto tauTimeStepRatio = timeStep / tau;
-        const auto compress         = _getSettings().getCompressibility();
+        const auto compress         = _getSettings().get_compressibility();
 
         const auto thermalEnergy = targetTemperature.quantity_from_zero() * kb;
 
@@ -309,7 +322,7 @@ namespace manostat
             tauTimeStepRatio / volume
         );
 
-        const auto deltaP = Pressure3D{_getSettings().getTargetPressure()} -
+        const auto deltaP = Pressure3D{_getSettings().get_targetPressure()} -
                             diagonal(_getPressureTensor());
 
         auto mu = linalg::Vec3D{1.0, 1.0, 1.0};
@@ -349,9 +362,9 @@ namespace manostat
     )
     {
         const auto &settings         = _getSettings();
-        const auto  tau              = settings.getTau();
+        const auto  tau              = settings.get_tau();
         const auto  tauTimeStepRatio = timeStep / tau;
-        const auto  compress         = settings.getCompressibility();
+        const auto  compress         = settings.get_compressibility();
 
         const auto thermalEnergy = targetTemperature.quantity_from_zero() * kb;
 
@@ -361,7 +374,7 @@ namespace manostat
         );
 
         const auto deltaP =
-            linalg::diagonalMatrix(settings.getTargetPressure()) -
+            linalg::diagonalMatrix(settings.get_targetPressure()) -
             _getPressureTensor();
 
         // dimensionless strain: -beta * (dt / tau) * dP / 3

@@ -35,10 +35,10 @@
 #include "forceFieldSettings.hpp"
 #include "generalSettings.hpp"
 #include "manostatSettings.hpp"
-#include "systemInfo.hpp"
 #include "thermostatSettings.hpp"
 #include "units.hpp"
 #include "vector3d.hpp"
+#include "version.hpp"
 
 /**
  * @brief tests writing timestep metadata
@@ -64,7 +64,7 @@ TEST_F(TestEnergyOutput, writeHeader)
  */
 TEST_F(TestEnergyOutput, columnHeader)
 {
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en", false);
@@ -74,11 +74,14 @@ TEST_F(TestEnergyOutput, columnHeader)
     std::ifstream file("default.en");
     std::string   line;
     std::getline(file, line);
-    EXPECT_EQ(line, std::format("# PQ energy file {}", sysinfo::VERSION));
+    EXPECT_EQ(
+        line,
+        std::format("# PQ energy file {}", CURRENT_VERSION.to_string())
+    );
     std::getline(file, line);
     EXPECT_EQ(
         line,
-        "#SIMULATION-TIME[step] TEMPERATURE[K] PRESSURE[bar] E(TOT)[kcal/mol] "
+        "#STEP[-] TEMPERATURE[K] PRESSURE[bar] E(TOT)[kcal/mol] "
         "E(KIN)[kcal/mol] E(INTRA)[kcal/mol] E(COUL)[kcal/mol] "
         "E(NON-COUL)[kcal/mol] MOMENTUM[amuA/fs] LOOPTIME[s]"
     );
@@ -91,7 +94,7 @@ TEST_F(TestEnergyOutput, columnHeader)
  */
 TEST_F(TestEnergyOutput, columnHeaderOnceAfterMetadata)
 {
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en", false);
@@ -110,7 +113,7 @@ TEST_F(TestEnergyOutput, columnHeaderOnceAfterMetadata)
     ASSERT_EQ(lines.size(), 5);
     EXPECT_EQ(lines[0], out::energyFileMarker());
     EXPECT_EQ(lines[1], "# timestep = 0.5 fs");
-    EXPECT_TRUE(lines[2].starts_with("#SIMULATION-TIME[step] TEMPERATURE[K] "));
+    EXPECT_TRUE(lines[2].starts_with("#STEP[-] TEMPERATURE[K] "));
     EXPECT_TRUE(lines[3].starts_with("         1\t"));
     EXPECT_TRUE(lines[4].starts_with("         2\t"));
 }
@@ -123,9 +126,9 @@ TEST_F(TestEnergyOutput, columnHeaderOnceAfterMetadata)
  */
 TEST_F(TestEnergyOutput, columnHeaderMatchesDataAndInfo)
 {
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::ON);
-    _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
-    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::Z);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::ON);
+    _settings->manostatSettings.set_manostatTypeByUser(ManostatType::BERENDSEN);
+    _settings->manostatSettings.set_fixedAxisByUser(FixedAxis::Z);
     _settings->thermostatSettings.setThermostatTypeByUser(
         ThermostatType::NOSE_HOOVER
     );
@@ -160,7 +163,7 @@ TEST_F(TestEnergyOutput, columnHeaderMatchesDataAndInfo)
     std::getline(enFile, header);
     std::getline(enFile, data);
 
-    ASSERT_TRUE(header.starts_with("#SIMULATION-TIME[step] "));
+    ASSERT_TRUE(header.starts_with("#STEP[-] "));
     const auto tokens = splitWords(header.substr(1));
 
     EXPECT_EQ(tokens.size(), splitWords(data).size());
@@ -190,7 +193,7 @@ TEST_F(TestEnergyOutput, columnHeaderMatchesDataAndInfo)
     }
 
     ASSERT_EQ(tokens.size(), infoLabels.size());
-    EXPECT_EQ(tokens[0], "SIMULATION-TIME[step]");
+    EXPECT_EQ(tokens[0], "STEP[-]");
     EXPECT_EQ(infoLabels[0], "SIMULATION-TIME[ps]");
 
     for (std::size_t index = 1; index < tokens.size(); ++index)
@@ -217,7 +220,7 @@ TEST_F(TestEnergyOutput, forceFieldNotActive)
     _physicalData->set_intraNonCoulombEnergy(10.0 * kcal_per_mol);
     _physicalData->set_loopTime(0.1 * s);
 
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en", false);
@@ -261,7 +264,7 @@ TEST_F(TestEnergyOutput, forceFieldActive)
     _physicalData->set_improperEnergy(22.0 * kcal_per_mol);
     _physicalData->set_loopTime(0.1 * s);
 
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::ON);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::ON);
     _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en", false);
@@ -305,9 +308,9 @@ TEST_F(TestEnergyOutput, manostatActive)
     _physicalData->set_density(20.0 * kg_per_litre);
     _physicalData->set_loopTime(0.1 * s);
 
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
-    _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
-    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
+    _settings->manostatSettings.set_manostatTypeByUser(ManostatType::BERENDSEN);
+    _settings->manostatSettings.set_fixedAxisByUser(FixedAxis::NONE);
     _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en", false);
@@ -351,9 +354,9 @@ TEST_F(TestEnergyOutput, manostatActiveWithFixedAxis)
     _physicalData->set_density(20.0 * kg_per_litre);
     _physicalData->set_loopTime(0.1 * s);
 
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
-    _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
-    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::Z);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
+    _settings->manostatSettings.set_manostatTypeByUser(ManostatType::BERENDSEN);
+    _settings->manostatSettings.set_fixedAxisByUser(FixedAxis::Z);
     _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en", false);
@@ -398,9 +401,9 @@ TEST_F(TestEnergyOutput, qmActive)
     _physicalData->set_density(20.0 * kg_per_litre);
     _physicalData->set_loopTime(0.1 * s);
 
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     _settings->generalSettings.setJobtypeByUser(JobType::QM_MD);
-    _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
+    _settings->manostatSettings.set_manostatTypeByUser(ManostatType::NONE);
 
     _energyOutput->setFilename("default.en", false);
     _energyOutput->write(100.0, *_physicalData, *_settings);
@@ -440,9 +443,9 @@ TEST_F(TestEnergyOutput, noseHooverActive)
     _physicalData->set_noseHooverFrictionEnergy(12.0);
     _physicalData->set_loopTime(0.1 * s);
 
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
-    _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
+    _settings->manostatSettings.set_manostatTypeByUser(ManostatType::NONE);
     _settings->thermostatSettings.setThermostatTypeByUser(
         ThermostatType::NOSE_HOOVER
     );
@@ -488,9 +491,9 @@ TEST_F(TestEnergyOutput, qmmmActiveSubtractsQMReferenceEnergy)
     _physicalData->set_numberOfSmoothingMol(1.0);
     _physicalData->set_loopTime(0.1 * s);
 
-    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    _settings->forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     _settings->generalSettings.setJobtypeByUser(JobType::QMMM_MD);
-    _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
+    _settings->manostatSettings.set_manostatTypeByUser(ManostatType::NONE);
     _settings->thermostatSettings.setThermostatTypeByUser(ThermostatType::NONE);
 
     _energyOutput->setFilename("default.en", false);

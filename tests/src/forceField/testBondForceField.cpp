@@ -62,7 +62,7 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
     box.setBox(orthoBox, false);
 
     PotentialSettings potentialSettings;
-    potentialSettings.setCoulombRadiusCutOffByUser(10.0 * angstrom);
+    potentialSettings.setCoulombRadiusCutoffByUser(10.0 * angstrom);
     auto physicalData     = physicalData::PhysicalData();
     auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
 
@@ -121,7 +121,7 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings.getSmoothingMethod(),
+        hybridSettings.get_smoothing(),
         potentialSettings
     );
 
@@ -207,7 +207,7 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings.getSmoothingMethod(),
+        hybridSettings.get_smoothing(),
         potentialSettings
     );
 

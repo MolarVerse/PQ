@@ -26,6 +26,7 @@
 #include "aseQMRunner.hpp"
 
 class FennolSettings;
+class GeneralSettings;
 
 namespace QM
 {
@@ -40,8 +41,9 @@ namespace QM
         ~AseFennolRunner() override = default;
 
         explicit AseFennolRunner(
-            const QMSettings&     qmSettings,
-            const FennolSettings& fennolSettings
+            const QMSettings&      qmSettings,
+            const FennolSettings&  fennolSettings,
+            const GeneralSettings& generalSettings
         );
     };
 }   // namespace QM

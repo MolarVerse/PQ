@@ -25,6 +25,8 @@
 
 #include <random>
 
+class GeneralSettings;
+
 namespace rng
 {
     /**
@@ -40,11 +42,16 @@ namespace rng
         std::mt19937       _generator;
 
        public:
-        RandomNumberGenerator();
+        static RandomNumberGenerator create(
+            const GeneralSettings& generalSettings
+        );
 
         template <typename T>
         T      getNormalDistribution(const T& mean, const T& stddev);
         double getUniformRealDistribution(double min, double max);
+
+       private:
+        explicit RandomNumberGenerator(const GeneralSettings& generalSettings);
     };
 
 }   // namespace rng

@@ -52,14 +52,14 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 int main()
 {
     Settings settings;
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(10.0 * angstrom);
+    settings.potentialSettings.setCoulombRadiusCutoffByUser(10.0 * angstrom);
     auto molecule            = benchSetup::makeMolecule({.nAtoms = 2});
     auto nonCoulombPotential = benchSetup::makeNonCoulomb();
     auto coulombPotential =
         pot::CoulombShiftedPotential(settings.potentialSettings);
 
-    settings.potentialSettings.setScale14CoulombByUser(0.75);
-    settings.potentialSettings.setScale14VanDerWaalsByUser(0.75);
+    settings.potentialSettings.set_scale14CoulombByUser(0.75);
+    settings.potentialSettings.set_scale14VDWByUser(0.75);
 
     auto intraNonBondedType = intraNonBonded::IntraNonBondedContainer(
         MolType{0},

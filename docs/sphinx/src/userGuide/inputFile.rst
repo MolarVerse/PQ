@@ -99,7 +99,7 @@ Possible options are:
 
    4. **qmmm-md** - Represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation.
 
-   5. **mm-opt** - represents a geometry optimization calculation using molecular mechanics.
+   5. **mm-opt** - represents a geometry optimization calculation using molecular mechanics. If the optimizer has not converged after ``nstep`` epochs, PQ writes a warning and ends normally. ``mm-opt`` does not apply constraints, so it stops with an error if :ref:`shake <shakeKey>` or ``distance-constraints`` is on (a rigid water model also turns SHAKE on). See ``examples/ar3_mm_opt`` for a small input.
 
    6. **mm-hessian** - represents a molecular mechanics Hessian calculation. By default, the geometry is optimized first and the Hessian is built at the optimized structure. Set ``optimize_before_hessian = false`` to calculate the Hessian directly at the input geometry.
 
@@ -369,6 +369,7 @@ The ``traj_format`` keyword sets how MD runs write positions, velocities, forces
     - **xyz** (default): the :ref:`trajectoryFile`, :ref:`velocityFile`, :ref:`forceFile` and :ref:`chargeFile`
     - **extxyz**: one :ref:`extxyzFile` instead of these four files
     - **h5md**: one :ref:`h5mdFile` instead of these four files (needs PQ built with ``-DBUILD_WITH_HDF5=ON``)
+    - **ase**: one :ref:`aseTrajFile` in ASE units instead of these four files
 
 .. _extxyzfilekey:
 
@@ -393,6 +394,18 @@ H5MD File
     h5md_file = {file} -> "default.h5md"
 
 The ``h5md_file`` keyword sets the name of the :ref:`h5mdFile`, which is written if ``traj_format = h5md``. Like the other output files, it follows ``file_prefix``.
+
+.. _asetrajfilekey:
+
+ASE Trajectory File
+===================
+
+.. admonition:: Key
+    :class: tip
+
+    ase_traj_file = {file} -> "default.ase.traj"
+
+The ``ase_traj_file`` keyword sets the name of the :ref:`aseTrajFile`, which is written if ``traj_format = ase``. Like the other output files, it follows ``file_prefix``.
 
 .. _energyfilekey:
 
@@ -2265,9 +2278,9 @@ Learning Rate Decay
 .. admonition:: Key
     :class: tip
 
-    learning-rate-decay = {double}
+    learning-rate-decay = {double} -> 1.0
 
-With the ``learning-rate-decay`` keyword the user can specify the decay speed of the learning rate. Pay attention this key is used at the moment for different kind of decay strategies and therefore the value is dependent on the chosen strategy.
+With the ``learning-rate-decay`` keyword the user can specify the decay speed of the learning rate. Its meaning depends on the strategy. For ``exponential-decay`` the learning rate after step *n* is the initial learning rate times exp(-decay · *n* / ``nstep``), so the default of 1.0 lowers it by a factor of e over the run. For ``constant-decay`` the value is subtracted from the learning rate at every update; it has no default there and must be set.
 
 .. _learningrateupdatefreqKey:
 

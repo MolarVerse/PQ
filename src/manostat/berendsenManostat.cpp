@@ -46,8 +46,8 @@ namespace manostat
         const Time             &timeStep
     )
     {
-        const auto compressibility = settings.getCompressibility();
-        const auto tau             = settings.getTau();
+        const auto compressibility = settings.get_compressibility();
+        const auto tau             = settings.get_tau();
 
         return compressibility * timeStep / tau;
     }
@@ -59,7 +59,7 @@ namespace manostat
      * @param physicalData
      * @param targetTemperature The target temperature for the system
      * @param timeStep the integration time step used for velocity updates
-     * @param coulombRadiusCutOff The Coulomb radius cut-off distance used to
+     * @param coulombRadiusCutoff The Coulomb radius cut-off distance used to
      * check for interactions beyond the specified cut-off
      */
     void BerendsenManostat::applyManostat(
@@ -67,7 +67,7 @@ namespace manostat
         physicalData::PhysicalData &physicalData,
         const Temperature & /*targetTemperature*/,
         const Time     &timeStep,
-        const Distance &coulombRadiusCutOff
+        const Distance &coulombRadiusCutoff
     )
     {
         auto _ = scopedTimer(TimerId::Manostat, "Berendsen");
@@ -76,7 +76,7 @@ namespace manostat
 
         const auto mu = calculateMu(timeStep);
 
-        _validateScaling(simulationBox, mu, coulombRadiusCutOff);
+        _validateScaling(simulationBox, mu, coulombRadiusCutoff);
 
         // Reconstruction temporarily unwraps atoms. Molecule::scale() below
         // wraps every position into the resized box.
@@ -94,9 +94,9 @@ namespace manostat
         const auto  muSimSpace = _toSimSpaceScaling(mu, box);
 
         simulationBox.scaleBox(mu);
-        simulationBox.checkCoulRadiusCutOff(
+        simulationBox.checkCoulRadiusCutoff(
             ExceptionType::ManostatError,
-            coulombRadiusCutOff
+            coulombRadiusCutoff
         );
 
         physicalData.set_volume(simulationBox.getVolume());
@@ -119,7 +119,7 @@ namespace manostat
     QuantityTensor3D BerendsenManostat::calculateMu(const Time &timeStep) const
     {
         const auto &settings  = _getSettings();
-        const auto &fixedAxis = settings.getFixedAxis();
+        const auto &fixedAxis = settings.get_fixedAxis();
 
         if (fixedAxis == FixedAxis::ALL)
             return linalg::diagonalMatrix(linalg::Vec3D{1.0, 1.0, 1.0});
@@ -141,7 +141,7 @@ namespace manostat
 
         p_avg /= numFree;
 
-        const auto deltaP = settings.getTargetPressure() - p_avg;
+        const auto deltaP = settings.get_targetPressure() - p_avg;
 
         double mu_scaled = mstd::pow(1.0 - (preFactor * deltaP), 1.0 / numFree);
 
@@ -170,7 +170,7 @@ namespace manostat
     {
         const auto &settings        = _getSettings();
         const auto  p_xyz           = diagonal(_getPressureTensor());
-        const auto  isotropy        = settings.getIsotropy();
+        const auto  isotropy        = settings.get_isotropy();
         const auto  anisotropicAxis = get2DAnisotropicAxis(isotropy);
         const auto  isotropicAxes   = get2DIsotropicAxes(isotropy);
         const auto  p_x             = p_xyz[isotropicAxes[0]];
@@ -178,11 +178,11 @@ namespace manostat
         const auto  p_xy            = (p_x + p_y) / 2.0;
         const auto  p_z             = p_xyz[anisotropicAxis];
 
-        const auto &fixedAxis = settings.getFixedAxis();
+        const auto &fixedAxis = settings.get_fixedAxis();
         const auto  dimension = 3.0 - toDim(fixedAxis);
         const auto  preFactor = _calcPreFactor(settings, timeStep) / dimension;
 
-        const auto targetPressure = settings.getTargetPressure();
+        const auto targetPressure = settings.get_targetPressure();
         const auto pressureFactor = preFactor * (targetPressure - p_xy);
 
         Quantity3D mu;
@@ -214,8 +214,8 @@ namespace manostat
     {
         const auto &settings       = _getSettings();
         const auto  pxyz           = diagonal(_getPressureTensor());
-        const auto  targetPressure = settings.getTargetPressure();
-        const auto  fixedAxis      = settings.getFixedAxis();
+        const auto  targetPressure = settings.get_targetPressure();
+        const auto  fixedAxis      = settings.get_fixedAxis();
         const auto  dimension      = 3.0 - toDim(fixedAxis);
         const auto  preFactor = _calcPreFactor(settings, timeStep) / dimension;
 
@@ -245,8 +245,8 @@ namespace manostat
     {
         const auto &settings = _getSettings();
         const auto  pTarget =
-            linalg::diagonalMatrix(settings.getTargetPressure());
-        const auto &fixedAxis = settings.getFixedAxis();
+            linalg::diagonalMatrix(settings.get_targetPressure());
+        const auto &fixedAxis = settings.get_fixedAxis();
         const auto  dimension = 3.0 - toDim(fixedAxis);
         const auto  preFactor = _calcPreFactor(settings, timeStep) / dimension;
         const QuantityTensor3D kronecker =

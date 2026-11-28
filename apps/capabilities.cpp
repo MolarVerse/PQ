@@ -32,13 +32,14 @@
 #include <ostream>
 #include <string_view>
 
+#include "capabilitiesDetail.hpp"
 #include "defaults.hpp"
 #include "externalQMScripts.hpp"
 #include "jsonOutput.hpp"
-#include "systemInfo.hpp"
 #include "units.hpp"
+#include "version.hpp"
 
-namespace
+namespace cli::detail
 {
     constexpr bool withAse             = PQ_BUILD_WITH_ASE;
     constexpr bool withMpi             = PQ_BUILD_WITH_MPI;
@@ -47,15 +48,6 @@ namespace
     constexpr bool sharedBuild         = PQ_BUILD_SHARED;
     constexpr bool staticBuild         = PQ_BUILD_STATIC;
     constexpr bool withSingularity     = PQ_BUILD_WITH_SINGULARITY;
-
-    /**
-     * @brief Represents a parameter in the PQ input schema.
-     */
-    struct JsonParam
-    {
-        std::string_view name;
-        std::string_view type;
-    };
 
     void writeStringArray(
         cli::JsonWriter                        &json,
@@ -388,7 +380,7 @@ namespace
         writeParameters(json);
         json.endObject();
     }
-}   // namespace
+}   // namespace cli::detail
 
 /**
  * @brief Writes the versioned machine-readable PQ capabilities.
@@ -405,10 +397,10 @@ void cli::writeCapabilities(std::ostream &output)
     json.beginObject();
     json.value("schema", "pq.capabilities");
     json.value("schema_version", 2);
-    json.value("version", sysinfo::VERSION);
-    writeBuildCapabilities(json);
-    writeCliCapabilities(json);
-    writeInputCapabilities(json);
+    json.value("version", CURRENT_VERSION.to_string());
+    detail::writeBuildCapabilities(json);
+    detail::writeCliCapabilities(json);
+    detail::writeInputCapabilities(json);
     json.endObject();
     output << '\n';
 

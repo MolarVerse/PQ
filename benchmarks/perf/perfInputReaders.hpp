@@ -133,17 +133,17 @@ namespace benchInputReaders
         Settings settings;
         settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
         settings.timings.setTimeStepByUser(0.5 * fs);
-        settings.fileSettings.setMolDescriptorFileNameByUser(
+        settings.fileSettings.set_molDescriptorFileByUser(
             (directory / "moldescriptor.dat").string()
         );
-        settings.fileSettings.setStartFileNameByUser(
+        settings.fileSettings.set_startFileByUser(
             (directory / "input.rst").string()
         );
-        settings.fileSettings.setTopologyFileNameByUser(
+        settings.fileSettings.set_topologyFileByUser(
             (directory / "topology.top").string()
         );
 
-        settings.forceFieldSettings.setTypeByUser(ForceFieldType::BONDED);
+        settings.forceFieldSettings.set_typeByUser(ForceFieldType::BONDED);
 
         std::size_t atoms = 0;
 
@@ -158,13 +158,13 @@ namespace benchInputReaders
             input::molDescriptor::MoldescriptorReader moldescriptor(engine);
             moldescriptor.read();
             input::restartFile::readRestartFile(
-                engine,
-                settings.noseHooverSettings,
-                settings.timings
+                settings,
+                engine.get_simulationBox(),
+                engine.getLogOutput()
             );
             input::topology::readTopologyFile(engine);
 
-            atoms = engine.getSimulationBox().getNumberOfAtoms();
+            atoms = engine.get_simulationBox().getNumberOfAtoms();
         }
 
         std::filesystem::remove_all(directory);

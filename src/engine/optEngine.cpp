@@ -40,8 +40,15 @@ namespace engine
      */
     void OptEngine::run()
     {
-        _evaluator->evaluate(get_physicalData());
-        _optimizer->updateHistory(get_physicalData().getTotalEnergy());
+        _evaluator->evaluate(
+            get_physicalData(),
+            get_simulationBox(),
+            get_intraNonBonded()
+        );
+        _optimizer->updateHistory(
+            get_physicalData().getTotalEnergy(),
+            get_simulationBox()
+        );
 
         const auto nEpochs = getSettings().timings.getNumberOfSteps();
 
@@ -61,18 +68,24 @@ namespace engine
 
             takeStep();
 
-            if (_converged || _optStopped)
+            if (_optStopped)
+            {
                 break;
+            }
 
             writeOutput(
                 getSettings().generalSettings.getJobtype(),
                 outputFileSettings
             );
             deleteTmpFiles();
+
+            if (_converged)
+            {
+                break;
+            }
         }
 
-        throwOnFailure(
-            _converged,
+        throwIfStopped(
             _optStopped,
             getStep(),
             nEpochs,
@@ -97,6 +110,50 @@ namespace engine
             getLogOutput().writeEndedNormally(elapsedTime);
             out::StdoutOutput::writeEndedNormally(elapsedTime);
         }
+        else
+        {
+            const auto msg = notConvergedMessage(nEpochs);
+
+            getLogOutput().writeOptWarning(msg);
+            out::StdoutOutput::writeOptWarning(msg);
+        }
+    }
+
+    /**
+     * @brief throw if the learning rate strategy stopped the optimization
+     *
+     * @param optStopped whether the learning rate strategy stopped the run
+     * @param step the step at which the run ended
+     * @param nEpochs the maximum number of epochs
+     * @param errorMessages the errors of the learning rate strategy
+     *
+     * @throw exc::OptException listing the errors if the run was stopped
+     */
+    void OptEngine::throwIfStopped(
+        bool                            optStopped,
+        size_t                          step,
+        size_t                          nEpochs,
+        const std::vector<std::string> &errorMessages
+    )
+    {
+        if (!optStopped)
+        {
+            return;
+        }
+
+        auto msg = std::format(
+            "Optimizer stopped after {} epochs out of {}. The following "
+            "error messages were raised:\n",
+            step,
+            nEpochs
+        );
+
+        for (size_t i = 0; i < errorMessages.size(); ++i)
+        {
+            msg += std::format("{}) {}\n", i + 1, errorMessages[i]);
+        }
+
+        throw exc::OptException(msg);
     }
 
     /**
@@ -119,31 +176,27 @@ namespace engine
         const std::vector<std::string> &errorMessages
     )
     {
-        if (optStopped)
-        {
-            auto msg = std::format(
-                "Optimizer stopped after {} epochs out of {}. The following "
-                "error "
-                "messages were raised:\n",
-                step,
-                nEpochs
-            );
-
-            for (size_t i = 0; i < errorMessages.size(); ++i)
-                msg += std::format("{}) {}\n", i + 1, errorMessages[i]);
-
-            throw exc::OptException(msg);
-        }
+        throwIfStopped(optStopped, step, nEpochs, errorMessages);
 
         if (!converged)
         {
-            throw exc::OptException(
-                std::format(
-                    "Optimizer did not converge after {} epochs.",
-                    nEpochs
-                )
-            );
+            throw exc::OptException(notConvergedMessage(nEpochs));
         }
+    }
+
+    /**
+     * @brief the message for a run that reached nEpochs without converging
+     *
+     * @param nEpochs the maximum number of epochs
+     *
+     * @return std::string
+     */
+    std::string OptEngine::notConvergedMessage(size_t nEpochs)
+    {
+        return std::format(
+            "Optimizer did not converge after {} epochs.",
+            nEpochs
+        );
     }
 
     /**
@@ -151,11 +204,22 @@ namespace engine
      */
     void OptEngine::takeStep()
     {
-        _optimizer->update(_learningRateStrategy->getLearningRate(), getStep());
+        _optimizer->update(
+            _learningRateStrategy->getLearningRate(),
+            getStep(),
+            get_simulationBox()
+        );
 
-        _evaluator->evaluate(get_physicalData());
+        _evaluator->evaluate(
+            get_physicalData(),
+            get_simulationBox(),
+            get_intraNonBonded()
+        );
 
-        _optimizer->updateHistory(get_physicalData().getTotalEnergy());
+        _optimizer->updateHistory(
+            get_physicalData().getTotalEnergy(),
+            get_simulationBox()
+        );
 
         _converged = _optimizer->hasConverged();
 
@@ -221,16 +285,16 @@ namespace engine
         size_t                    startingStepCount
     )
     {
-        const auto outputFreq = outputSettings.getOutputFrequency();
+        const auto outputFreq = outputSettings.get_outputFrequency();
         const auto effStep    = getStep() + startingStepCount;
 
         if (0 == getStep() % outputFreq)
         {
-            const out::Frame frame{getSimulationBox()};
+            const out::Frame frame{get_simulationBox()};
 
             getEngineOutput().writeXyzFile(frame, effStep);
             getEngineOutput().writeForceFile(frame, effStep);
-            getEngineOutput().writeOptRstFile(getSimulationBox(), effStep);
+            getEngineOutput().writeOptRstFile(get_simulationBox(), effStep);
             getEngineOutput().writeOptFile(getStep(), *_optimizer);
         }
 
@@ -324,7 +388,7 @@ namespace engine
      * @brief get the optimizer
      *
      */
-    opt::Optimizer &OptEngine::getOptimizer() { return *_optimizer; }
+    opt::Optimizer &OptEngine::get_optimizer() { return *_optimizer; }
 
     /**
      * @brief get the learning rate strategy

@@ -52,12 +52,12 @@ TEST_F(TestInputFileReader, testParseIntegrator)
     ASSERT_TRUE(funcMap.contains("integrator"));
     const auto &parseFunc = funcMap.at("integrator");
 
-    GeneralSettings::setIntegratorType(IntegratorType::NONE);
+    _settings.generalSettings.setIntegratorTypeByUser(IntegratorType::NONE);
 
     std::vector<std::string> lineElements = {"integrator", "=", "v-verlet"};
     parseFunc(lineElements, 0);
     EXPECT_EQ(
-        GeneralSettings::getIntegratorType(),
+        _settings.generalSettings.getIntegratorType(),
         IntegratorType::VELOCITY_VERLET
     );
     EXPECT_TRUE(_settings.referenceSettings.getReferenceFileNames().contains(
@@ -71,6 +71,6 @@ TEST_F(TestInputFileReader, testParseIntegrator)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"notValid\" for key \"integrator\" at line 0 in input "
-        "file. Allowed values: none, velocity_verlet, v_verlet"
+        "file. Allowed values: none, velocity_verlet (v_verlet)"
     );
 }

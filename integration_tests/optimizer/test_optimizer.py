@@ -44,7 +44,6 @@ the written frames, so only the frames that exist are compared.
 import math
 import pathlib
 import re
-import subprocess
 
 import pytest
 
@@ -190,9 +189,8 @@ def assert_follows(trajectory, converged, frames, opt_rows, stdout):
     assert epochs - 1 == converged, (
         f"converged after {epochs} epochs, the model after {converged} updates")
 
-    # frame 0 is the start, then one per update; the converged update is not
-    # written
-    assert converged - 1 <= len(frames) - 1 <= converged
+    # frame 0 is the start, then one per update, the converged one included
+    assert len(frames) - 1 == converged
     for number, frame in enumerate(frames):
         for atom in range(2):
             for axis in range(3):
@@ -243,6 +241,19 @@ def test_steepest_descent_with_an_exponential_decay(opt_input):
     stdout, frames, opt_rows = run_opt({
         "learning-rate-strategy": "exponential-decay",
         "learning-rate-decay": decay})
+
+    assert_follows(trajectory, converged, frames, opt_rows, stdout)
+
+
+@pytest.mark.parametrize("example_dir", ["hessian_bond/"], indirect=False)
+def test_the_exponential_decay_defaults_to_one(opt_input):
+    trajectory = steepest_descent(
+        lambda number: LR0 if number == 1 else
+        LR0 * math.exp(-1.0 * (number - 1) / NSTEP), NSTEP)
+    converged = converged_update(trajectory)
+
+    stdout, frames, opt_rows = run_opt({
+        "learning-rate-strategy": "exponential-decay"})
 
     assert_follows(trajectory, converged, frames, opt_rows, stdout)
 
@@ -313,16 +324,18 @@ def test_adam(opt_input):
 
 
 @pytest.mark.parametrize("example_dir", ["hessian_bond/"], indirect=False)
-def test_an_optimisation_that_does_not_converge_fails_with_the_epochs(
-        opt_input):
+def test_an_optimisation_that_does_not_converge_ends_with_a_warning(opt_input):
+    """The run is not an error: PQ warns that it did not converge after nstep
+    epochs and ends normally (exit code 0)."""
     text = pathlib.Path("opt.in").read_text()
     text = re.sub(r"nstep = \d+;", "nstep = 3;", text)
     text = re.sub(r"rms-force-conv = .*;", "rms-force-conv = 1.0e-9;", text)
     pathlib.Path("short.in").write_text(text)
 
-    with pytest.raises(subprocess.CalledProcessError) as error:
-        execute_pq("short.in")
+    stdout, stderr = execute_pq("short.in")
 
-    assert error.value.returncode != 0
+    assert stderr == b""
+    assert b"Optimizer did not converge after 3 epochs" in stdout
+    assert b"Optimizer converged after" not in stdout
     assert b"Optimizer did not converge after 3 epochs" in (
-        error.value.stdout + error.value.stderr)
+        pathlib.Path("opt.log").read_bytes())

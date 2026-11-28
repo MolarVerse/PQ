@@ -27,7 +27,6 @@
 #include <format>
 #include <iostream>
 #include <memory>
-#include <mstd/utils.hpp>
 #include <ostream>
 #include <sstream>
 #include <streambuf>
@@ -49,24 +48,10 @@
 #include "mathUtilities.hpp"
 #include "qmSettings.hpp"
 #include "thermostatSettings.hpp"
+#include "validationDetail.hpp"
 
-namespace
+namespace cli::detail
 {
-    class ScopedStreamRedirect
-    {
-       private:
-        std::ostream   &_stream;
-        std::streambuf *_original;
-
-       public:
-        ScopedStreamRedirect(std::ostream &stream, std::streambuf *replacement);
-
-        MSTD_NO_COPY(ScopedStreamRedirect);
-        MSTD_NO_MOVE(ScopedStreamRedirect);
-
-        ~ScopedStreamRedirect();
-    };
-
     ScopedStreamRedirect::ScopedStreamRedirect(
         std::ostream   &stream,
         std::streambuf *replacement
@@ -134,12 +119,6 @@ namespace
     {
         return value.starts_with("https://") || value.starts_with("http://");
     }
-
-    struct Files
-    {
-        std::filesystem::path installedRelativePath;
-        std::filesystem::path buildPath;
-    };
 
     std::filesystem::path runtimeAssetPath(const Files &files)
     {
@@ -317,12 +296,12 @@ namespace
 
     void validateEffectiveFiles(const Settings &settings)
     {
-        requireFile(settings.fileSettings.getStartFileName(), "Start file");
+        requireFile(settings.fileSettings.get_startFile(), "Start file");
 
         if (settings.fileSettings.isRingPolymerStartFileNameSetByUser())
         {
             requireFile(
-                settings.fileSettings.getRingPolymerStartFileName(),
+                settings.fileSettings.get_rpmdStartFile(),
                 "Ring-polymer start file"
             );
         }
@@ -330,16 +309,16 @@ namespace
         if (settings.fileSettings.isIntraNonBondedFileNameSetByUser())
         {
             requireFile(
-                settings.fileSettings.getIntraNonBondedFileName(),
+                settings.fileSettings.get_intraNonBondedFile(),
                 "Intra non-bonded file"
             );
         }
 
         if (isMMActivated(settings.generalSettings.getJobtype()) ||
-            settings.manostatSettings.getManostatType() != ManostatType::NONE)
+            settings.manostatSettings.get_manostatType() != ManostatType::NONE)
         {
             requireFile(
-                settings.fileSettings.getMolDescriptorFileName(),
+                settings.fileSettings.get_molDescriptorFile(),
                 "Moldescriptor file"
             );
         }
@@ -347,17 +326,14 @@ namespace
         if (isMMActivated(settings.generalSettings.getJobtype()) &&
             !settings.forceFieldSettings.isNonCoulombicActive())
         {
-            requireFile(
-                settings.fileSettings.getGuffDatFileName(),
-                "Guff file"
-            );
+            requireFile(settings.fileSettings.get_guffDatFile(), "Guff file");
         }
 
         if (settings.constraintSettings.isActive() ||
             settings.forceFieldSettings.isActive())
         {
             requireFile(
-                settings.fileSettings.getTopologyFileName(),
+                settings.fileSettings.get_topologyFile(),
                 "Topology file"
             );
         }
@@ -365,17 +341,14 @@ namespace
         if (settings.forceFieldSettings.isActive())
         {
             requireFile(
-                settings.fileSettings.getParameterFileName(),
+                settings.fileSettings.get_parameterFile(),
                 "Parameter file"
             );
         }
 
         if (settings.fileSettings.isMShakeFileNameSetByUser())
         {
-            requireFile(
-                settings.fileSettings.getMShakeFileName(),
-                "M-SHAKE file"
-            );
+            requireFile(settings.fileSettings.get_mShakeFile(), "M-SHAKE file");
         }
 
         if (!isQMActivated(settings.generalSettings.getJobtype()))
@@ -386,7 +359,7 @@ namespace
         if (method == QMMethod::DFTBPLUS)
         {
             requireFile(
-                settings.fileSettings.getDFTBFileName(),
+                settings.fileSettings.get_dftbFile(),
                 "DFTB setup file"
             );
         }
@@ -430,10 +403,7 @@ namespace
         if (isQMActivated(settings.generalSettings.getJobtype()) &&
             settings.qmSettings.getQMMethod() == QMMethod::ORCA)
         {
-            requireFile(
-                settings.fileSettings.getOrcaFileName(),
-                "ORCA template"
-            );
+            requireFile(settings.fileSettings.get_orcaFile(), "ORCA template");
         }
 
         validateInstalledExternalQMScript(
@@ -518,7 +488,7 @@ namespace
     {
         return scope == ValidationScope::PORTABLE ? "portable" : "installed";
     }
-}   // namespace
+}   // namespace cli::detail
 
 cli::ValidationResult cli::validateInputFile(std::string_view inputFile)
 {
@@ -532,14 +502,12 @@ cli::ValidationResult cli::validateInputFile(
 {
     auto engine = std::unique_ptr<engine::Engine>();
 
-    std::ostringstream   parserOutput;
-    ScopedStreamRedirect redirect(std::cout, parserOutput.rdbuf());
+    std::ostringstream           parserOutput;
+    detail::ScopedStreamRedirect redirect(std::cout, parserOutput.rdbuf());
 
     try
     {
-        Settings settings;
-        input::readJobType(settings.generalSettings, std::string(inputFile));
-
+        Settings               settings;
         input::InputFileReader reader(
             inputFile,
             settings,
@@ -553,14 +521,14 @@ cli::ValidationResult cli::validateInputFile(
         // would also rewrite e.g. the qm_script into its full path
         settings.kinetics.finalize(settings.timings.getNumberOfSteps());
         settings.validate();
-        validateInputDependencies(settings);
+        detail::validateInputDependencies(settings);
         if (scope == ValidationScope::INSTALLED)
         {
-            validateCompiledCapabilities(
+            detail::validateCompiledCapabilities(
                 settings.qmSettings,
                 settings.generalSettings.getJobtype()
             );
-            validateEffectiveFiles(settings);
+            detail::validateEffectiveFiles(settings);
         }
 
         auto result = ValidationResult{
@@ -569,12 +537,12 @@ cli::ValidationResult cli::validateInputFile(
             .scope       = scope,
             .diagnostics = {}
         };
-        appendWarnings(reader, result, settings);
+        detail::appendWarnings(reader, result, settings);
         return result;
     }
     catch (const exc::PQException &exception)
     {
-        return invalidResult(
+        return detail::invalidResult(
             inputFile,
             exception.getMessage(),
             exception.getLineNumber(),
@@ -594,13 +562,13 @@ void cli::writeValidationJson(
     json.value("schema_version", 1);
     json.value("valid", result.valid);
     json.value("input", result.inputFile);
-    json.value("scope", string(result.scope));
+    json.value("scope", detail::string(result.scope));
     json.beginArray("diagnostics");
 
     for (const auto &diagnostic : result.diagnostics)
     {
         json.beginObject();
-        json.value("severity", string(diagnostic.severity));
+        json.value("severity", detail::string(diagnostic.severity));
         json.value("message", diagnostic.message);
         json.value("file", result.inputFile);
         if (diagnostic.lineNumber.has_value())

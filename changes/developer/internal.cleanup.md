@@ -1,3 +1,6 @@
 - make MoleculeType const correct and use const refs for containers
 - make physicalData being owned by value from engine and remove it from evaluator/optimizer
 - use `mstd` `CONST_GETTER_SETTER` for `PhysicalData` members
+- enforce writing cutoff without capital `O`
+- make simulationBox being owned by value from engine along with other members and remove them from evaluator/optimizer 
+- remove engine deps from `RestartFileReader`

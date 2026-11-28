@@ -108,6 +108,28 @@ set_property(
 )
 set_property(TEST regression_shake_mshake_equivalence_zip PROPERTY TIMEOUT 60)
 
+add_test(
+    NAME regression_mm_hessian_final_step
+    COMMAND
+        ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/check_mm_hessian_final_step.py
+        --pq $<TARGET_FILE:PQ>
+        --example ${PROJECT_SOURCE_DIR}/examples/oh_mm_hessian
+)
+set_property(TEST regression_mm_hessian_final_step PROPERTY LABELS "regression;examples")
+set_property(TEST regression_mm_hessian_final_step PROPERTY TIMEOUT 120)
+
+add_test(
+    NAME regression_mm_opt_final_step
+    COMMAND
+        ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/check_mm_opt_final_step.py
+        --pq $<TARGET_FILE:PQ>
+        --example ${PROJECT_SOURCE_DIR}/examples/ar3_mm_opt
+)
+set_property(TEST regression_mm_opt_final_step PROPERTY LABELS "regression;examples")
+set_property(TEST regression_mm_opt_final_step PROPERTY TIMEOUT 120)
+
 if(BUILD_WITH_MPI)
     set(MPI_REGRESSION_CASE qm-rpmd-mpi-smoke)
     set(
@@ -270,6 +292,17 @@ add_test(
 )
 set_property(TEST regression_documented_defaults PROPERTY LABELS "regression;examples")
 set_property(TEST regression_documented_defaults PROPERTY TIMEOUT 300)
+
+add_test(
+    NAME regression_mm_opt_example
+    COMMAND
+        ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/check_mm_opt_example.py
+        --pq $<TARGET_FILE:PQ>
+        --example ${PROJECT_SOURCE_DIR}/examples/ar3_mm_opt
+)
+set_property(TEST regression_mm_opt_example PROPERTY LABELS "regression;examples")
+set_property(TEST regression_mm_opt_example PROPERTY TIMEOUT 300)
 
 # Real ORCA, only where it is installed: -DORCA_EXECUTABLE=/path/to/orca.
 # Only the quantum chemistry ORCA banner counts (not the GNOME screen reader).

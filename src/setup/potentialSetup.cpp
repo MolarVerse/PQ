@@ -120,11 +120,11 @@ namespace setup
     void PotentialSetup::setupCoulomb()
     {
         const auto &potentialSettings = _engine.getSettings().potentialSettings;
-        const auto  wolfParam         = potentialSettings.getWolfParameter();
-        const auto  rfEpsilon = potentialSettings.getReactionFieldEpsilon();
+        const auto  wolfParam         = potentialSettings.get_wolfParameter();
+        const auto  rfEpsilon = potentialSettings.get_reactionFieldEpsilon();
         const auto &potential = _engine.getPotential();
 
-        switch (potentialSettings.getCoulombLongRangeType())
+        switch (potentialSettings.get_coulombLRType())
         {
             using enum CoulombLongRangeType;
 
@@ -196,7 +196,7 @@ namespace setup
     void PotentialSetup::setupNonCoulombicPairs()
     {
         const auto &pot    = _engine.getPotential();
-        auto       &simBox = _engine.getSimulationBox();
+        auto       &simBox = _engine.get_simulationBox();
 
         auto &nonCoulPot = dynamic_cast<pot::ForceFieldNonCoulomb &>(
             pot->getNonCoulombPotential()
@@ -255,7 +255,7 @@ namespace setup
         auto       &log               = _engine.getLogOutput();
         const auto &potentialSettings = _engine.getSettings().potentialSettings;
 
-        const auto coulLRType = potentialSettings.getCoulombLongRangeType();
+        const auto coulLRType = potentialSettings.get_coulombLRType();
 
         log.writeSetupInfo(
             std::format(
@@ -266,15 +266,15 @@ namespace setup
         log.writeEmptyLine();
 
         const auto coulRCut =
-            _engine.getSettings().potentialSettings.getCoulombRadiusCutOff();
+            _engine.getSettings().potentialSettings.get_coulombRadiusCutoff();
         InvDistance wolfParam = InvDistance::zero();
         auto        rfEpsilon = 0.0;
 
         if (coulLRType == CoulombLongRangeType::WOLF)
-            wolfParam = potentialSettings.getWolfParameter();
+            wolfParam = potentialSettings.get_wolfParameter();
 
         if (coulLRType == CoulombLongRangeType::REACTION_FIELD)
-            rfEpsilon = potentialSettings.getReactionFieldEpsilon();
+            rfEpsilon = potentialSettings.get_reactionFieldEpsilon();
 
         const auto coulRCutStr =
             std::format("Coulomb radius cut-off: {}", coulRCut);
@@ -308,7 +308,7 @@ namespace setup
 
         if (_engine.getSettings().forceFieldSettings.isNonCoulombicActive())
         {
-            auto      &simBox = _engine.getSimulationBox();
+            auto      &simBox = _engine.get_simulationBox();
             const auto nGlobalVdwTypes =
                 simBox.getExternalGlobalVdwTypes().size();
 

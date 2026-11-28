@@ -153,7 +153,7 @@ TEST_F(QMMMEnergiesTest, sumsReferenceEnergiesOfActiveMolecules)
 {
     Settings             settings;
     engine::QMMMMDEngine engine{settings};
-    auto                &simBox = engine.getSimulationBox();
+    auto                &simBox = engine.get_simulationBox();
 
     auto water = molsys::MoleculeType{MolType{1}};
     water.setQMReferenceEnergy(-10.0 * kcal_per_mol);

@@ -50,12 +50,6 @@
 TEST_F(TestAtomSection, keyword) { EXPECT_EQ(_section->keyword(), ""); }
 
 /**
- * @brief tests the isHeader function
- *
- */
-TEST_F(TestAtomSection, isHeader) { EXPECT_FALSE(_section->isHeader()); }
-
-/**
  * @brief tests the numberOfArguments function
  *
  */
@@ -68,7 +62,12 @@ TEST_F(TestAtomSection, numberOfArguments)
         {
             auto line = std::vector<std::string>(i);
             ASSERT_THROW_MSG(
-                _section->process(line, *_engine, lineNumber),
+                _section->process(
+                    line,
+                    lineNumber,
+                    _settings,
+                    _engine->get_simulationBox()
+                ),
                 exc::RstFileException,
                 "Error in line 7: Atom section must have 6, 9, 12, 15, 18 or "
                 "21 elements"
@@ -87,7 +86,12 @@ TEST_F(TestAtomSection, moltypeNotFound)
     line[2]           = "1";
     size_t lineNumber = 7;
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine, lineNumber),
+        _section->process(
+            line,
+            lineNumber,
+            _settings,
+            _engine->get_simulationBox()
+        ),
         exc::RstFileException,
         "Molecule type MolType(1) not found"
     );
@@ -104,13 +108,18 @@ TEST_F(TestAtomSection, notEnoughElementsInLine)
 
     auto molecule = molsys::MoleculeType(MolType{1});
     molecule.setNumberOfAtoms(3);
-    _engine->getSimulationBox().getMoleculeTypes().push_back(molecule);
+    _engine->get_simulationBox().getMoleculeTypes().push_back(molecule);
 
     std::ifstream file(filename);
     _section->setFilePointer(&file);
 
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine, lineNumber),
+        _section->process(
+            line,
+            lineNumber,
+            _settings,
+            _engine->get_simulationBox()
+        ),
         exc::RstFileException,
         "Error in line 10: Molecule must have 1 atoms"
     );
@@ -123,7 +132,12 @@ TEST_F(TestAtomSection, notEnoughElementsInLine)
     _section->setFilePointer(&fp2);
 
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine, lineNumber),
+        _section->process(
+            line,
+            lineNumber,
+            _settings,
+            _engine->get_simulationBox()
+        ),
         exc::RstFileException,
         "Error in line 14: Molecule must have 2 atoms"
     );
@@ -140,14 +154,19 @@ TEST_F(TestAtomSection, numberOfArgumentsWithinMolecule)
 
     auto molecule = molsys::MoleculeType(MolType{1});
     molecule.setNumberOfAtoms(3);
-    _engine->getSimulationBox().getMoleculeTypes().push_back(molecule);
+    _engine->get_simulationBox().getMoleculeTypes().push_back(molecule);
 
     std::ifstream file(filename);
     _section->setFilePointer(&file);
 
     size_t lineNumber = 0;
     ASSERT_THROW_MSG(
-        _section->process(line, *_engine, lineNumber),
+        _section->process(
+            line,
+            lineNumber,
+            _settings,
+            _engine->get_simulationBox()
+        ),
         exc::RstFileException,
         "Error in line 2: Atom section must have 6, 9, 12, 15, 18 or 21 "
         "elements"
@@ -164,62 +183,65 @@ TEST_F(TestAtomSection, testProcess)
 
     auto molecule = molsys::MoleculeType(MolType{1});
     molecule.setNumberOfAtoms(3);
-    _engine->getSimulationBox().addMoleculeType(molecule);
+    _engine->get_simulationBox().addMoleculeType(molecule);
 
     auto molecule2 = molsys::MoleculeType(MolType{2});
     molecule2.setNumberOfAtoms(4);
-    _engine->getSimulationBox().addMoleculeType(molecule2);
+    _engine->get_simulationBox().addMoleculeType(molecule2);
 
     std::ifstream file(filename);
     _section->setFilePointer(&file);
 
     size_t lineNumber = 0;
-    _section->process(line, *_engine, lineNumber);
+    _section
+        ->process(line, lineNumber, _settings, _engine->get_simulationBox());
 
     line    = std::vector<std::string>(21);
     line[2] = "2";
     for (size_t i = 3; i < 21; ++i) line[i] = "1.0";
 
-    _section->process(line, *_engine, lineNumber);
+    _section
+        ->process(line, lineNumber, _settings, _engine->get_simulationBox());
 
     line    = std::vector<std::string>(21);
     line[2] = "1";
     for (size_t i = 3; i < 21; ++i) line[i] = "1.0";
 
-    _section->process(line, *_engine, lineNumber);
+    _section
+        ->process(line, lineNumber, _settings, _engine->get_simulationBox());
 
     _settings.generalSettings.setJobtypeByUser(JobType::QM_MD);
 
-    EXPECT_EQ(_engine->getSimulationBox().getMolecules().size(), 3);
+    EXPECT_EQ(_engine->get_simulationBox().getMolecules().size(), 3);
 
     EXPECT_EQ(
-        _engine->getSimulationBox().getMolecules()[0].getMoltype(),
+        _engine->get_simulationBox().getMolecules()[0].getMoltype(),
         MolType{1}
     );
     EXPECT_EQ(
-        _engine->getSimulationBox().getMolecules()[0].getNumberOfAtoms(),
+        _engine->get_simulationBox().getMolecules()[0].getNumberOfAtoms(),
         3
     );
 
     EXPECT_EQ(
-        _engine->getSimulationBox().getMolecules()[1].getMoltype(),
+        _engine->get_simulationBox().getMolecules()[1].getMoltype(),
         MolType{2}
     );
     EXPECT_EQ(
-        _engine->getSimulationBox().getMolecules()[1].getNumberOfAtoms(),
+        _engine->get_simulationBox().getMolecules()[1].getNumberOfAtoms(),
         4
     );
 
     EXPECT_EQ(
-        _engine->getSimulationBox().getMolecules()[2].getMoltype(),
+        _engine->get_simulationBox().getMolecules()[2].getMoltype(),
         MolType{1}
     );
     EXPECT_EQ(
-        _engine->getSimulationBox().getMolecules()[2].getNumberOfAtoms(),
+        _engine->get_simulationBox().getMolecules()[2].getNumberOfAtoms(),
         3
     );
 
-    EXPECT_EQ(_engine->getSimulationBox().getNumberOfActiveAtoms(), 10);
+    EXPECT_EQ(_engine->get_simulationBox().getNumberOfActiveAtoms(), 10);
 }
 
 TEST_F(TestAtomSection, testProcessAtomLine)
@@ -234,7 +256,7 @@ TEST_F(TestAtomSection, testProcessAtomLine)
         line[i]           = std::to_string(iValue + (iValue / 10.0));
     }
 
-    _processAtomLine(line, _engine->getSimulationBox(), molecule);
+    _processAtomLine(line, _engine->get_simulationBox(), molecule);
 
     ASSERT_THAT(
         molecule.getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom),
@@ -263,13 +285,13 @@ TEST_F(TestAtomSection, testProcessQMAtomLine)
         line[i]           = std::to_string(iValue + (iValue / 10.0));
     }
 
-    _processQMAtomLine(line, _engine->getSimulationBox());
+    _processQMAtomLine(line, _engine->get_simulationBox());
 
     _settings.generalSettings.setJobtypeByUser(JobType::QM_MD);
-    auto atoms      = _engine->getSimulationBox().getActiveAtoms();
+    auto atoms      = _engine->get_simulationBox().getActiveAtoms();
     auto first_atom = *atoms.begin();
 
-    ASSERT_EQ(_engine->getSimulationBox().getNumberOfActiveAtoms(), 1);
+    ASSERT_EQ(_engine->get_simulationBox().getNumberOfActiveAtoms(), 1);
     ASSERT_THAT(
         first_atom->getPosition().numerical_value_in(angstrom),
         testing::ElementsAre(stod(line[3]), stod(line[4]), stod(line[5]))

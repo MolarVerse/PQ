@@ -75,3 +75,26 @@ TEST(TestOptEngine, aRunThatHitsTheEpochLimitIsNotReportedAsStopped)
         );
     }
 }
+
+TEST(TestOptEngine, aRunThatIsNotStoppedDoesNotThrow)
+{
+    EXPECT_NO_THROW(engine::OptEngine::throwIfStopped(false, 10, 10, {}));
+}
+
+TEST(TestOptEngine, aStoppedRunThrowsWithoutTheConvergenceCheck)
+{
+    EXPECT_THROW_MSG(
+        engine::OptEngine::throwIfStopped(true, 3, 10, {"stalled"}),
+        exc::OptException,
+        "Optimizer stopped after 3 epochs out of 10. The following error "
+        "messages were raised:\n1) stalled\n"
+    );
+}
+
+TEST(TestOptEngine, theNotConvergedMessageNamesTheEpochLimit)
+{
+    EXPECT_EQ(
+        engine::OptEngine::notConvergedMessage(25),
+        "Optimizer did not converge after 25 epochs."
+    );
+}

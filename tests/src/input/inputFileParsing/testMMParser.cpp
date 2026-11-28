@@ -56,7 +56,7 @@ TEST_F(TestInputFileReader, testParseForceField)
     EXPECT_TRUE(settings.forceFieldSettings.isActive());
     EXPECT_TRUE(settings.forceFieldSettings.isNonCoulombicActive());
 
-    settings.forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    settings.forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     _clearParser(parser);
 
     lineElements = {"force-field", "=", "off"};
@@ -64,7 +64,7 @@ TEST_F(TestInputFileReader, testParseForceField)
     EXPECT_FALSE(settings.forceFieldSettings.isActive());
     EXPECT_FALSE(settings.forceFieldSettings.isNonCoulombicActive());
 
-    settings.forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    settings.forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     _clearParser(parser);
 
     lineElements = {"force-field", "=", "bonded"};
@@ -72,7 +72,7 @@ TEST_F(TestInputFileReader, testParseForceField)
     EXPECT_TRUE(settings.forceFieldSettings.isActive());
     EXPECT_FALSE(settings.forceFieldSettings.isNonCoulombicActive());
 
-    settings.forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    settings.forceFieldSettings.set_typeByUser(ForceFieldType::OFF);
     _clearParser(parser);
 
     lineElements = {"forceField", "=", "notValid"};
@@ -107,7 +107,7 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
     std::vector<std::string> lineElements = {"noncoulomb", "=", "guff"};
     parseNonCoulombFunc(lineElements, 0);
     EXPECT_EQ(
-        settings.potentialSettings.getNonCoulombType(),
+        settings.potentialSettings.get_nonCoulombType(),
         NonCoulombType::GUFF
     );
 
@@ -116,7 +116,7 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
     lineElements = {"noncoulomb", "=", "lj"};
     parseNonCoulombFunc(lineElements, 0);
     EXPECT_EQ(
-        settings.potentialSettings.getNonCoulombType(),
+        settings.potentialSettings.get_nonCoulombType(),
         NonCoulombType::LJ
     );
 
@@ -125,7 +125,7 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
     lineElements = {"noncoulomb", "=", "buck"};
     parseNonCoulombFunc(lineElements, 0);
     EXPECT_EQ(
-        settings.potentialSettings.getNonCoulombType(),
+        settings.potentialSettings.get_nonCoulombType(),
         NonCoulombType::BUCKINGHAM
     );
 
@@ -134,7 +134,7 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
     lineElements = {"noncoulomb", "=", "morse"};
     parseNonCoulombFunc(lineElements, 0);
     EXPECT_EQ(
-        settings.potentialSettings.getNonCoulombType(),
+        settings.potentialSettings.get_nonCoulombType(),
         NonCoulombType::MORSE
     );
 
@@ -145,6 +145,6 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
         parseNonCoulombFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"notValid\" for key \"noncoulomb\" at line 0 in input "
-        "file. Allowed values: none, lj, buckingham, morse, guff, buck"
+        "file. Allowed values: none, lj, buckingham (buck), morse, guff"
     );
 }

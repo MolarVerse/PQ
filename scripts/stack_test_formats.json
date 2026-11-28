@@ -1,0 +1,112 @@
+{
+ "md": {
+  ".box": [
+   "# # # # # # #"
+  ],
+  ".chrg": [
+   "# # # # # # #",
+   "H #",
+   "O #"
+  ],
+  ".en": [
+   "# # # # # # # # # #",
+   "# PQ energy file vX",
+   "#SIMULATION-TIME[step] TEMPERATURE[K] PRESSURE[bar] E(TOT)[kcal/mol] E(KIN)[kcal/mol] E(INTRA)[kcal/mol] E(COUL)[kcal/mol] E(NON-COUL)[kcal/mol] MOMENTUM[amuA/fs] LOOPTIME[s]"
+  ],
+  ".force": [
+   "# # # # # # #",
+   "# Total force = # kcal/mol/Angstrom",
+   "H # # #",
+   "O # # #"
+  ],
+  ".info": [
+   "-----------------------------------------------------------------------------------------",
+   "| E(COUL) # kcal/mol E(NON-COUL) # kcal/mol |",
+   "| E(KIN) # kcal/mol E(INTRA) # kcal/mol |",
+   "| MOMENTUM # amuA/fs LOOPTIME # s |",
+   "| PQ info file |",
+   "| PRESSURE # bar E(TOT) # kcal/mol |",
+   "| SIMULATION-TIME # ps TEMPERATURE # K |"
+  ],
+  ".instant_en": [
+   "# # # # # # # # # #",
+   "# PQ energy file vX",
+   "#SIMULATION-TIME[step] TEMPERATURE[K] PRESSURE[bar] E(TOT)[kcal/mol] E(KIN)[kcal/mol] E(INTRA)[kcal/mol] E(COUL)[kcal/mol] E(NON-COUL)[kcal/mol] MOMENTUM[amuA/fs] LOOPTIME[s]"
+  ],
+  ".mom": [
+   "# # # # # # # # #"
+  ],
+  ".rst": [
+   "Box # # # # # #",
+   "H # # # # # # # # # # #",
+   "O # # # # # # # # # # #",
+   "Step # Simulation_Time #"
+  ],
+  ".stress": [
+   "# # # # # # # # # #"
+  ],
+  ".vel": [
+   "# # # # # # #",
+   "H # # #",
+   "O # # #"
+  ],
+  ".vir": [
+   "# # # # # # # # # #"
+  ],
+  ".xyz": [
+   "# # # # # # #",
+   "H # # #",
+   "O # # #"
+  ]
+ },
+ "hessian": {
+  ".en": [
+   "# # # # # # # # # #",
+   "# PQ energy file vX",
+   "#SIMULATION-TIME[step] TEMPERATURE[K] PRESSURE[bar] E(TOT)[kcal/mol] E(KIN)[kcal/mol] E(INTRA)[kcal/mol] E(COUL)[kcal/mol] E(NON-COUL)[kcal/mol] MOMENTUM[amuA/fs] LOOPTIME[s]"
+  ],
+  ".force": [
+   "# # # # # # #",
+   "# Total force = # kcal/mol/Angstrom",
+   "H # # #",
+   "O # # #"
+  ],
+  ".hessian": [
+   "# # # # # #"
+  ],
+  ".hessian.info": [
+   "columns = #",
+   "format = pq-hessian-info-v1",
+   "hessian_builder = CENTRAL",
+   "hessian_definition = -dF_i/dx_j",
+   "hessian_displacement = # \u00c5",
+   "hessian_file = oh-opt.hessian",
+   "hessian_unit = kcal_mol-1_angstrom-2",
+   "optimize_before_hessian = true",
+   "rows = #"
+  ],
+  ".info": [
+   "-----------------------------------------------------------------------------------------",
+   "| E(COUL) # kcal/mol E(NON-COUL) # kcal/mol |",
+   "| E(KIN) # kcal/mol E(INTRA) # kcal/mol |",
+   "| EFFECTIVE STEPS # - TEMPERATURE # K |",
+   "| MOMENTUM # amuA/fs LOOPTIME # s |",
+   "| PQ info file |",
+   "| PRESSURE # bar E(TOT) # kcal/mol |"
+  ],
+  ".opt": [
+   "# # # # # # # # # # # # #"
+  ],
+  ".rst": [
+   "Box # # # # # #",
+   "H # # # # # # # # # # #",
+   "O # # # # # # # # # # #",
+   "Step #"
+  ],
+  ".xyz": [
+   "# # # # # # #",
+   "H # # #",
+   "O # # #"
+  ]
+ }
+}

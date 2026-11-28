@@ -105,7 +105,7 @@ namespace ff
 
         physicalData.addBondEnergy(bondEnergy);
 
-        if (_isLinker && distance < potentialSettings.getCoulombRadiusCutOff())
+        if (_isLinker && distance < potentialSettings.get_coulombRadiusCutoff())
         {
             forceMagnitude += correctLinker<BondForceField>(
                 coulombPot,
@@ -116,8 +116,8 @@ namespace ff
                 atomIndices[0],
                 atomIndices[1],
                 distance,
-                potentialSettings.getScale14Coulomb(),
-                potentialSettings.getScale14VDW()
+                potentialSettings.get_scale14Coulomb(),
+                potentialSettings.get_scale14VDW()
             );
         }
 

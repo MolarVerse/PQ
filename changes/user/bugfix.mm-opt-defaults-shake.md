@@ -1,0 +1,1 @@
+- `mm-opt` now runs with the default `exponential-decay` learning rate, prints a warning and exits with code 0 when it does not converge within `nstep`, and stops with an error when SHAKE or distance constraints are on, as it never applied them (#1263, #1300).

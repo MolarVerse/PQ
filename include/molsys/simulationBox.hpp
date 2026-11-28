@@ -103,9 +103,9 @@ namespace molsys
         void                                         copy(const SimulationBox&);
         [[nodiscard]] std::shared_ptr<SimulationBox> clone() const;
 
-        void checkCoulRadiusCutOff(
+        void checkCoulRadiusCutoff(
             const ExceptionType&,
-            const Distance& coulombRadiusCutOff
+            const Distance& coulombRadiusCutoff
         ) const;
         void setupExternalToInternalGlobalVdwTypesMap();
 
@@ -127,7 +127,10 @@ namespace molsys
         void removeNetForce();
 
         void setPartialChargesOfMoleculesFromMoleculeTypes();
-        void initPositions(double displacement);
+        void initPositions(
+            double                 displacement,
+            const GeneralSettings& generalSettings
+        );
 
         [[nodiscard]] Temperature calculateTemperature();
         [[nodiscard]] Force       calculateTotalForce() const;

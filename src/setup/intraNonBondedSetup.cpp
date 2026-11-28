@@ -36,7 +36,7 @@ namespace setup
      */
     void setupIntraNonBonded(engine::Engine &engine)
     {
-        if (!GeneralSettings::isIntraNonBondedActivated())
+        if (!engine.getSettings().generalSettings.isIntraNonBondedActivated())
             return;
 
         out::StdoutOutput::writeSetup("Intra Non-Bonded Interactions");
@@ -69,15 +69,15 @@ namespace setup
      */
     void IntraNonBondedSetup::setup()
     {
-        const auto &intraNonBonded = _engine.getIntraNonBonded();
+        auto       &intraNonBonded = _engine.get_intraNonBonded();
         const auto &potential      = _engine.getPotential();
         const auto &nonCoulombPot  = potential->getNonCoulombPotSharedPtr();
         const auto &coulombPot     = potential->getCoulombPotSharedPtr();
 
-        intraNonBonded->setNonCoulombPotential(nonCoulombPot);
-        intraNonBonded->setCoulombPotential(coulombPot);
+        intraNonBonded.setNonCoulombPotential(nonCoulombPot);
+        intraNonBonded.setCoulombPotential(coulombPot);
 
-        intraNonBonded->fillIntraNonBondedMaps(_engine.getSimulationBox());
+        intraNonBonded.fillIntraNonBondedMaps(_engine.get_simulationBox());
     }
 
 }   // namespace setup

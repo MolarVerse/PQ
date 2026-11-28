@@ -23,17 +23,14 @@
 #include "generalInputParser.hpp"
 
 #include <cstdint>
-#include <format>
 #include <optional>
 
 #include "enums/general.hpp"
-#include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
 #include "keyValidatorBase.hpp"
-#include "parserUtils.hpp"
 #include "rangeValidator.hpp"
 #include "stringUtilities.hpp"
 
@@ -49,74 +46,43 @@ namespace input
      * (required)
      *
      */
-    GeneralInputParser::GeneralInputParser()
+    GeneralInputParser::GeneralInputParser(GeneralSettings &generalSettings)
+        : _generalSettings(generalSettings)
     {
-        addKeyword(
-            std::string("jobtype"),
-            bindMember(&GeneralInputParser::parseJobType, this),
-            true
-        );
-
+        addJobTypeKey();
         addDimensionalityKey();
         addFloatingPointTypeKey();
         addRandomSeedKey();
     }
 
     /**
-     * @brief parse jobtype of simulation left empty just to not parse it again
-     * after engine is generated
+     * @brief Adds the jobtype key to the input parser and validates its value
      */
-    void GeneralInputParser::parseJobType(
-        const std::vector<std::string> & /*lineElements*/,
-        size_t /*lineNumber*/
-    )
+    void GeneralInputParser::addJobTypeKey()
     {
-    }
-
-    /**
-     * @brief parse jobtype of simulation and set it in settings and reset
-     * engine unique_ptr
-     *
-     * @details Possible options are:
-     * 1) mm-md
-     * 2) qm-md
-     *
-     * @param generalSettings Reference to the general settings object where the
-     * job type will be set.
-     * @param lineElements
-     * @param lineNumber
-     *
-     * @throw exc::InputFileException if jobtype is not recognised
-     */
-    void GeneralInputParser::parseJobTypeForEngine(
-        GeneralSettings                &generalSettings,
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
-    {
-        checkCommand(lineElements, lineNumber);
-
-        const auto jobtype =
-            utilities::toLowerAndReplaceDashesCopy(lineElements[2]);
-
-        const auto jobTypeEnum =
-            JobTypeMeta::from_stringCaseInsensitive(jobtype);
-
-        if (!jobTypeEnum.has_value())
-        {
-            throw exc::InputFileException(format(
-                "Invalid jobtype \"{}\" in input file - possible values are:\n"
+        const auto metaData = KeyMetadata{
+            .name        = "jobtype",
+            .title       = "Job Type",
+            .description = "Specifies the type of job to be performed",
+            .errorMessage =
+                "Invalid job type specified - possible values "
+                "are:\n"
                 "- mm-opt\n"
                 "- mm-hessian\n"
                 "- mm-md\n"
                 "- qm-md\n"
                 "- qm-rpmd\n"
-                "- qmmm-md\n",
-                lineElements[2]
-            ));
-        }
+                "- qmmm-md\n"
+        };
 
-        generalSettings.setJobtypeByUser(jobTypeEnum.value());
+        const auto setValue = [this](JobType jobType)
+        { _generalSettings->setJobtypeByUser(jobType); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<JobType>{.metadata = metaData, .onSet = setValue}
+        );
+
+        addKeyword(metaData.name, adapt(key), true);
     }
 
     void GeneralInputParser::addDimensionalityKey()
@@ -126,7 +92,14 @@ namespace input
             .title = "Dimensionality",
             .description =
                 "Specifies the dimensionality of the simulation (3 or 3d)",
-            .errorMessage = "Dimensionality must be 3 or 3d"
+            .errorMessage = "Dimensionality must be 3 or 3d",
+            .lifecycle    = deprecate(
+                {.deprecatedSince = v1_1_0,
+                    .removedIn       = v2_0_0,
+                    .message = "Since this key is only possible to be used for "
+                                  "3-dimensional simulations, it will be removed in "
+                                  "future versions"}
+            )
         };
 
         auto customParser = [](std::string_view value) -> std::optional<size_t>
@@ -142,8 +115,12 @@ namespace input
             return std::nullopt;
         };
 
-        const auto setValue = [](size_t value)
-        { GeneralSettings::setDimensionality(value); };
+        const auto setValue = [](size_t /*value*/)
+        {
+            // do nothing as this key had always only one allowed value
+            // (3-dimensional) and if it would not have been three it would have
+            // even be used wrong -- key will be removed with version 2.0.0
+        };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<size_t>{
@@ -162,12 +139,13 @@ namespace input
             .name  = "floating_point_type",
             .title = "Floating Point Type",
             .description =
-                "Specifies the floating point type for the simulation (float "
+                "Specifies the floating point type for the simulation "
+                "(float "
                 "or double)"
         };
 
-        const auto setValue = [](FPType value)
-        { GeneralSettings::setFloatingPointType(value); };
+        const auto setValue = [this](FPType value)
+        { _generalSettings->setFloatingPointTypeByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<FPType>{.metadata = metaData, .onSet = setValue}
@@ -184,11 +162,8 @@ namespace input
             .description = "Specifies the random seed for the simulation"
         };
 
-        const auto setValue = [](std::uint_fast32_t value)
-        {
-            GeneralSettings::setRandomSeed(value);
-            GeneralSettings::setIsRandomSeedSet(true);
-        };
+        const auto setValue = [this](std::uint_fast32_t value)
+        { _generalSettings->setRandomSeedByUser(value); };
 
         const auto validator = RangeValidator<std::uint_fast32_t>{
             0,

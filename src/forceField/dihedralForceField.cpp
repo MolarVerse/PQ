@@ -165,7 +165,8 @@ namespace ff
 
             const auto distance14Quantity = norm(dPosition14);
 
-            if (distance14Quantity < potentialSettings.getCoulombRadiusCutOff())
+            if (distance14Quantity <
+                potentialSettings.get_coulombRadiusCutoff())
             {
                 const auto forceMagnitudeLinker =
                     correctLinker<DihedralForceField>(
@@ -177,8 +178,8 @@ namespace ff
                         atomIndices[0],
                         atomIndices[3],
                         distance14Quantity,
-                        potentialSettings.getScale14Coulomb(),
-                        potentialSettings.getScale14VDW()
+                        potentialSettings.get_scale14Coulomb(),
+                        potentialSettings.get_scale14VDW()
                     );
 
                 const auto forcexyz =

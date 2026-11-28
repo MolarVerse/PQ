@@ -255,12 +255,13 @@ class FENNIXCalculator:
     _settings.qmSettings.setQMMethodByUser(QMMethod::FENNOL);
     _settings.fennolSettings.setFennolModelPathByUser("model.fnx");
     _settings.fennolSettings.setUseGPUPreprocessingByUser(false);
-    GeneralSettings::setFloatingPointType(FPType::DOUBLE);
+    _settings.generalSettings.setFloatingPointTypeByUser(FPType::DOUBLE);
 
     ASSERT_NO_THROW({
         QM::AseFennolRunner runner(
             _settings.qmSettings,
-            _settings.fennolSettings
+            _settings.fennolSettings,
+            _settings.generalSettings
         );
     });
 
@@ -325,7 +326,7 @@ class MACECalculator:
     modules["mace"]             = maceModule;
     modules["mace.calculators"] = calculatorsModule;
 
-    GeneralSettings::setFloatingPointType(FPType::DOUBLE);
+    _settings.generalSettings.setFloatingPointTypeByUser(FPType::DOUBLE);
     _settings.qmSettings.setUseDispersionCorrectionByUser(true);
     _settings.maceSettings.setMaceModeByUser(MaceMode::ACCURATE);
     _settings.maceSettings.setMaceModelPathByUser("model.model");
@@ -335,7 +336,11 @@ class MACECalculator:
         TestQMSetupAseUtil::setUseForTesting(_settings);
 
     ASSERT_NO_THROW({
-        QM::AseMaceRunner runner(_settings.qmSettings, _settings.maceSettings);
+        QM::AseMaceRunner runner(
+            _settings.qmSettings,
+            _settings.maceSettings,
+            _settings.generalSettings
+        );
     });
 
     auto lastKwargs = calculatorsModule.attr(testModelTypeStr.c_str())

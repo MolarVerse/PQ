@@ -49,7 +49,12 @@ ast_check_enabled_ids = [
     "preferMstdCopyMoveMacros",
     "noConstValueParam",
     "noInClassMemberDefinition",
+    "maxAnonymousNamespaceSize",
 ]
+
+[cpp.forbidden_spellings]
+cutOff = { replacement = "cutoff", within_words = true }
+CutOff = { replacement = "Cutoff", within_words = true }
 
 # Per-check configuration — one sub-table per check id.
 # The paramNameForType check has NO built-in defaults, so you must
@@ -91,3 +96,6 @@ extensions = ["hpp", "h", "tpp"]
 
 [cpp.ast_check_config.noForbiddenInclude]
 libs = ["mp-units"]
+
+[cpp.ast_check_config.maxAnonymousNamespaceSize]
+exclude_paths = ["tests/", "benchmarks/"]

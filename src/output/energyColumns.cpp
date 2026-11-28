@@ -30,9 +30,9 @@
 #include "manostatSettings.hpp"
 #include "physicalData.hpp"
 #include "settings.hpp"
-#include "systemInfo.hpp"
 #include "thermostatSettings.hpp"
 #include "units.hpp"
+#include "version.hpp"
 
 namespace out
 {
@@ -175,7 +175,7 @@ namespace out
             });
         }
 
-        if (settings.manostatSettings.getManostatType() != ManostatType::NONE)
+        if (settings.manostatSettings.get_manostatType() != ManostatType::NONE)
         {
             _add({
                 .name = "VOLUME",
@@ -190,7 +190,7 @@ namespace out
                     physicalData.get_density().numerical_value_in(kg_per_litre),
             });
 
-            if (settings.manostatSettings.getFixedAxis() != FixedAxis::NONE)
+            if (settings.manostatSettings.get_fixedAxis() != FixedAxis::NONE)
             {
                 _add({
                     .name  = "P(COUPLED)",
@@ -291,13 +291,13 @@ namespace out
      */
     std::string energyFileMarker()
     {
-        return std::format("# PQ energy file {}", sysinfo::VERSION);
+        return std::format("# PQ energy file {}", CURRENT_VERSION.to_string());
     }
 
     /**
      * @brief column names line of the .en file, one token per data column
      *
-     * @details "#SIMULATION-TIME[step] TEMPERATURE[K] ...": the '#' is glued
+     * @details "#STEP[-] TEMPERATURE[K] ...": the '#' is glued
      * to the first token, so token i is column i also in a spreadsheet;
      * names and units are those of the info file, so readers can use it
      * instead

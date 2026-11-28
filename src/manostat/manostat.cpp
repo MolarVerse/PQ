@@ -27,7 +27,6 @@
 #include "box.hpp"
 #include "enums/manostat.hpp"
 #include "exceptions.hpp"
-#include "generalSettings.hpp"
 #include "globalTimer.hpp"
 #include "manostatSettings.hpp"
 #include "physicalData.hpp"
@@ -59,9 +58,8 @@ namespace manostat
         physicalData::PhysicalData  &physicalData
     )
     {
-        const auto ekinVirial = physicalData.getKinEnergyVirialTensor(
-            GeneralSettings::getVirialType()
-        );
+        const auto ekinVirial =
+            physicalData.getKinEnergyVirialTensor(_settings->get_virial());
         const auto forceVirial = physicalData.get_virial();
         const auto volume      = simulationBox.getVolume();
 
@@ -80,7 +78,7 @@ namespace manostat
                               box.getBoxMatrix();
         }
 
-        const auto fixedAxis = _settings->getFixedAxis();
+        const auto fixedAxis = _settings->get_fixedAxis();
         const auto p_xyz     = diagonal(_pressureTensor);
 
         size_t   numFree = 0;
@@ -136,7 +134,7 @@ namespace manostat
      *
      * @param simulationBox The current simulation box.
      * @param mu The scaling tensor to validate.
-     * @param coulombRadiusCutOff The Coulomb radius cut-off distance used to
+     * @param coulombRadiusCutoff The Coulomb radius cut-off distance used to
      * check for interactions beyond the specified cut-off
      *
      * @throws exc::ManostatException if the scaling tensor is invalid or leads
@@ -145,7 +143,7 @@ namespace manostat
     void Manostat::_validateScaling(
         const molsys::SimulationBox &simulationBox,
         const QuantityTensor3D      &mu,
-        const Distance              &coulombRadiusCutOff
+        const Distance              &coulombRadiusCutoff
     )
     {
         const auto determinant = det(mu);
@@ -158,7 +156,7 @@ namespace manostat
         }
 
         auto candidate = simulationBox.getBox().clone();
-        _validateCandidate(*candidate, mu, coulombRadiusCutOff);
+        _validateCandidate(*candidate, mu, coulombRadiusCutoff);
     }
 
     /**
@@ -166,7 +164,7 @@ namespace manostat
      *
      * @param candidate The candidate simulation box to scale and validate.
      * @param mu The scaling tensor to apply to the candidate box.
-     * @param coulombRadiusCutOff The Coulomb radius cut-off distance used to
+     * @param coulombRadiusCutoff The Coulomb radius cut-off distance used to
      * check for interactions beyond the specified cut-off
      *
      * @throws exc::ManostatException if the resulting candidate cell geometry
@@ -175,7 +173,7 @@ namespace manostat
     void Manostat::_validateCandidate(
         molsys::Box            &candidate,
         const QuantityTensor3D &mu,
-        const Distance         &coulombRadiusCutOff
+        const Distance         &coulombRadiusCutoff
     )
     {
         candidate.scaleBox(mu);
@@ -200,7 +198,7 @@ namespace manostat
             }
         }
 
-        if (candidate.getMinimalBoxDimension() < 2.0 * coulombRadiusCutOff)
+        if (candidate.getMinimalBoxDimension() < 2.0 * coulombRadiusCutoff)
         {
             throw exc::ManostatException(
                 "Coulomb radius cut off is larger than half of the minimal "
@@ -236,14 +234,14 @@ namespace manostat
      * @param physicalData The physical data of the system
      * @param timeStep the integration time step used for velocity updates
      * @param targetTemperature The target temperature for the system
-     * @param coulombRadiusCutOff The Coulomb radius cut off for the system
+     * @param coulombRadiusCutoff The Coulomb radius cut off for the system
      */
     void Manostat::applyManostat(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
         const Temperature & /*targetTemperature*/,
         const Time & /*timeStep*/,
-        const Distance & /*coulombRadiusCutOff*/
+        const Distance & /*coulombRadiusCutoff*/
     )
     {
         auto _ = scopedTimer(TimerId::Manostat, "Calc Pressure");

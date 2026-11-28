@@ -88,10 +88,8 @@ namespace engine
 
         template <typename T>
         void makeIntegrator(T integrator);
-        template <typename T>
-        void makeThermostat(T thermostat);
-        template <typename T>
-        void makeManostat(T manostat);
+        template <typename T, typename... Args>
+        void makeThermostat(Args &&...args);
 
         /***************************
          * standard getter methods *

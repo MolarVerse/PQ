@@ -32,6 +32,7 @@
 #include <thread>
 #include <vector>
 
+#include "aseQMRunnerDetail.hpp"
 #include "units.hpp"
 
 #if !defined(_WIN32)
@@ -39,6 +40,7 @@
 #endif
 
 #include "box.hpp"
+#include "embeddedPython.hpp"
 #include "exceptions.hpp"
 #include "globalTimer.hpp"
 #include "interrupt.hpp"
@@ -49,7 +51,7 @@
 namespace QM
 {
 
-    namespace
+    namespace detail
     {
         /**
          * @brief get the positions of the atoms in the ASE Atoms object
@@ -61,7 +63,6 @@ namespace QM
          *
          * @throw py::error_already_set if the construction of the array fails
          */
-        [[nodiscard]]
         pybind11::array asePositions(const molsys::SimulationBox &simulationBox)
         {
             const auto nAtoms = simulationBox.getNumberOfActiveAtoms();
@@ -112,7 +113,6 @@ namespace QM
          * @throw pybind11::error_already_set if the construction of the array
          * fails
          */
-        [[nodiscard]]
         pybind11::array_t<double> aseCell(
             const molsys::SimulationBox &simulationBox
         )
@@ -147,12 +147,13 @@ namespace QM
         /**
          * @brief get the periodic boundary conditions of the ASE Atoms object
          *
+         * @param periodicity the periodicity of the simulation box
+         *
          * @return pybind11::array_t<bool>
          *
          * @throw pybind11::error_already_set if the construction of the array
          * fails
          */
-        [[nodiscard]]
         pybind11::array_t<bool> asePBC(molsys::Periodicity periodicity)
         {
             std::array<bool, 3> pbc_array{true, true, true};
@@ -192,7 +193,6 @@ namespace QM
          * @throw pybind11::error_already_set if the construction of the array
          * fails
          */
-        [[nodiscard]]
         pybind11::array_t<int> aseAtomicNumbers(
             const molsys::SimulationBox &simulationBox
         )
@@ -224,13 +224,14 @@ namespace QM
             }
         }
 
+        /**
+         * @brief the thread that calls this function
+         *
+         * @return PythonThread
+         */
 #if !defined(_WIN32)
-        using PythonThread = pthread_t;
-
         PythonThread currentThread() { return ::pthread_self(); }
 #else
-        using PythonThread = int;
-
         PythonThread currentThread() { return 0; }
 #endif
 
@@ -247,6 +248,7 @@ namespace QM
          * @param stopToken stops the watchdog when the QM step is done
          * @param timedOut set to true if the time limit was exceeded
          * @param pythonThread thread that runs the Python calculation
+         * @param qmLoopTimeLimit time limit of one QM step
          */
         void interruptAfterTimeout(
             const std::stop_token &stopToken,
@@ -287,7 +289,7 @@ namespace QM
 #endif
         }
 
-    }   // namespace
+    }   // namespace detail
 
     /**
      * @class AseQMRunner::AseInterface
@@ -309,9 +311,18 @@ namespace QM
      *
      * @throw pybind11::error_already_set if the import of the ase.atoms module
      * fails
+     * @throw std::runtime_error if Python cannot be started
      */
     AseQMRunner::AseQMRunner(const QMSettings &settings)
-        : QMRunner(settings), _ase(std::make_unique<AseInterface>())
+        : QMRunner(settings),
+          // AseInterface holds numpy objects, so Python must run first
+          _ase(
+              []
+              {
+                  utilities::startPython();
+                  return std::make_unique<AseInterface>();
+              }()
+          )
     {
         try
         {
@@ -359,10 +370,10 @@ namespace QM
 
         auto         timedOut = std::atomic_bool{false};
         std::jthread timeoutThread{[&timedOut,
-                                    pythonThread = currentThread(),
+                                    pythonThread = detail::currentThread(),
                                     this](const std::stop_token &stopToken)
                                    {
-                                       interruptAfterTimeout(
+                                       detail::interruptAfterTimeout(
                                            stopToken,
                                            timedOut,
                                            pythonThread,
@@ -553,10 +564,10 @@ namespace QM
     {
         try
         {
-            const auto positions     = asePositions(simulationBox);
-            const auto cell          = aseCell(simulationBox);
-            const auto pbc           = asePBC(_getPeriodicity());
-            const auto atomicNumbers = aseAtomicNumbers(simulationBox);
+            const auto positions     = detail::asePositions(simulationBox);
+            const auto cell          = detail::aseCell(simulationBox);
+            const auto pbc           = detail::asePBC(_getPeriodicity());
+            const auto atomicNumbers = detail::aseAtomicNumbers(simulationBox);
 
             _ase->atoms = _ase->atomsModule.attr("Atoms")(
                 pybind11::arg("positions") = positions,

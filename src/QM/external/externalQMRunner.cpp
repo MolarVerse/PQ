@@ -29,10 +29,10 @@
 #include <filesystem>
 #include <format>
 #include <fstream>
-#include <mstd/utils.hpp>
 #include <string>
 #include <thread>
 
+#include "externalQMRunnerDetail.hpp"
 #include "hybridSettings.hpp"
 #include "units.hpp"
 
@@ -54,14 +54,6 @@
 #include "simulationBox.hpp"
 
 #if !defined(_WIN32)
-namespace
-{
-    struct CancelState
-    {
-        static inline volatile std::sig_atomic_t flag = 0;
-    };
-}   // namespace
-
 /**
  * @brief signal handler that records SIGINT, SIGTERM or SIGHUP while an
  * external QM program runs
@@ -75,32 +67,14 @@ namespace
 // linkage
 extern "C" void pqRecordQMCancelSignal(int signalNumber)
 {
-    CancelState::flag = signalNumber;
+    QM::detail::CancelState::flag = signalNumber;
 }
 
-namespace
+namespace QM::detail
 {
     /**
-     * @brief records SIGINT, SIGTERM and SIGHUP while the QM process runs, so
-     * its process group can be stopped before PQ exits; restores the previous
-     * handlers on destruction
+     * @brief installs the cancel signal handler and keeps the previous ones
      */
-    class ScopedCancelSignals
-    {
-       private:
-        static constexpr auto _nSignals = 3;
-
-        std::array<int, _nSignals> _signals{SIGINT, SIGTERM, SIGHUP};
-        std::array<struct sigaction, _nSignals> _previous{};
-
-       public:
-        ScopedCancelSignals();
-        ~ScopedCancelSignals();
-
-        MSTD_NO_COPY(ScopedCancelSignals);
-        MSTD_NO_MOVE(ScopedCancelSignals);
-    };
-
     ScopedCancelSignals::ScopedCancelSignals()
     {
         CancelState::flag = 0;
@@ -121,6 +95,9 @@ namespace
         }
     }
 
+    /**
+     * @brief restores the previous signal handlers
+     */
     ScopedCancelSignals::~ScopedCancelSignals()
     {
         for (std::size_t i = 0; i < _signals.size(); ++i)
@@ -174,7 +151,7 @@ namespace
         ::killpg(pid, SIGKILL);
         ::waitpid(pid, &status, 0);
     }
-}   // namespace
+}   // namespace QM::detail
 #endif
 
 namespace
@@ -498,14 +475,14 @@ namespace QM
             auto _ = scopedTimer(TimerId::QMEngine, "Write Pointcharges");
             _writePointChargeFile(
                 simulationBox,
-                fileSettings.getPointChargeFileName()
+                fileSettings.get_pointChargeFile()
             );
         }
 
         const auto resultFiles = std::array{
-            fileSettings.getQMForcesTempFileName(),
-            fileSettings.getQMChargesTempFileName(),
-            fileSettings.getStressTensorTempFileName()
+            fileSettings.get_qmForcesTempFile(),
+            fileSettings.get_qmChargesTempFile(),
+            fileSettings.get_stressTensorTempFile()
         };
         for (const auto &file : resultFiles) std::filesystem::remove(file);
 
@@ -521,7 +498,7 @@ namespace QM
                 simulationBox,
                 physicalData,
                 _getQMSettings(),
-                fileSettings.getQMForcesTempFileName()
+                fileSettings.get_qmForcesTempFile()
             );
         }
 
@@ -530,7 +507,7 @@ namespace QM
             _readChargeFile(
                 simulationBox,
                 _getQMSettings(),
-                fileSettings.getQMChargesTempFileName()
+                fileSettings.get_qmChargesTempFile()
             );
         }
 
@@ -540,7 +517,7 @@ namespace QM
             _readStressTensor(
                 simulationBox.getBox(),
                 physicalData,
-                fileSettings.getStressTensorTempFileName()
+                fileSettings.get_stressTensorTempFile()
             );
         }
     }
@@ -594,7 +571,7 @@ namespace QM
 
         int status = 0;
         {
-            const auto cancelSignals = ScopedCancelSignals{};
+            const auto cancelSignals = detail::ScopedCancelSignals{};
 
             while (true)
             {
@@ -608,16 +585,16 @@ namespace QM
                         std::format("{} command could not be awaited", program)
                     );
 
-                if (CancelState::flag != 0)
+                if (detail::CancelState::flag != 0)
                 {
-                    stopProcessGroup(pid, status, pollInterval);
+                    detail::stopProcessGroup(pid, status, pollInterval);
                     break;
                 }
 
                 if (timeLimit > 0.0 &&
                     std::chrono::steady_clock::now() >= deadline)
                 {
-                    stopProcessGroup(pid, status, pollInterval);
+                    detail::stopProcessGroup(pid, status, pollInterval);
                     throw exc::QMRunnerException("QM calculation timeout");
                 }
 
@@ -626,9 +603,9 @@ namespace QM
         }
 
         // previous handlers are restored; deliver the signal to PQ itself
-        if (CancelState::flag != 0)
+        if (detail::CancelState::flag != 0)
         {
-            static_cast<void>(::raise(CancelState::flag));
+            static_cast<void>(::raise(detail::CancelState::flag));
         }
 
         if (!WIFEXITED(status) || WEXITSTATUS(status) != EXIT_SUCCESS)

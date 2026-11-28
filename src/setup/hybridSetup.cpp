@@ -121,10 +121,10 @@ namespace setup
     void HybridSetup::setupInnerRegionCenter()
     {
         const auto numberOfAtoms =
-            _engine.getSimulationBox().getNumberOfAtoms();
+            _engine.get_simulationBox().getNumberOfAtoms();
 
         for (const auto index :
-             _engine.getSettings().hybridSettings.getInnerRegionCenter())
+             _engine.getSettings().hybridSettings.get_innerRegionCenter())
         {
             if (index >= numberOfAtoms)
             {
@@ -144,8 +144,8 @@ namespace setup
      */
     void HybridSetup::setupForcedCoreList()
     {
-        _engine.getSimulationBox().setupForcedCoreMolecules(
-            _engine.getSettings().hybridSettings.getForcedCoreList()
+        _engine.get_simulationBox().setupForcedCoreMolecules(
+            _engine.getSettings().hybridSettings.get_forcedCoreList()
         );
     }
 
@@ -155,8 +155,8 @@ namespace setup
      */
     void HybridSetup::setupForcedLayerList()
     {
-        _engine.getSimulationBox().setupForcedLayerMolecules(
-            _engine.getSettings().hybridSettings.getForcedLayerList()
+        _engine.get_simulationBox().setupForcedLayerMolecules(
+            _engine.getSettings().hybridSettings.get_forcedLayerList()
         );
     }
 
@@ -166,8 +166,8 @@ namespace setup
      */
     void HybridSetup::setupForcedOuterList()
     {
-        _engine.getSimulationBox().setupForcedOuterMolecules(
-            _engine.getSettings().hybridSettings.getForcedOuterList()
+        _engine.get_simulationBox().setupForcedOuterMolecules(
+            _engine.getSettings().hybridSettings.get_forcedOuterList()
         );
     }
 
@@ -187,15 +187,15 @@ namespace setup
     void HybridSetup::checkZoneRadii()
     {
         const auto coreRadius =
-            _engine.getSettings().hybridSettings.getCoreRadius();
+            _engine.getSettings().hybridSettings.get_coreRadius();
         const auto layerRadius =
-            _engine.getSettings().hybridSettings.getLayerRadius();
+            _engine.getSettings().hybridSettings.get_layerRadius();
         const auto smoothingRegionThickness =
-            _engine.getSettings().hybridSettings.getSmoothingRegionThickness();
+            _engine.getSettings().hybridSettings.get_smoothingRegionThickness();
         const auto pointChargeThickness =
-            _engine.getSettings().hybridSettings.getPointChargeThickness();
+            _engine.getSettings().hybridSettings.get_pointChargeThickness();
         const auto minimalBoxDimension =
-            _engine.getSimulationBox().getMinimalBoxDimension();
+            _engine.get_simulationBox().getMinimalBoxDimension();
 
         if (coreRadius > layerRadius)
         {
@@ -268,9 +268,9 @@ namespace setup
     void HybridSetup::validateQMChargeSettings()
     {
         const auto mmChargesRequested =
-            !_engine.getSettings().hybridSettings.getUseQMCharges();
+            !_engine.getSettings().hybridSettings.get_useQMCharges();
         const auto qmAtomsPresent =
-            _engine.getSimulationBox().moleculeTypeExists(MolType{0});
+            _engine.get_simulationBox().moleculeTypeExists(MolType{0});
 
         if (mmChargesRequested && qmAtomsPresent)
         {
@@ -294,7 +294,7 @@ namespace setup
      */
     void HybridSetup::validateQMReferenceEnergies()
     {
-        auto &simBox = _engine.getSimulationBox();
+        auto &simBox = _engine.get_simulationBox();
 
         const auto hasReference = [](const auto &moleculeType)
         { return moleculeType.hasQMReferenceEnergy(); };
@@ -321,23 +321,23 @@ namespace setup
 
         const auto jobtype = _engine.getSettings().generalSettings.getJobtype();
         const auto smoothingMethod =
-            _engine.getSettings().hybridSettings.getSmoothingMethod();
+            _engine.getSettings().hybridSettings.get_smoothing();
         const auto innerRegionCenter =
-            _engine.getSettings().hybridSettings.getInnerRegionCenter();
+            _engine.getSettings().hybridSettings.get_innerRegionCenter();
         const auto forcedCoreList =
-            _engine.getSettings().hybridSettings.getForcedCoreList();
+            _engine.getSettings().hybridSettings.get_forcedCoreList();
         const auto forcedOuterList =
-            _engine.getSettings().hybridSettings.getForcedOuterList();
+            _engine.getSettings().hybridSettings.get_forcedOuterList();
         const auto useQMCharges =
-            _engine.getSettings().hybridSettings.getUseQMCharges();
+            _engine.getSettings().hybridSettings.get_useQMCharges();
         const auto coreRadius =
-            _engine.getSettings().hybridSettings.getCoreRadius();
+            _engine.getSettings().hybridSettings.get_coreRadius();
         const auto layerRadius =
-            _engine.getSettings().hybridSettings.getLayerRadius();
+            _engine.getSettings().hybridSettings.get_layerRadius();
         const auto smoothingRegionThickness =
-            _engine.getSettings().hybridSettings.getSmoothingRegionThickness();
+            _engine.getSettings().hybridSettings.get_smoothingRegionThickness();
         const auto pointChargeThickness =
-            _engine.getSettings().hybridSettings.getPointChargeThickness();
+            _engine.getSettings().hybridSettings.get_pointChargeThickness();
 
         const auto formatIndexList =
             []<typename T>(const std::vector<T> &indices)

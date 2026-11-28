@@ -23,8 +23,33 @@
 #ifndef SETTINGS__SETTING_HPP
 #define SETTINGS__SETTING_HPP
 
+#include <cstdint>
 #include <mstd/types.hpp>
 #include <optional>
+
+#define SETTING_DETAIL_CONST_GETTER(fn, member)                              \
+    [[nodiscard]] decltype(auto) fn() const noexcept(noexcept(member.get())) \
+    {                                                                        \
+        return member.get();                                                 \
+    }
+
+#define SETTING_DETAIL_SETTER_BY_USER(fn, member)                             \
+    void fn(                                                                  \
+        ::mstd::detail::getter_t<std::remove_cvref_t<decltype(member.get())>> \
+            value                                                             \
+    ) noexcept(noexcept(member.setByUser(value)))                             \
+    {                                                                         \
+        member.setByUser(value);                                              \
+    }
+
+#define SETTING_GETTER(name) SETTING_DETAIL_CONST_GETTER(get##name, name)
+
+#define SETTING_SETTER_BY_USER(name) \
+    SETTING_DETAIL_SETTER_BY_USER(set##name##ByUser, name)
+
+#define SETTING_GETTER_AND_SETTER_BY_USER(name) \
+    SETTING_GETTER(name)                        \
+    SETTING_SETTER_BY_USER(name)
 
 /**
  * @brief A template class representing a configurable setting.
@@ -35,7 +60,7 @@
  * generate meaningful error messages when the setting is not set and no default
  * is available.
  */
-template <typename T, mstd::Tag Name = mstd::Tag("Settings")>
+template <typename T, mstd::Tag Name>
 class Setting
 {
    public:

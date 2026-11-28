@@ -32,6 +32,7 @@
 #include "generalSettings.hpp"
 #include "molecule.hpp"
 #include "orthorhombicBox.hpp"
+#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
 #include "units.hpp"
@@ -288,7 +289,8 @@ TEST_F(TestCellList, clonePreservesNumberOfCellsAndNeighbourCells)
 {
     _cellList->setNumberOfCells(4);
     _cellList->setNumberOfNeighbourCells(2);
-    GeneralSettings::activateCellList();
+    Settings settings;
+    settings.generalSettings.activateCellListByUser();
 
     const auto cloned = _cellList->clone();
 
@@ -363,14 +365,17 @@ TEST_F(TestCellList, addMoleculesToCellsRejectsUninitializedCells)
  */
 TEST_F(TestCellList, updateCellList)
 {
-    const auto coulombRadiusCutOff = 4.0 * angstrom;
+    const auto coulombRadiusCutoff = 4.0 * angstrom;
     _cellList->setNumberOfCells(11);
     _cellList->resizeCells();
 
-    EXPECT_NO_THROW(
-        _cellList->updateCellList(*_simulationBox, coulombRadiusCutOff)
-    );
-    GeneralSettings::activateCellList();
+    Settings settings;
+    settings.generalSettings.activateCellListByUser();
+    EXPECT_NO_THROW(_cellList->updateCellList(
+        *_simulationBox,
+        coulombRadiusCutoff,
+        settings.generalSettings
+    ));
 
     auto molecule = molsys::Molecule();
 
@@ -385,7 +390,7 @@ TEST_F(TestCellList, updateCellList)
 
     _simulationBox->addMolecule(molecule);
 
-    _cellList->setup(*_simulationBox, coulombRadiusCutOff);
+    _cellList->setup(*_simulationBox, coulombRadiusCutoff);
     auto cellSizeOld = _cellList->getCellSize();
 
     molsys::OrthorhombicBox orthoBox{
@@ -393,12 +398,20 @@ TEST_F(TestCellList, updateCellList)
     };
     _simulationBox->setBox(orthoBox, false);
 
-    _cellList->updateCellList(*_simulationBox, coulombRadiusCutOff);
+    _cellList->updateCellList(
+        *_simulationBox,
+        coulombRadiusCutoff,
+        settings.generalSettings
+    );
 
     EXPECT_NE(_cellList->getCellSize(), cellSizeOld);
 
     cellSizeOld = _cellList->getCellSize();
-    _cellList->updateCellList(*_simulationBox, coulombRadiusCutOff);
+    _cellList->updateCellList(
+        *_simulationBox,
+        coulombRadiusCutoff,
+        settings.generalSettings
+    );
 
     EXPECT_EQ(_cellList->getCellSize(), cellSizeOld);
 }

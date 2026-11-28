@@ -121,7 +121,7 @@ namespace waterModel
             using enum SmoothingMethod;
 
             auto       smF       = 0.0;
-            const auto smoothing = _getHybridSettings().getSmoothingMethod();
+            const auto smoothing = _getHybridSettings().get_smoothing();
 
             if (smoothing == HOTSPOT && water.getHybridZone() == SMOOTHING)
                 smF = water.getSmoothingFactor().numerical_value_in(

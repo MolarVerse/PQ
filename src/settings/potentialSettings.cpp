@@ -62,131 +62,16 @@ void PotentialSettings::finalize(JobType jobType)
         _coulombConfig = CoulombPotentialConfig(Distance::zero());
 }
 
-/********************
- *                  *
- * standard setters *
- *                  *
- ********************/
-
-/**
- * @brief Set the nonCoulomb type as enum in the PotentialSettings class
- *
- * @param type
- */
-void PotentialSettings::setNonCoulombTypeByUser(NonCoulombType type)
-{
-    _nonCoulombType.setByUser(type);
-}
-
-/**
- * @brief Set the Coulomb long range type in the PotentialSettings class
- *
- * @param type
- */
-void PotentialSettings::setCoulombLongRangeTypeByUser(CoulombLongRangeType type)
-{
-    _coulombLRType.setByUser(type);
-}
-
 /**
  * @brief Set the Coulomb radius cut off in the PotentialSettings class
  *
- * @param coulombRadiusCutOff
+ * @param coulombRadiusCutoff
  */
-void PotentialSettings::setCoulombRadiusCutOffByUser(
-    const Pos& coulombRadiusCutOff
+void PotentialSettings::setCoulombRadiusCutoffByUser(
+    const Pos& coulombRadiusCutoff
 )
 {
-    _coulombConfig = CoulombPotentialConfig(coulombRadiusCutOff);
-}
-
-/**
- * @brief Set the non-Coulomb radius cut off in the PotentialSettings class
- *
- * @param nonCoulombRadiusCutOff
- */
-void PotentialSettings::setNonCoulombRadiusCutOffByUser(
-    const Pos& nonCoulombRadiusCutOff
-)
-{
-    _nonCoulombRadiusCutOff.setByUser(nonCoulombRadiusCutOff);
-}
-
-/**
- * @brief Set the 1-4 Coulomb scaling factor in the PotentialSettings class
- *
- * @param scale14Coulomb
- */
-void PotentialSettings::setScale14CoulombByUser(double scale14Coulomb)
-{
-    _scale14Coulomb.setByUser(scale14Coulomb);
-}
-
-/**
- * @brief Set the 1-4 Van der Waals scaling factor in the PotentialSettings
- * class
- *
- * @param scale14VanDerWaals
- */
-void PotentialSettings::setScale14VanDerWaalsByUser(double scale14VanDerWaals)
-{
-    _scale14VanDerWaals.setByUser(scale14VanDerWaals);
-}
-
-/**
- * @brief Set the reaction field epsilon in the PotentialSettings class
- *
- * @param epsilon
- */
-void PotentialSettings::setReactionFieldEpsilonByUser(double epsilon)
-{
-    _reactionFieldEpsilon.setByUser(epsilon);
-}
-
-/**
- * @brief Set the Wolf parameter in the PotentialSettings class
- *
- * @param wolfParameter
- */
-void PotentialSettings::setWolfParameterByUser(const InvDistance& wolfParameter)
-{
-    _wolfParameter.setByUser(wolfParameter);
-}
-
-/********************
- *                  *
- * standard getters *
- *                  *
- ********************/
-
-/**
- * @brief get the Coulomb long range type
- *
- * @return CoulombLongRangeType
- */
-CoulombLongRangeType PotentialSettings::getCoulombLongRangeType() const
-{
-    return _coulombLRType.get();
-}
-
-/**
- * @brief get the nonCoulomb type
- *
- * @return NonCoulombType
- */
-NonCoulombType PotentialSettings::getNonCoulombType() const
-{
-    return _nonCoulombType.get();
-}
-
-/**
- * @brief get the non-Coulomb radius cut off
- *
- * @return std::optional<Pos>
- */
-const Distance& PotentialSettings::getNonCoulombRadiusCutOff() const
-{
-    return _nonCoulombRadiusCutOff.get();
+    _coulombConfig = CoulombPotentialConfig(coulombRadiusCutoff);
 }
 
 /**
@@ -194,27 +79,7 @@ const Distance& PotentialSettings::getNonCoulombRadiusCutOff() const
  *
  * @return true if set by user, false otherwise
  */
-bool PotentialSettings::isNonCoulombRadiusCutOffSetByUser() const
+bool PotentialSettings::isNonCoulombRadiusCutoffSetByUser() const
 {
-    return _nonCoulombRadiusCutOff.isSetByUser();
-}
-
-/**
- * @brief get the reaction field epsilon
- *
- * @return double
- */
-double PotentialSettings::getReactionFieldEpsilon() const
-{
-    return _reactionFieldEpsilon.get();
-}
-
-/**
- * @brief get the Wolf parameter
- *
- * @return const InvDistance&
- */
-const InvDistance& PotentialSettings::getWolfParameter() const
-{
-    return _wolfParameter.get();
+    return _nonCoulombRadiusCutoff.isSetByUser();
 }

@@ -23,6 +23,7 @@
 #ifndef MANOSTAT__STOCHASTIC_RESCALING_MANOSTAT_HPP
 #define MANOSTAT__STOCHASTIC_RESCALING_MANOSTAT_HPP
 
+#include "generalSettings.hpp"
 #include "manostat.hpp"
 #include "randomNumberGenerator.hpp"
 #include "unit_types.hpp"
@@ -38,17 +39,20 @@ namespace manostat
     class StochasticRescalingManostat : public Manostat
     {
        private:
-        rng::RandomNumberGenerator _randomNumberGenerator;
+        rng::RandomNumberGenerator _rng;
 
        public:
-        using Manostat::Manostat;
+        StochasticRescalingManostat(
+            const ManostatSettings &settings,
+            const GeneralSettings  &generalSettings
+        );
 
         void applyManostat(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
             const Temperature          &targetTemperature,
             const Time                 &timeStep,
-            const Distance             &coulombRadiusCutOff
+            const Distance             &coulombRadiusCutoff
         ) override;
 
         [[nodiscard]] virtual QuantityTensor3D calculateMu(
