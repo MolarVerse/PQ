@@ -71,7 +71,7 @@ jobs:
       - name: Setup GCC
         uses: ./.github/actions/setup-gcc
         with:
-          packages: ninja-build clangd-20 libhdf5-dev
+          packages: ninja-build clangd-20 libhdf5-dev libzstd-dev
 
       - name: Set clangd-20 as the default clangd
         run: sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-20 100
@@ -111,8 +111,8 @@ jobs:
           # of the compile database (googletest, google benchmark, the perf
           # harness deps) — otherwise clangd-tidy has no compile command for
           # a changed tests/ or benchmarks/ file and silently can't check it
-          # (issue #620). HDF5 is on so the H5MD sources and their wrappers
-          # have compile commands and headers too.
+          # (issue #620). HDF5 and zstd are on so the H5MD and Zarr sources
+          # and their wrappers have compile commands and headers too.
           #
           # No actual build is needed: FetchContent (Eigen) and the
           # googletest/mstd submodules are already fetched/checked out, so
@@ -134,6 +134,7 @@ jobs:
             -DBUILD_WITH_PERF_BENCH=On \
             -DBUILD_WITH_DOCS=Off \
             -DBUILD_WITH_HDF5=On \
+            -DBUILD_WITH_ZSTD=On \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
 
       - name: Run clangd-tidy on changed files

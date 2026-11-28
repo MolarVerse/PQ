@@ -65,7 +65,7 @@ jobs:
       - name: Install clang
         uses: awalsh128/cache-apt-pkgs-action@v1
         with:
-          packages: clang-20 libclang-rt-20-dev g++-14 libhdf5-dev
+          packages: clang-20 libclang-rt-20-dev g++-14 libhdf5-dev libzstd-dev
           version: 1.0
 
       - name: Set up Python
@@ -105,6 +105,7 @@ jobs:
             -DBUILD_WITH_TESTS=ON \
             -DBUILD_WITH_DOCS=OFF \
             -DBUILD_WITH_HDF5=ON \
+            -DBUILD_WITH_ZSTD=ON \
             -DBUILD_WITH_PERF_BENCH=ON \
             -DBUILD_WITH_BENCHMARKING=ON \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
