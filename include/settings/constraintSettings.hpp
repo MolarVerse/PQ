@@ -26,6 +26,7 @@
 #include <cstddef>
 #include <mstd/enum.hpp>
 
+#include "enums/jobtype.hpp"
 #include "setting.hpp"
 #include "unit_types.hpp"
 
@@ -53,12 +54,15 @@ class ConstraintSettings
     Setting<MassPerTime, "Rattle Tolerance"> _rattleTolerance;
     Setting<double, "MShake Tolerance">      _mshakeTolerance;
 
+    Setting<Time, "Opt Rattle Time Step"> _optRattleTimeStep;
+
    public:
     ConstraintSettings();
 
     void finalize(
         ReferenceSettings&        referenceSettings,
-        const WaterModelSettings& waterModelSettings
+        const WaterModelSettings& waterModelSettings,
+        JobType                   jobType
     );
 
     SETTING_GETTER_AND_SETTER_BY_USER(_shakeMaxIter);
@@ -67,6 +71,7 @@ class ConstraintSettings
     SETTING_GETTER_AND_SETTER_BY_USER(_shakeTolerance);
     SETTING_GETTER_AND_SETTER_BY_USER(_rattleTolerance);
     SETTING_GETTER_AND_SETTER_BY_USER(_mshakeTolerance);
+    SETTING_GETTER_AND_SETTER_BY_USER(_optRattleTimeStep);
 
     void activateShakeForWaterModel();
 

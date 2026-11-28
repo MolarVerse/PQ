@@ -250,6 +250,36 @@ TEST_F(TestInputFileReader, testParseRattleIteration)
 }
 
 /**
+ * @brief tests parsing the "opt-rattle-timestep" command
+ *
+ * @details if the time step is not positive, throws inputFileException
+ *
+ */
+TEST_F(TestInputFileReader, testParseOptRattleTimeStep)
+{
+    ConstraintSettings            constraintSettings;
+    input::ConstraintsInputParser parser{constraintSettings};
+    const auto                    funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("opt_rattle_timestep"));
+    const auto &parseFunc = funcMap.at("opt_rattle_timestep");
+
+    std::vector<std::string> lineElements = {"opt-rattle-timestep", "=", "0.5"};
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(constraintSettings.get_optRattleTimeStep(), 0.5 * fs);
+
+    _clearParser(parser);
+
+    lineElements = {"opt-rattle-timestep", "=", "0"};
+    EXPECT_THROW_MSG(
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"0\" for key \"opt-rattle-timestep\" at line 0 in "
+        "input file: failed validation with message Value must be greater than "
+        "0"
+    );
+}
+
+/**
  * @brief tests parsing the "mshake-tolerance" command
  *
  * @details if the tolerance is negative, throws inputFileException

@@ -741,18 +741,26 @@ TEST_F(TestInputValidation, acceptsExponentialDecayWithDefaultDecay)
     );
 }
 
-TEST_F(TestInputValidation, rejectsShakeInOptimization)
+TEST_F(TestInputValidation, acceptsShakeInOptimization)
 {
     _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings.constraintSettings.activateShakeByUser();
     _setKeyword("nstep");
 
+    EXPECT_NO_THROW(_finalizeAndValidate());
+}
+
+TEST_F(TestInputValidation, rejectsMShakeInOptimization)
+{
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
+    _settings.constraintSettings.activateMShakeByUser();
+    _setKeyword("nstep");
+
     ASSERT_THROW_MSG(
         _finalizeAndValidate(),
         exc::InputFileException,
-        "Job type MM_OPT does not apply SHAKE, M-SHAKE or distance "
-        "constraints. Set shake = off and distance-constraints = off (a "
-        "rigid water model also turns SHAKE on)."
+        "Job type MM_OPT does not apply M-SHAKE or distance constraints. Set "
+        "shake = off or on and distance-constraints = off."
     );
 }
 
@@ -765,9 +773,8 @@ TEST_F(TestInputValidation, rejectsDistanceConstraintsInOptimization)
     ASSERT_THROW_MSG(
         _finalizeAndValidate(),
         exc::InputFileException,
-        "Job type MM_OPT does not apply SHAKE, M-SHAKE or distance "
-        "constraints. Set shake = off and distance-constraints = off (a "
-        "rigid water model also turns SHAKE on)."
+        "Job type MM_OPT does not apply M-SHAKE or distance constraints. Set "
+        "shake = off or on and distance-constraints = off."
     );
 }
 

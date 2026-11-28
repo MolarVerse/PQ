@@ -104,6 +104,7 @@ namespace engine
         [[nodiscard]] out::OptOutput &getOptOutput();
 
        private:
+        void _evaluate();
         void _writeOutput(
             const OutputFileSettings &outputSettings,
             size_t                    startingStepCount

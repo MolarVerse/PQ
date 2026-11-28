@@ -51,6 +51,7 @@ namespace input
         void addRattleIterationKeyword();
         void addMShakeToleranceKeyword();
         void addMShakeIterationKeyword();
+        void addOptRattleTimeStepKeyword();
         void addDistanceConstraintActivatedKeyword();
     };
 

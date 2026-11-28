@@ -23,6 +23,8 @@
 #include <gtest/gtest.h>
 
 #include "constraintSettings.hpp"
+#include "defaults.hpp"
+#include "enums/jobtype.hpp"
 #include "referenceSettings.hpp"
 #include "units.hpp"
 #include "waterModelSettings.hpp"
@@ -71,6 +73,15 @@ TEST(ConstraintSettingsTest, RattleToleranceRoundTrip)
     EXPECT_EQ(settings.get_rattleTolerance(), 1.0e-6 * g_per_mol / s);
 }
 
+TEST(ConstraintSettingsTest, OptRattleTimeStepRoundTrip)
+{
+    ConstraintSettings settings;
+    EXPECT_EQ(settings.get_optRattleTimeStep(), 1.0 * fs);
+
+    settings.set_optRattleTimeStepByUser(0.5 * fs);
+    EXPECT_EQ(settings.get_optRattleTimeStep(), 0.5 * fs);
+}
+
 TEST(ConstraintSettingsTest, MShakeToleranceRoundTrip)
 {
     ConstraintSettings settings;
@@ -96,7 +107,7 @@ TEST(ConstraintSettingsTest, FinalizeActivatesShakeForRigidWaterModel)
     ASSERT_TRUE(waterModelSettings.getRigidWaterGeometry().has_value());
 
     ReferenceSettings referenceSettings;
-    settings.finalize(referenceSettings, waterModelSettings);
+    settings.finalize(referenceSettings, waterModelSettings, JobType::MM_MD);
 
     EXPECT_TRUE(settings.isShakeActivated());
     EXPECT_TRUE(referenceSettings.getReferenceFileNames().contains(
@@ -117,7 +128,7 @@ TEST(ConstraintSettingsTest, FinalizeDoesNotActivateShakeForFlexibleWaterModel)
     ASSERT_FALSE(waterModelSettings.getRigidWaterGeometry().has_value());
 
     ReferenceSettings referenceSettings;
-    settings.finalize(referenceSettings, waterModelSettings);
+    settings.finalize(referenceSettings, waterModelSettings, JobType::MM_MD);
 
     EXPECT_FALSE(settings.isShakeActivated());
     EXPECT_TRUE(referenceSettings.getReferenceFileNames().empty());
@@ -136,7 +147,7 @@ TEST(ConstraintSettingsTest, FinalizeAddsRattleReferenceForExplicitShake)
     WaterModelSettings waterModelSettings;
 
     ReferenceSettings referenceSettings;
-    settings.finalize(referenceSettings, waterModelSettings);
+    settings.finalize(referenceSettings, waterModelSettings, JobType::MM_MD);
 
     EXPECT_TRUE(settings.isShakeActivated());
     EXPECT_TRUE(referenceSettings.getReferenceFileNames().contains(
@@ -159,7 +170,7 @@ TEST(ConstraintSettingsTest, FinalizeDoesNotOverrideExplicitShakeDeactivation)
     ASSERT_TRUE(waterModelSettings.getRigidWaterGeometry().has_value());
 
     ReferenceSettings referenceSettings;
-    settings.finalize(referenceSettings, waterModelSettings);
+    settings.finalize(referenceSettings, waterModelSettings, JobType::MM_MD);
 
     EXPECT_FALSE(settings.isShakeActivated());
     EXPECT_FALSE(settings.isShakeSetBySystem());
@@ -179,15 +190,59 @@ TEST(ConstraintSettingsTest, IsShakeSetBySystemReflectsActivationSource)
     waterModelSettings.setWaterIntraModelByUser(WaterIntraModel::SPC);
 
     ReferenceSettings referenceSettings;
-    systemActivated.finalize(referenceSettings, waterModelSettings);
+    systemActivated
+        .finalize(referenceSettings, waterModelSettings, JobType::MM_MD);
 
     EXPECT_TRUE(systemActivated.isShakeActivated());
     EXPECT_TRUE(systemActivated.isShakeSetBySystem());
 
     ConstraintSettings userActivated;
     userActivated.activateShakeByUser();
-    userActivated.finalize(referenceSettings, waterModelSettings);
+    userActivated
+        .finalize(referenceSettings, waterModelSettings, JobType::MM_MD);
 
     EXPECT_TRUE(userActivated.isShakeActivated());
     EXPECT_FALSE(userActivated.isShakeSetBySystem());
+}
+
+TEST(ConstraintSettingsTest, FinalizeSetsOptIterationDefaults)
+{
+    WaterModelSettings waterModelSettings;
+    ReferenceSettings  referenceSettings;
+
+    ConstraintSettings mdSettings;
+    mdSettings.finalize(referenceSettings, waterModelSettings, JobType::MM_MD);
+
+    EXPECT_EQ(mdSettings.get_shakeMaxIter(), defaults::SHAKE_MAX_ITER_DEFAULT);
+    EXPECT_EQ(
+        mdSettings.get_rattleMaxIter(),
+        defaults::RATTLE_MAX_ITER_DEFAULT
+    );
+
+    ConstraintSettings optSettings;
+    optSettings
+        .finalize(referenceSettings, waterModelSettings, JobType::MM_OPT);
+
+    EXPECT_EQ(
+        optSettings.get_shakeMaxIter(),
+        defaults::SHAKE_MAX_ITER_OPT_DEFAULT
+    );
+    EXPECT_EQ(
+        optSettings.get_rattleMaxIter(),
+        defaults::RATTLE_MAX_ITER_OPT_DEFAULT
+    );
+}
+
+TEST(ConstraintSettingsTest, FinalizeKeepsUserIterationsInOpt)
+{
+    WaterModelSettings waterModelSettings;
+    ReferenceSettings  referenceSettings;
+
+    ConstraintSettings settings;
+    settings.set_shakeMaxIterByUser(30U);
+    settings.set_rattleMaxIterByUser(40U);
+    settings.finalize(referenceSettings, waterModelSettings, JobType::MM_OPT);
+
+    EXPECT_EQ(settings.get_shakeMaxIter(), 30U);
+    EXPECT_EQ(settings.get_rattleMaxIter(), 40U);
 }

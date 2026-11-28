@@ -117,6 +117,11 @@ namespace defaults
         1e-8 * mstd::units::g / mstd::units::mol / mstd::units::ps;
     static constexpr double MSHAKE_TOLERANCE_DEFAULT = 1e-8;
 
+    static constexpr size_t SHAKE_MAX_ITER_OPT_DEFAULT  = 1000;
+    static constexpr size_t RATTLE_MAX_ITER_OPT_DEFAULT = 1000;
+
+    static constexpr Time OPT_RATTLE_TIME_STEP_DEFAULT = 1.0 * mstd::units::fs;
+
     static constexpr bool CELL_LIST_IS_ACTIVE_DEFAULT =
         false;   // default is brute force routine
     static constexpr size_t NUMBER_OF_CELLS_DEFAULT = 7;   // for each dimension

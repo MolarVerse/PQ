@@ -1,8 +1,7 @@
-"""Run the ``ar3_mm_opt`` example and two variants of it.
+"""Run the ``ar3_mm_opt`` example and a variant of it.
 
 1. The example as shipped converges with the default learning-rate settings.
 2. With a small ``nstep`` it does not converge: PQ warns and exits with 0.
-3. With ``shake = on`` PQ stops with an error, as mm-opt applies no SHAKE.
 """
 
 import argparse
@@ -54,7 +53,6 @@ def main():
             ["Optimizer did not converge after 2 epochs."],
             ["PQ ended normally"],
         ),
-        ("rejects shake", "shake = on;\n", None, ["does not apply SHAKE"], []),
     ]
 
     for name, extra, expected_code, texts, absent in cases:

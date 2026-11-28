@@ -31,6 +31,7 @@ rattle-iter                  false      20
 rattle-tolerance             false      1e-6
 mshake-tolerance             false      1e-6
 mshake-iter                  false      20
+opt-rattle-timestep          false      1.0
 distance-constraints         false      true
 
 long_range                   false      shifted

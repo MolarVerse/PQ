@@ -304,6 +304,17 @@ add_test(
 set_property(TEST regression_mm_opt_example PROPERTY LABELS "regression;examples")
 set_property(TEST regression_mm_opt_example PROPERTY TIMEOUT 300)
 
+add_test(
+    NAME regression_mm_opt_constraints
+    COMMAND
+        ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/check_mm_opt_constraints.py
+        --pq $<TARGET_FILE:PQ>
+        --examples ${PROJECT_SOURCE_DIR}/examples
+)
+set_property(TEST regression_mm_opt_constraints PROPERTY LABELS "regression;examples")
+set_property(TEST regression_mm_opt_constraints PROPERTY TIMEOUT 300)
+
 # Real ORCA, only where it is installed: -DORCA_EXECUTABLE=/path/to/orca.
 # Only the quantum chemistry ORCA banner counts (not the GNOME screen reader).
 find_program(ORCA_EXECUTABLE orca)
