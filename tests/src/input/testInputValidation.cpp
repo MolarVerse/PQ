@@ -26,6 +26,7 @@
 #include <memory>
 #include <string>
 
+#include "constraintSettings.hpp"
 #include "defaults.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
@@ -88,7 +89,7 @@ void TestInputValidation::SetUp()
         InitVelocities::FALSE
     );
 
-    _settings.potentialSettings.setCoulombLongRangeTypeByUser(
+    _settings.potentialSettings.set_coulombLRTypeByUser(
         CoulombLongRangeType::SHIFTED
     );
     _settings.potentialSettings.setCoulombRadiusCutoffByUser(
@@ -724,7 +725,7 @@ TEST_F(TestInputValidation, requiresDecayForConstantDecayOptimization)
     );
 }
 
-TEST_F(TestInputValidation, requiresDecayForExponentialDecayOptimization)
+TEST_F(TestInputValidation, acceptsExponentialDecayWithDefaultDecay)
 {
     _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings.timings.setNumberOfStepsByUser(100U);
@@ -733,12 +734,49 @@ TEST_F(TestInputValidation, requiresDecayForExponentialDecayOptimization)
     );
     _setKeyword("nstep");
 
-    ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(_settings),
-        exc::UserInputException,
-        "The exponential-decay learning rate strategy requires "
-        "learning-rate-decay."
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
+    EXPECT_DOUBLE_EQ(
+        _settings.optimizerSettings.get_learningRateDecay(),
+        defaults::LEARNING_RATE_DECAY_DEFAULT
     );
+}
+
+TEST_F(TestInputValidation, rejectsShakeInOptimization)
+{
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
+    _settings.constraintSettings.activateShakeByUser();
+    _setKeyword("nstep");
+
+    ASSERT_THROW_MSG(
+        _finalizeAndValidate(),
+        exc::InputFileException,
+        "Job type MM_OPT does not apply SHAKE, M-SHAKE or distance "
+        "constraints. Set shake = off and distance-constraints = off (a "
+        "rigid water model also turns SHAKE on)."
+    );
+}
+
+TEST_F(TestInputValidation, rejectsDistanceConstraintsInOptimization)
+{
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
+    _settings.constraintSettings.activateDistanceConstraintsByUser();
+    _setKeyword("nstep");
+
+    ASSERT_THROW_MSG(
+        _finalizeAndValidate(),
+        exc::InputFileException,
+        "Job type MM_OPT does not apply SHAKE, M-SHAKE or distance "
+        "constraints. Set shake = off and distance-constraints = off (a "
+        "rigid water model also turns SHAKE on)."
+    );
+}
+
+TEST_F(TestInputValidation, acceptsShakeInMD)
+{
+    _configureMDJob(JobType::MM_MD);
+    _settings.constraintSettings.activateShakeByUser();
+
+    EXPECT_NO_THROW(_finalizeAndValidate());
 }
 
 TEST_F(TestInputValidation, acceptsConstantOptimizationWithoutDecay)

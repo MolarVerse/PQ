@@ -68,18 +68,24 @@ namespace engine
 
             takeStep();
 
-            if (_converged || _optStopped)
+            if (_optStopped)
+            {
                 break;
+            }
 
             writeOutput(
                 getSettings().generalSettings.getJobtype(),
                 outputFileSettings
             );
             deleteTmpFiles();
+
+            if (_converged)
+            {
+                break;
+            }
         }
 
-        throwOnFailure(
-            _converged,
+        throwIfStopped(
             _optStopped,
             getStep(),
             nEpochs,
@@ -104,6 +110,50 @@ namespace engine
             getLogOutput().writeEndedNormally(elapsedTime);
             out::StdoutOutput::writeEndedNormally(elapsedTime);
         }
+        else
+        {
+            const auto msg = notConvergedMessage(nEpochs);
+
+            getLogOutput().writeOptWarning(msg);
+            out::StdoutOutput::writeOptWarning(msg);
+        }
+    }
+
+    /**
+     * @brief throw if the learning rate strategy stopped the optimization
+     *
+     * @param optStopped whether the learning rate strategy stopped the run
+     * @param step the step at which the run ended
+     * @param nEpochs the maximum number of epochs
+     * @param errorMessages the errors of the learning rate strategy
+     *
+     * @throw exc::OptException listing the errors if the run was stopped
+     */
+    void OptEngine::throwIfStopped(
+        bool                            optStopped,
+        size_t                          step,
+        size_t                          nEpochs,
+        const std::vector<std::string> &errorMessages
+    )
+    {
+        if (!optStopped)
+        {
+            return;
+        }
+
+        auto msg = std::format(
+            "Optimizer stopped after {} epochs out of {}. The following "
+            "error messages were raised:\n",
+            step,
+            nEpochs
+        );
+
+        for (size_t i = 0; i < errorMessages.size(); ++i)
+        {
+            msg += std::format("{}) {}\n", i + 1, errorMessages[i]);
+        }
+
+        throw exc::OptException(msg);
     }
 
     /**
@@ -126,31 +176,27 @@ namespace engine
         const std::vector<std::string> &errorMessages
     )
     {
-        if (optStopped)
-        {
-            auto msg = std::format(
-                "Optimizer stopped after {} epochs out of {}. The following "
-                "error "
-                "messages were raised:\n",
-                step,
-                nEpochs
-            );
-
-            for (size_t i = 0; i < errorMessages.size(); ++i)
-                msg += std::format("{}) {}\n", i + 1, errorMessages[i]);
-
-            throw exc::OptException(msg);
-        }
+        throwIfStopped(optStopped, step, nEpochs, errorMessages);
 
         if (!converged)
         {
-            throw exc::OptException(
-                std::format(
-                    "Optimizer did not converge after {} epochs.",
-                    nEpochs
-                )
-            );
+            throw exc::OptException(notConvergedMessage(nEpochs));
         }
+    }
+
+    /**
+     * @brief the message for a run that reached nEpochs without converging
+     *
+     * @param nEpochs the maximum number of epochs
+     *
+     * @return std::string
+     */
+    std::string OptEngine::notConvergedMessage(size_t nEpochs)
+    {
+        return std::format(
+            "Optimizer did not converge after {} epochs.",
+            nEpochs
+        );
     }
 
     /**
@@ -239,7 +285,7 @@ namespace engine
         size_t                    startingStepCount
     )
     {
-        const auto outputFreq = outputSettings.getOutputFrequency();
+        const auto outputFreq = outputSettings.get_outputFrequency();
         const auto effStep    = getStep() + startingStepCount;
 
         if (0 == getStep() % outputFreq)

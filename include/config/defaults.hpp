@@ -144,6 +144,7 @@ namespace defaults
     static constexpr size_t LR_UPDATE_FREQUENCY_DEFAULT   = 1;
     static constexpr double INITIAL_LEARNING_RATE_DEFAULT = 1.0e-4;
     static constexpr double MIN_LEARNING_RATE_DEFAULT     = 1e-15;
+    static constexpr double LEARNING_RATE_DECAY_DEFAULT   = 1.0;
 
     static constexpr ConvStrategy EN_CONV_STRATEGY_DEFAULT =
         ConvStrategy::RIGOROUS;

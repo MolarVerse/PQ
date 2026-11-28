@@ -1,0 +1,1 @@
+- Add integration tests for mm-opt with steepest descent and Adam on a harmonic O-H bond: written frames and .opt rows are compared with a Python model for all learning rate strategies, plus the convergence epoch, the converged final step, the default decay of 1.0 and the warning of a run that does not converge.

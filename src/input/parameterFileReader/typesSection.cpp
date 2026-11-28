@@ -132,8 +132,8 @@ namespace input::parameterFile
             );
         }
 
-        _potentialSettings->setScale14CoulombByUser(scaleCoulomb);
-        _potentialSettings->setScale14VanDerWaalsByUser(scaleVanDerWaals);
+        _potentialSettings->set_scale14CoulombByUser(scaleCoulomb);
+        _potentialSettings->set_scale14VDWByUser(scaleVanDerWaals);
     }
 
     /**

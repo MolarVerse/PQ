@@ -1,0 +1,9 @@
+# Geometry optimization of an argon trimer (Lennard-Jones in guff.dat)
+jobtype = mm-opt;
+force-field = off;
+rcoulomb = 9.0;
+start_file = start.rst;
+file_prefix = ar3-opt;
+nstep = 100;
+optimizer = steepest-descent;
+initial-learning-rate = 0.5;

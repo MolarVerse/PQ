@@ -88,6 +88,12 @@ setting that leaves relevant variants open (the note says which); **no** = no in
 | `hessian_bond` `test_central_hessian_error_follows_the_displacement` | displacement 0.001 and 0.002 | `mm-hessian` | same | the central error grows as the displacement squared (ratio 3 to 5) |
 | `hessian_bond` `test_hessian_info_file_describes_the_run` | five_point | `mm-hessian` | same | builder, displacement, definition (-dF_i/dx_j) and unit (kcal/mol/Å²) of the info file |
 | `hessian_bond` `test_analytic_builder_is_refused_for_the_mm_evaluator` | `hessian_builder = analytic` | `mm-hessian` | same | "The selected evaluator does not support analytic Hessians" |
+| `optimizer` `test_steepest_descent_with_a_constant_learning_rate` | `opt.in` (template in the test): `mm-opt`, steepest descent, `initial-learning-rate = 5e-4` | `mm-opt` | the `hessian_bond` O-H bond stretched to 1.65 Å (harmonic, k = 500, r0 = 1 Å) | every written frame and every row of the `.opt` file (energy change, relative change, largest force component, RMS force) equals a Python model of the optimiser; the distance error halves with every update; the run converges (RMS force below 5) at the epoch of the model |
+| `optimizer` `test_steepest_descent_with_an_exponential_decay` | `learning-rate-strategy = exponential-decay`, `learning-rate-decay = 2` | `mm-opt` | same | the same comparison with `lr0 * exp(-decay * step / nstep)` |
+| `optimizer` `test_steepest_descent_with_a_constant_decay` (2 tests) | `constant-decay`, `learning-rate-decay = 3e-5`, `learning-rate-update-freq` 1 and 2 | `mm-opt` | same | the same with `lr - decay` after every `update-freq` steps |
+| `optimizer` `test_the_minimum_learning_rate_stops_a_decay` | `constant-decay` with `min-learning-rate = 2e-4` | `mm-opt` | same | the learning rate stays at the minimum, with the warning in the log |
+| `optimizer` `test_adam` | `optimizer = adam`, `initial-learning-rate = 0.01`, `nstep = 40` | `mm-opt` | same | 23 updates of Adam (beta 0.9 and 0.999, epsilon 1e-8, first step 1) equal the Python model; the first update moves every coordinate by the learning rate |
+| `optimizer` `test_an_optimisation_that_does_not_converge_fails_with_the_epochs` | `nstep = 3`, a threshold that is not reached | `mm-opt` | same | exit status 1 and "Optimizer did not converge after 3 epochs" |
 
 Each water model appears in exactly one QM/MM test, so it is always combined with one particular
 smoothing method and neighbour search: `spc_fw` (exact, brute force), `spc-mtr` (exact, cell
@@ -103,7 +109,7 @@ intermolecular model are the same.
 | `mm-md` | yes (`cgo`, `chig`) |
 | `qm-md` | yes, DFTB+, ASE DFTB+, ASE xTB, PySCF, FeNNol (MACE skipped) |
 | `qmmm-md` | partly: DFTB+ only, 2 steps, no zone changes (see coupling section) |
-| `mm-opt` | no. Elsewhere: unit (`tests/src/opt`) |
+| `mm-opt` | yes for a harmonic bond (`optimizer`: steepest descent and Adam against a Python model, 7 to 23 updates). Not: more than 2 atoms, other force field terms, periodic images. Elsewhere: unit (`tests/src/opt`) |
 | `mm-hessian` | yes for a harmonic bond (`hessian_bond`: values against the analytic Hessian); `oh_mm_hessian` only checks the shape (its two atoms do not interact, the Hessian is the zero matrix). Not: angles, dihedrals, non-bonded forces, periodic images, more than 2 atoms |
 | `qm-rpmd` (ring polymer) | no. Elsewhere: regression (`qm-rpmd-mpi-smoke`, MPI build, one smoke step), example |
 
@@ -173,9 +179,9 @@ intermolecular model are the same.
 
 | Feature | Status |
 |---|---|
-| Steepest descent, constant learning rate | partly: `nstep = 1`, energy and force thresholds of `1e10`, so the first convergence check ends it |
-| Adam, decaying/exponential/line-search learning rates | no. Elsewhere: unit |
-| Convergence strategies and thresholds | no. Elsewhere: unit |
+| Steepest descent, constant learning rate | yes (7 updates against the model; also `nstep = 1` in `oh_mm_hessian`) |
+| Adam, exponential decay and constant decay (with frequency and `min-learning-rate`) | yes (against the model). Line search: no. Elsewhere: unit |
+| Convergence strategies and thresholds | partly: the RMS force threshold (the run ends at the epoch of the model) and the failure when it is not reached; the energy and max force thresholds are set so they never decide. Elsewhere: unit |
 | `max-learning-rate` | yes, with and without, plus the error message |
 | Hessian builder `central` | yes (values against the analytic Hessian, error order checked) |
 | Hessian builders forward, five-point | yes (same). Analytic: refused for the MM evaluator (tested). Elsewhere: unit |
@@ -307,7 +313,7 @@ In rough order of value for the cost; each is a **new variant** of an existing c
    `check_pq_output`, which costs nothing but reference size.
 7. The Hessian of angles, dihedrals and non-bonded forces (analytic or against forces), and the
    Hessian after `optimize_before_hessian = true`.
-8. **`mm-opt` and `Adam`/decaying learning rates** with a real number of optimisation steps.
+8. The convergence strategies (`rigorous`, `loose`, `absolute`, `relative`) and the max force and energy thresholds, an optimisation of more than 2 atoms, and the written converged geometry (issue #1323: it is not written yet).
 
 ## Adding a test
 

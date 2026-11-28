@@ -141,7 +141,7 @@ namespace engine
         _getHybridConfigurator().calculateSmoothingFactors(get_simulationBox());
         getCellList().updateCellList(
             get_simulationBox(),
-            getSettings().potentialSettings.getCoulombRadiusCutoff(),
+            getSettings().potentialSettings.get_coulombRadiusCutoff(),
             getSettings().generalSettings
         );
         get_physicalData().set_numberOfSmoothingMol(

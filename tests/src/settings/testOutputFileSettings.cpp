@@ -61,7 +61,7 @@ TEST(TestOutputSettings, setSpecialOutputFrequency)
 {
     OutputFileSettings settings;
     settings.setOutputFrequencyByUser(0);
-    EXPECT_EQ(settings.getOutputFrequency(), UINT64_MAX);
+    EXPECT_EQ(settings.get_outputFrequency(), UINT64_MAX);
 }
 
 /**
@@ -71,40 +71,40 @@ TEST(TestOutputSettings, setSpecialOutputFrequency)
 TEST(TestOutputSettings, includeOutputMetadataDefaultsToFalse)
 {
     OutputFileSettings settings;
-    EXPECT_FALSE(settings.getIncludeOutputMetadata());
+    EXPECT_FALSE(settings.get_includeOutputMetadata());
 
-    settings.setIncludeOutputMetadataByUser(true);
-    EXPECT_TRUE(settings.getIncludeOutputMetadata());
+    settings.set_includeOutputMetadataByUser(true);
+    EXPECT_TRUE(settings.get_includeOutputMetadata());
 
-    settings.setIncludeOutputMetadataByUser(false);
+    settings.set_includeOutputMetadataByUser(false);
 }
 
 TEST(TestOutputSettings, determinesMostCommonConfiguredPrefix)
 {
     OutputFileSettings settings;
-    settings.setRestartFileNameByUser("production.rst");
-    settings.setEnergyFileNameByUser("production.en");
-    settings.setTrajectoryFileNameByUser("production.xyz");
-    settings.setOptFileNameByUser("optimization.opt");
-    settings.setFilePrefixByUser("production");
-    settings.setOverwriteOutputFilesByUser(true);
+    settings.set_rstFileByUser("production.rst");
+    settings.set_energyFileByUser("production.en");
+    settings.set_trajFileByUser("production.xyz");
+    settings.set_optFileByUser("optimization.opt");
+    settings.set_filePrefixByUser("production");
+    settings.set_overwriteOutputFilesByUser(true);
     settings.setOutputFrequencyByUser(5);
 
     EXPECT_EQ(
         TestOutputFileSettings::determineMostCommonPrefix(settings),
         "production"
     );
-    EXPECT_EQ(settings.getOptFileName(), "optimization.opt");
-    EXPECT_EQ(settings.getFilePrefix(), "production");
-    EXPECT_TRUE(settings.getOverwriteOutputFiles());
-    EXPECT_EQ(settings.getOutputFrequency(), 5);
+    EXPECT_EQ(settings.get_optFile(), "optimization.opt");
+    EXPECT_EQ(settings.get_filePrefix(), "production");
+    EXPECT_TRUE(settings.get_overwriteOutputFiles());
+    EXPECT_EQ(settings.get_outputFrequency(), 5);
 }
 
 TEST(TestOutputSettings, setsHybridCenterFilename)
 {
     OutputFileSettings settings;
-    settings.setHybridCenterFileNameByUser("center.xyz");
-    EXPECT_EQ(settings.getHybridCenterFileName(), "center.xyz");
+    settings.set_hybridCenterFileByUser("center.xyz");
+    EXPECT_EQ(settings.get_hybridCenterFile(), "center.xyz");
 }
 
 TEST(TestOutputSettings, replacesDefaultHybridCenterFilenameWithPrefix)
@@ -112,46 +112,43 @@ TEST(TestOutputSettings, replacesDefaultHybridCenterFilenameWithPrefix)
     OutputFileSettings settings;
     TestOutputFileSettings::replaceDefaultValues(settings, "centerPrefix");
 
-    EXPECT_EQ(settings.getHybridCenterFileName(), "centerPrefix.center.xyz");
+    EXPECT_EQ(settings.get_hybridCenterFile(), "centerPrefix.center.xyz");
 }
 
 TEST(TestOutputSettings, preservesUserSetHybridCenterFilenameEqualToDefault)
 {
     OutputFileSettings settings;
-    settings.setHybridCenterFileNameByUser(DefaultFiles::hybridCenterFile);
+    settings.set_hybridCenterFileByUser(DefaultFiles::hybridCenterFile);
     TestOutputFileSettings::replaceDefaultValues(settings, "centerPrefix");
 
-    EXPECT_EQ(
-        settings.getHybridCenterFileName(),
-        DefaultFiles::hybridCenterFile
-    );
+    EXPECT_EQ(settings.get_hybridCenterFile(), DefaultFiles::hybridCenterFile);
 }
 
 TEST(TestOutputSettings, trajectoryFormatDefaultsToXyz)
 {
     OutputFileSettings settings;
-    EXPECT_EQ(settings.getTrajectoryFormat(), TrajectoryFormat::XYZ);
+    EXPECT_EQ(settings.get_trajFormat(), TrajectoryFormat::XYZ);
 
-    settings.setTrajectoryFormatByUser(TrajectoryFormat::EXTXYZ);
-    EXPECT_EQ(settings.getTrajectoryFormat(), TrajectoryFormat::EXTXYZ);
+    settings.set_trajFormatByUser(TrajectoryFormat::EXTXYZ);
+    EXPECT_EQ(settings.get_trajFormat(), TrajectoryFormat::EXTXYZ);
 }
 
 TEST(TestOutputSettings, extxyzFilenameFollowsPrefix)
 {
     OutputFileSettings settings;
-    settings.setFilePrefixByUser("run");
+    settings.set_filePrefixByUser("run");
     settings.finalize();
-    EXPECT_EQ(settings.getExtxyzFileName(), "run.extxyz");
-    EXPECT_EQ(settings.getH5mdFileName(), "run.h5md");
-    EXPECT_EQ(settings.getAseTrajFileName(), "run.ase.traj");
+    EXPECT_EQ(settings.get_extxyzFile(), "run.extxyz");
+    EXPECT_EQ(settings.get_h5mdFile(), "run.h5md");
+    EXPECT_EQ(settings.get_aseTrajFile(), "run.ase.traj");
 
     OutputFileSettings named;
-    named.setExtxyzFileNameByUser("water.extxyz");
-    named.setH5mdFileNameByUser("water.h5md");
-    named.setAseTrajFileNameByUser("water.ase.traj");
+    named.set_extxyzFileByUser("water.extxyz");
+    named.set_h5mdFileByUser("water.h5md");
+    named.set_aseTrajFileByUser("water.ase.traj");
     named.finalize();
-    EXPECT_EQ(named.getExtxyzFileName(), "water.extxyz");
-    EXPECT_EQ(named.getH5mdFileName(), "water.h5md");
-    EXPECT_EQ(named.getAseTrajFileName(), "water.ase.traj");
-    EXPECT_EQ(named.getRestartFileName(), "water.rst");
+    EXPECT_EQ(named.get_extxyzFile(), "water.extxyz");
+    EXPECT_EQ(named.get_h5mdFile(), "water.h5md");
+    EXPECT_EQ(named.get_aseTrajFile(), "water.ase.traj");
+    EXPECT_EQ(named.get_rstFile(), "water.rst");
 }
