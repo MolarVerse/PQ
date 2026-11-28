@@ -1,0 +1,1 @@
+- `regression_mm_opt_constraints` runs the new `h2o_mm_opt_mshake` example and compares it with SHAKE on all three water distances (#1321).
