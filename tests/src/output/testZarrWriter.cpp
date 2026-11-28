@@ -54,6 +54,18 @@ namespace
         return {out::zarr::Codec::BYTES};
     }
 
+    // zarr.json of the test array after nFrames frames
+    std::string arrayMetadata(std::size_t nFrames, out::zarr::Codec codec)
+    {
+        return out::zarr::arrayMetadata<double>(
+                   {nFrames, 3},
+                   {2, 3},
+                   codec,
+                   out::zarr::unitAttribute("Angstrom")
+        )
+            .str();
+    }
+
     std::string codecJson(out::zarr::Codec codec)
     {
         return codec == out::zarr::Codec::ZSTD ? ZSTD_CODEC : BYTES_CODEC;
@@ -111,8 +123,7 @@ TEST(TestZarrWriter, writesGroupAndArrayMetadata)
             {}
         )
             .str(),
-        R"({"zarr_format": 3, "node_type": "array", "shape": [4], "data_type": "int32", "chunk_grid": {"name": "regular", "configuration": {"chunk_shape": [2]}}, "chunk_key_encoding": {"name": "default", "configuration": {"separator": "/"}}, "fill_value": 0, "codecs": )" +
-            BYTES_CODEC + R"(, "attributes": {}})"
+        R"({"zarr_format": 3, "node_type": "array", "shape": [4], "data_type": "int32", "chunk_grid": {"name": "regular", "configuration": {"chunk_shape": [2]}}, "chunk_key_encoding": {"name": "default", "configuration": {"separator": "/"}}, "fill_value": 0, "codecs": [{"name": "bytes", "configuration": {"endian": "little"}}], "attributes": {}})"
     );
 
     EXPECT_EQ(out::zarr::dataType<std::int64_t>(), "int64");
@@ -132,7 +143,10 @@ TEST(TestZarrWriter, zstdCodecOnlyWithZstd)
     {
         out::zarr::JsonObject codecs;
         codecs.addObjects("codecs", out::zarr::codecs(out::zarr::Codec::ZSTD));
-        EXPECT_EQ(codecs.str(), R"({"codecs": )" + ZSTD_CODEC + "}");
+        EXPECT_EQ(
+            codecs.str(),
+            R"({"codecs": [{"name": "bytes", "configuration": {"endian": "little"}}, {"name": "zstd", "configuration": {"level": 3, "checksum": false}}]})"
+        );
 
         const std::string bytes(1000, 'a');
         EXPECT_LT(
@@ -178,7 +192,11 @@ TEST(TestZarrWriter, writesFixedArray)
         std::filesystem::remove_all(path);
 
         const std::vector<std::int32_t> values{8, 1, 0};
-        out::zarr::writeArray(path, std::span<const std::int32_t>{values}, codec);
+        out::zarr::writeArray(
+            path,
+            std::span<const std::int32_t>{values},
+            codec
+        );
 
         EXPECT_EQ(
             zarrTest::readFile(path / "zarr.json"),
@@ -205,37 +223,33 @@ TEST(TestZarrWriter, appendsFramesInChunks)
         const std::filesystem::path path = "testZarrWriterArray.zarr";
         std::filesystem::remove_all(path);
 
-        const auto metadata = [&](std::size_t nFrames)
-        {
-            return out::zarr::arrayMetadata<double>(
-                       {nFrames, 3},
-                       {2, 3},
-                       codec,
-                       out::zarr::unitAttribute("Angstrom")
-            )
-                .str();
-        };
-
-        out::zarr::Array<double> array{
-            path,
-            {3},
-            2,
-            codec,
-            out::zarr::unitAttribute("Angstrom")
-        };
-        EXPECT_EQ(zarrTest::readFile(path / "zarr.json"), metadata(0));
-        EXPECT_NE(metadata(0).find(codecJson(codec)), std::string::npos);
+        out::zarr::Array<double>
+            array{path, {3}, 2, codec, out::zarr::unitAttribute("Angstrom")};
+        EXPECT_EQ(
+            zarrTest::readFile(path / "zarr.json"),
+            arrayMetadata(0, codec)
+        );
+        EXPECT_NE(
+            arrayMetadata(0, codec).find(codecJson(codec)),
+            std::string::npos
+        );
 
         const std::vector<double> first{1.0, 2.0, 3.0};
         const std::vector<double> second{4.0, 5.0, 6.0};
         const std::vector<double> third{7.0, 8.0, 9.0};
 
         array.append(first);
-        EXPECT_EQ(zarrTest::readFile(path / "zarr.json"), metadata(0));
+        EXPECT_EQ(
+            zarrTest::readFile(path / "zarr.json"),
+            arrayMetadata(0, codec)
+        );
         EXPECT_FALSE(std::filesystem::exists(path / "c"));
 
         array.append(second);
-        EXPECT_EQ(zarrTest::readFile(path / "zarr.json"), metadata(2));
+        EXPECT_EQ(
+            zarrTest::readFile(path / "zarr.json"),
+            arrayMetadata(2, codec)
+        );
         EXPECT_EQ(
             zarrTest::readChunk<double>(path / "c" / "0" / "0", codec),
             (std::vector<double>{1.0, 2.0, 3.0, 4.0, 5.0, 6.0})
@@ -247,7 +261,10 @@ TEST(TestZarrWriter, appendsFramesInChunks)
         array.append(third);
         array.flush();
         EXPECT_EQ(array.getNumberOfFrames(), 3U);
-        EXPECT_EQ(zarrTest::readFile(path / "zarr.json"), metadata(3));
+        EXPECT_EQ(
+            zarrTest::readFile(path / "zarr.json"),
+            arrayMetadata(3, codec)
+        );
         EXPECT_EQ(
             zarrTest::readChunk<double>(path / "c" / "1" / "0", codec),
             (std::vector<double>{7.0, 8.0, 9.0, 0.0, 0.0, 0.0})

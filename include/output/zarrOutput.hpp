@@ -43,8 +43,8 @@ namespace out
      * @brief Zarr v3 trajectory (a directory) with the groups, arrays and
      * units of the H5MD output
      *
-     * @details frames are written in chunks of ZARR_CHUNK_FRAMES; close writes the last
-     * chunk that is not full yet
+     * @details frames are written in chunks of ZARR_CHUNK_FRAMES; close writes
+     * the last chunk that is not full yet
      */
     class ZarrOutput
     {

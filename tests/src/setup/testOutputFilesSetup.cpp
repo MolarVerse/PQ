@@ -261,6 +261,7 @@ TEST_F(TestSetup, setupOutputFilesMDPathZarrReplacesTrajectoryFiles)
     _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
     _settings->outputFiles.set_filePrefixByUser(PREFIX);
     _settings->outputFiles.set_trajFormatByUser(TrajectoryFormat::ZARR);
+    _settings->timings.setTimeStepByUser(0.5 * fs);
     _settings->timings.setNumberOfStepsByUser(100U);
 
     _settings->finalize();

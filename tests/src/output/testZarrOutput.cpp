@@ -107,6 +107,18 @@ namespace
         return zarrTest::readFile(path / "zarr.json");
     }
 
+    // values of the first two frames of a per-atom vector array
+    std::vector<float> frameValues(
+        const std::filesystem::path &value,
+        out::zarr::Codec             codec
+    )
+    {
+        auto values =
+            zarrTest::readChunk<float>(value / "c" / "0" / "0" / "0", codec);
+        values.resize(std::size_t{2} * 9);
+        return values;
+    }
+
     bool contains(const std::string &text, const std::string &part)
     {
         return text.find(part) != std::string::npos;
@@ -130,14 +142,18 @@ TEST(TestZarrOutput, writesH5mdLayoutInPqUnits)
         output.close();
     }
 
+    auto       root    = metadata(path);
+    const auto version = CURRENT_VERSION.to_string();
+    root.replace(root.find(version), version.size(), "VERSION");
     EXPECT_EQ(
-        metadata(path),
-        R"({"zarr_format": 3, "node_type": "group", "attributes": {"h5md": {"version": [1, 1], "author": {"name": "PQ"}, "creator": {"name": "PQ", "version": ")" +
-            CURRENT_VERSION.to_string() + R"("}}}})"
+        root,
+        R"({"zarr_format": 3, "node_type": "group", "attributes": {"h5md": {"version": [1, 1], "author": {"name": "PQ"}, "creator": {"name": "PQ", "version": "VERSION"}}}})"
     );
 
     const auto all = path / "particles" / "all";
-    EXPECT_TRUE(contains(metadata(path / "particles"), R"("node_type": "group")"));
+    EXPECT_TRUE(
+        contains(metadata(path / "particles"), R"("node_type": "group")")
+    );
     EXPECT_EQ(
         zarrTest::readChunk<std::int32_t>(all / "species" / "c" / "0", codec),
         (std::vector<std::int32_t>{8, 1, 0})
@@ -152,7 +168,9 @@ TEST(TestZarrOutput, writesH5mdLayoutInPqUnits)
     ));
 
     const auto position = metadata(all / "position" / "value");
-    EXPECT_TRUE(contains(position, R"("shape": [2, 3, 3], "data_type": "float32")"));
+    EXPECT_TRUE(
+        contains(position, R"("shape": [2, 3, 3], "data_type": "float32")")
+    );
     EXPECT_TRUE(contains(position, R"("chunk_shape": [100, 3, 3])"));
     EXPECT_TRUE(contains(position, R"("attributes": {"unit": "Angstrom"})"));
     EXPECT_TRUE(contains(
@@ -163,7 +181,9 @@ TEST(TestZarrOutput, writesH5mdLayoutInPqUnits)
         metadata(all / "force" / "value"),
         R"("unit": "kcal mol-1 Angstrom-1")"
     ));
-    EXPECT_TRUE(contains(metadata(all / "charge" / "value"), R"("shape": [2, 3])"));
+    EXPECT_TRUE(
+        contains(metadata(all / "charge" / "value"), R"("shape": [2, 3])")
+    );
     EXPECT_TRUE(contains(
         metadata(all / "box" / "edges" / "value"),
         R"("shape": [2, 3, 3], "data_type": "float64")"
@@ -174,17 +194,10 @@ TEST(TestZarrOutput, writesH5mdLayoutInPqUnits)
         R"("shape": [2], "data_type": "float64")"
     ));
 
-    const auto frameValues = [&](const std::filesystem::path &value)
-    {
-        auto values = zarrTest::readChunk<float>(value / "c" / "0" / "0" / "0", codec);
-        values.resize(2 * 9);
-        return values;
-    };
-
     // the H atom is wrapped into the box
-    const auto positions  = frameValues(all / "position" / "value");
-    const auto velocities = frameValues(all / "velocity" / "value");
-    const auto forces     = frameValues(all / "force" / "value");
+    const auto positions  = frameValues(all / "position" / "value", codec);
+    const auto velocities = frameValues(all / "velocity" / "value", codec);
+    const auto forces     = frameValues(all / "force" / "value", codec);
     for (std::size_t atomIndex = 0; atomIndex < 3; ++atomIndex)
     {
         auto expected = ATOMS[atomIndex].position;
@@ -196,7 +209,10 @@ TEST(TestZarrOutput, writesH5mdLayoutInPqUnits)
         for (std::size_t dim = 0; dim < 3; ++dim)
         {
             const auto index = (3 * atomIndex) + dim;
-            EXPECT_FLOAT_EQ(positions[index], static_cast<float>(expected[dim]));
+            EXPECT_FLOAT_EQ(
+                positions[index],
+                static_cast<float>(expected[dim])
+            );
             EXPECT_FLOAT_EQ(positions[index + 9], positions[index]);
             EXPECT_FLOAT_EQ(
                 velocities[index],
@@ -209,8 +225,10 @@ TEST(TestZarrOutput, writesH5mdLayoutInPqUnits)
         }
     }
 
-    auto charges =
-        zarrTest::readChunk<float>(all / "charge" / "value" / "c" / "0" / "0", codec);
+    auto charges = zarrTest::readChunk<float>(
+        all / "charge" / "value" / "c" / "0" / "0",
+        codec
+    );
     charges.resize(3);
     EXPECT_EQ(charges, (std::vector<float>{-0.8F, 0.4F, 0.4F}));
 
@@ -226,7 +244,8 @@ TEST(TestZarrOutput, writesH5mdLayoutInPqUnits)
 
     auto steps =
         zarrTest::readChunk<std::int64_t>(energy / "step" / "c" / "0", codec);
-    auto times = zarrTest::readChunk<double>(energy / "time" / "c" / "0", codec);
+    auto times =
+        zarrTest::readChunk<double>(energy / "time" / "c" / "0", codec);
     auto energies =
         zarrTest::readChunk<double>(energy / "value" / "c" / "0", codec);
     steps.resize(2);

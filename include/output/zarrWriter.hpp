@@ -139,7 +139,7 @@ namespace out::zarr
             const std::vector<std::size_t> &frameShape,
             std::size_t                     chunkFrames,
             Codec                           codec,
-            const JsonObject               &attributes
+            JsonObject                      attributes
         );
 
         void append(std::span<const T> frame);

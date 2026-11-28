@@ -226,7 +226,7 @@ TEST(TestEngineOutputFrames, zarrReplacesTheXyzFiles)
     const std::string prefix = "engineOutputZarr";
     const std::string store  = prefix + ".traj.zarr";
 
-    OutputFileSettings outputFileSettings;
+    OutputFileSettings      outputFileSettings;
     const ReferenceSettings referenceSettings;
 
     {

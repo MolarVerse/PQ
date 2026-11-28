@@ -25,7 +25,6 @@
 
 #include <gtest/gtest.h>
 
-#include <cstddef>
 #include <cstring>
 #include <filesystem>
 #include <fstream>
@@ -70,9 +69,12 @@ namespace zarrTest
                 ZSTD_getFrameContentSize(bytes.data(), bytes.size()),
                 '\0'
             );
-            raw.resize(
-                ZSTD_decompress(raw.data(), raw.size(), bytes.data(), bytes.size())
-            );
+            raw.resize(ZSTD_decompress(
+                raw.data(),
+                raw.size(),
+                bytes.data(),
+                bytes.size()
+            ));
             bytes = raw;
 #else
             ADD_FAILURE() << "zstd chunk in a build without zstd";

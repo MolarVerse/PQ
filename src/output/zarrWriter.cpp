@@ -274,8 +274,8 @@ namespace out::zarr
      */
     void writeFile(const std::filesystem::path &path, std::string_view content)
     {
-        auto partial = path;
-        partial += ".partial";
+        auto partial  = path;
+        partial      += ".partial";
 
         {
             std::ofstream file{partial, std::ios::binary | std::ios::trunc};
@@ -340,7 +340,10 @@ namespace out::zarr
 
 #ifdef WITH_ZSTD
         JsonObject level;
-        level.addInteger("level", static_cast<std::size_t>(ZSTD_CLEVEL_DEFAULT));
+        level.addInteger(
+            "level",
+            static_cast<std::size_t>(ZSTD_CLEVEL_DEFAULT)
+        );
         level.addBool("checksum", false);
 
         JsonObject zstd;
@@ -510,19 +513,21 @@ namespace out::zarr
         const std::vector<std::size_t> &frameShape,
         std::size_t                     chunkFrames,
         Codec                           codec,
-        const JsonObject               &attributes
+        JsonObject                      attributes
     )
         : _path(std::move(path)),
           _frameShape(frameShape),
-          _frameSize(std::accumulate(
-              frameShape.begin(),
-              frameShape.end(),
-              std::size_t{1},
-              std::multiplies{}
-          )),
+          _frameSize(
+              std::accumulate(
+                  frameShape.begin(),
+                  frameShape.end(),
+                  std::size_t{1},
+                  std::multiplies{}
+              )
+          ),
           _chunkFrames(chunkFrames),
           _codec(codec),
-          _attributes(attributes)
+          _attributes(std::move(attributes))
     {
         _chunk.reserve(_chunkFrames * _frameSize);
 
@@ -616,11 +621,8 @@ namespace out::zarr
         shape.insert(shape.end(), _frameShape.begin(), _frameShape.end());
 
         std::vector<std::size_t> chunkShape{_chunkFrames};
-        chunkShape.insert(
-            chunkShape.end(),
-            _frameShape.begin(),
-            _frameShape.end()
-        );
+        chunkShape
+            .insert(chunkShape.end(), _frameShape.begin(), _frameShape.end());
 
         const auto metadata =
             arrayMetadata<T>(shape, chunkShape, _codec, _attributes);

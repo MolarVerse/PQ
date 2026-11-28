@@ -151,7 +151,8 @@ namespace out
         _buffer.clear();
         for (const auto &atom : frame.atoms)
         {
-            const auto velocity = atom.velocity.numerical_value_in(angstrom / fs);
+            const auto velocity =
+                atom.velocity.numerical_value_in(angstrom / fs);
             for (std::size_t dim = 0; dim < 3; ++dim)
             {
                 _buffer.push_back(static_cast<float>(velocity[dim]));
@@ -174,9 +175,11 @@ namespace out
         _buffer.clear();
         for (const auto &atom : frame.atoms)
         {
-            _buffer.push_back(static_cast<float>(
-                atom.charge.numerical_value_in(elementary_charge)
-            ));
+            _buffer.push_back(
+                static_cast<float>(
+                    atom.charge.numerical_value_in(elementary_charge)
+                )
+            );
         }
         _charge->append(stepValue, time, _buffer);
 
