@@ -101,7 +101,7 @@ Possible options are:
 
    5. **mm-opt** - represents a geometry optimization calculation using molecular mechanics. If the optimizer has not converged after ``nstep`` epochs, PQ writes a warning and ends normally. With :ref:`shake <shakeKey>` = ``on`` or ``mshake`` the constrained bonds keep their length and the forces are projected onto the constraints, so convergence uses the constrained forces (see ``examples/h2o_mm_opt_shake`` and ``examples/h2o_mm_opt_mshake``). The SHAKE projection uses ``shake-iter``, ``rattle-iter`` and :ref:`opt-rattle-timestep <optrattletimestepKey>`; for rigid molecules M-SHAKE is the direct choice. :ref:`distance-constraints <distanceConstraintsKey>` add their penalty energy and forces with the static force constant; ``dforce_constant_dt`` is not used (see ``examples/ar3_mm_opt_distance``). See ``examples/ar3_mm_opt`` for a small input.
 
-   6. **mm-hessian** - represents a molecular mechanics Hessian calculation. By default, the geometry is optimized first and the Hessian is built at the optimized structure. Set ``optimize_before_hessian = false`` to calculate the Hessian directly at the input geometry.
+   6. **mm-hessian** - represents a molecular mechanics Hessian calculation. By default, the geometry is optimized first and the Hessian is built at the optimized structure. Set ``optimize_before_hessian = false`` to calculate the Hessian directly at the input geometry. The pre-optimization applies SHAKE, M-SHAKE and distance constraints like ``mm-opt``. The Hessian is then the one of the unconstrained MM energy at the constrained minimum: no projection onto the constraints and no distance-constraint penalty.
 
 .. _timestepKey:
 
@@ -1393,9 +1393,9 @@ Shake Iteration
 
     shake-iter = {uint+} -> 20
 
-With the ``shake-iter`` keyword the user can specify the maximum number of iterations until the convergence of the bond lengths should be reached within the shake algorithm. In ``mm-opt`` each step moves the atoms much further than an MD step, so the default there is 1000.
+With the ``shake-iter`` keyword the user can specify the maximum number of iterations until the convergence of the bond lengths should be reached within the shake algorithm. In ``mm-opt`` and ``mm-hessian`` each optimization step moves the atoms much further than an MD step, so the default there is 1000.
 
-.. centered:: *default value* = 20 (1000 in ``mm-opt``)
+.. centered:: *default value* = 20 (1000 in ``mm-opt`` and ``mm-hessian``)
 
 .. _rattletoleranceKey:
 
@@ -1423,9 +1423,9 @@ Rattle Iteration
 
     rattle-iter = {uint+} -> 20
 
-With the ``rattle-iter`` keyword the user can specify the maximum number of iterations until the convergence of the velocities of the shaked bonds should be reached within the rattle algorithm. In ``mm-opt`` RATTLE projects the full force in each step, so the default there is 1000.
+With the ``rattle-iter`` keyword the user can specify the maximum number of iterations until the convergence of the velocities of the shaked bonds should be reached within the rattle algorithm. In ``mm-opt`` and ``mm-hessian`` RATTLE projects the full force in each optimization step, so the default there is 1000.
 
-.. centered:: *default value* = 20 (1000 in ``mm-opt``)
+.. centered:: *default value* = 20 (1000 in ``mm-opt`` and ``mm-hessian``)
 
 .. _optrattletimestepKey:
 
@@ -1437,7 +1437,7 @@ Optimization Rattle Time Step
 
     opt-rattle-timestep = {double} fs -> 1.0 fs
 
-``mm-opt`` has no time step, but RATTLE works on velocities. To remove the constraint components from the forces, ``mm-opt`` turns the forces into the velocities :math:`\Delta t \, F / m` with :math:`\Delta t` = ``opt-rattle-timestep``, applies RATTLE and turns them back into forces. RATTLE stops when these velocities meet ``rattle-tolerance``, so a larger ``opt-rattle-timestep`` projects the forces more tightly and needs more ``rattle-iter``. Only used in ``mm-opt`` with :ref:`shake <shakeKey>`.
+``mm-opt`` has no time step, but RATTLE works on velocities. To remove the constraint components from the forces, ``mm-opt`` turns the forces into the velocities :math:`\Delta t \, F / m` with :math:`\Delta t` = ``opt-rattle-timestep``, applies RATTLE and turns them back into forces. RATTLE stops when these velocities meet ``rattle-tolerance``, so a larger ``opt-rattle-timestep`` projects the forces more tightly and needs more ``rattle-iter``. Only used in ``mm-opt`` and the ``mm-hessian`` pre-optimization with :ref:`shake <shakeKey>`.
 
 .. centered:: *default value* = 1.0 fs
 

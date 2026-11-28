@@ -1,0 +1,1 @@
+- `HessianEngine` evaluates the pre-optimization with `OptEngine::evaluateConstrained`, shared with `mm-opt`, and gets the same `shake-iter`/`rattle-iter` defaults (#1331).

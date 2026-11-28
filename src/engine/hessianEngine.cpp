@@ -31,6 +31,7 @@
 #include "adam.hpp"
 #include "constant.hpp"
 #include "constantDecay.hpp"
+#include "constraints.hpp"
 #include "convergenceSettings.hpp"
 #include "enums/hessian.hpp"
 #include "enums/optimizer.hpp"
@@ -51,6 +52,7 @@
 #include "optimizerSettings.hpp"
 #include "outputFileSettings.hpp"
 #include "physicalData.hpp"
+#include "simulationBox.hpp"
 #include "stdoutOutput.hpp"
 #include "steepestDescent.hpp"
 #include "terminalProgressBar.hpp"
@@ -417,15 +419,9 @@ namespace engine
         _converged  = false;
         _optStopped = false;
 
-        _evaluator->evaluate(
-            get_physicalData(),
-            get_simulationBox(),
-            get_intraNonBonded()
-        );
-        _optimizer->updateHistory(
-            get_physicalData().getTotalEnergy(),
-            get_simulationBox()
-        );
+        get_simulationBox().updateOldPositions();
+        get_constraints().applyShakeToPositions(get_simulationBox());
+        _evaluateOptimization();
 
         const auto &outputFileSettings = getSettings().outputFiles;
         const auto &jobType = getSettings().generalSettings.getJobtype();
@@ -479,17 +475,9 @@ namespace engine
             getStep(),
             get_simulationBox()
         );
+        get_constraints().applyShakeToPositions(get_simulationBox());
 
-        _evaluator->evaluate(
-            get_physicalData(),
-            get_simulationBox(),
-            get_intraNonBonded()
-        );
-
-        _optimizer->updateHistory(
-            get_physicalData().getTotalEnergy(),
-            get_simulationBox()
-        );
+        _evaluateOptimization();
 
         _converged = _optimizer->hasConverged();
 
@@ -523,6 +511,24 @@ namespace engine
         }
 
         _setStep(getStep() + 1);
+    }
+
+    /**
+     * @brief evaluate like mm-opt, with SHAKE, M-SHAKE and distance
+     * constraints, and add the energy to the optimizer history
+     */
+    void HessianEngine::_evaluateOptimization()
+    {
+        _optimizer->updateHistory(
+            OptEngine::evaluateConstrained(
+                *_evaluator,
+                get_constraints(),
+                get_simulationBox(),
+                get_intraNonBonded(),
+                get_physicalData()
+            ),
+            get_simulationBox()
+        );
     }
 
     std::shared_ptr<opt::Optimizer> HessianEngine::_setupEmptyOptimizer()

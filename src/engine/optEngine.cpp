@@ -24,7 +24,6 @@
 
 #include <format>
 
-#include "constraintSettings.hpp"
 #include "constraints.hpp"
 #include "exceptions.hpp"
 #include "frame.hpp"
@@ -264,32 +263,50 @@ namespace engine
     }
 
     /**
-     * @brief evaluate the forces and add the energy to the optimizer history
+     * @brief evaluate the forces with all constraints of a geometry
+     * optimization
      *
-     * @details with SHAKE or M-SHAKE the forces are projected onto the
-     * constraint surface, so the convergence checks see the constrained forces
+     * @details adds the distance constraint penalties and projects the forces
+     * onto the SHAKE or M-SHAKE constraints, so the convergence checks see the
+     * constrained forces
+     *
+     * @param evaluator
+     * @param constraints
+     * @param simulationBox
+     * @param intraNonBonded
+     * @param physicalData
+     *
+     * @return EnergyPerMol the energy to minimize
+     */
+    EnergyPerMol OptEngine::evaluateConstrained(
+        opt::Evaluator                 &evaluator,
+        constraints::Constraints       &constraints,
+        molsys::SimulationBox          &simulationBox,
+        intraNonBonded::IntraNonBonded &intraNonBonded,
+        physicalData::PhysicalData     &physicalData
+    )
+    {
+        evaluator.evaluate(physicalData, simulationBox, intraNonBonded);
+
+        constraints.applyStaticDistanceConstraints(simulationBox, physicalData);
+        constraints.projectForces(simulationBox);
+
+        return optimizedEnergy(physicalData);
+    }
+
+    /**
+     * @brief evaluate the forces and add the energy to the optimizer history
      */
     void OptEngine::_evaluate()
     {
-        _evaluator->evaluate(
-            get_physicalData(),
-            get_simulationBox(),
-            get_intraNonBonded()
-        );
-
-        get_constraints().applyStaticDistanceConstraints(
-            get_simulationBox(),
-            get_physicalData()
-        );
-
-        if (getSettings().constraintSettings.isShakeLikeActive())
-        {
-            get_constraints().calculateConstraintBondRefs(get_simulationBox());
-            get_constraints().projectForces(get_simulationBox());
-        }
-
         _optimizer->updateHistory(
-            optimizedEnergy(get_physicalData()),
+            evaluateConstrained(
+                *_evaluator,
+                get_constraints(),
+                get_simulationBox(),
+                get_intraNonBonded(),
+                get_physicalData()
+            ),
             get_simulationBox()
         );
     }

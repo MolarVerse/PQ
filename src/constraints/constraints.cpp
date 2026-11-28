@@ -273,7 +273,8 @@ namespace constraints
     /**
      * @brief removes the constraint components from the forces
      *
-     * @details applies RATTLE to the velocities M^-1 F dt with dt the
+     * @details takes the bond references at the current positions and
+     * applies RATTLE to the velocities M^-1 F dt with dt the
      * opt-rattle-timestep, so the forces become M P M^-1 F with P the RATTLE
      * projection. RATTLE stops at rattle-tolerance on these velocities, so a
      * larger dt projects the forces more tightly. The velocities are kept.
@@ -286,6 +287,8 @@ namespace constraints
         {
             return;
         }
+
+        calculateConstraintBondRefs(simulationBox);
 
         const auto  velocities = simulationBox.getVelocities();
         const auto &timeStep   = _constraintSettings->get_optRattleTimeStep();
